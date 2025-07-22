@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>There Is/Are Dominoes Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #e17055;
+        }
+
+        .game-board {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            min-height: 200px;
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .domino {
+            width: 180px;
+            height: 80px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border: 3px solid #2d3436;
+            border-radius: 10px;
+            display: flex;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .domino:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .domino.selected {
+            border-color: #e84393;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            transform: scale(1.05);
+        }
+
+        .domino.placed {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .domino-half {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+            color: white;
+            padding: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .domino-half:first-child {
+            border-right: 2px solid #2d3436;
+        }
+
+        .available-dominoes {
+            margin-bottom: 30px;
+        }
+
+        .dominoes-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #00b894, #55a3ff);
+            color: white;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .message.info {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+        }
+
+        .connection-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .student-instructions {
+            background: linear-gradient(135deg, #a8e6cf, #dcedc8);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4caf50;
+        }
+
+        @media (max-width: 768px) {
+            .domino {
+                width: 150px;
+                height: 70px;
+            }
+            
+            .domino-half {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-indicator" id="connectionStatus">
+        🟢 Ready for Student Input
+    </div>
+
+    <div class="game-container">
+        <div class="header">
+            <h1>🎲 There Is/Are Dominoes Game</h1>
+        </div>
+
+        <div class="student-instructions">
+            <h3>📢 For the Student:</h3>
+            <p><strong>Tell your teacher which domino to place by saying:</strong></p>
+            <ul>
+                <li>"Click the domino that says [phrase]"</li>
+                <li>"Put it at the beginning/end of the chain"</li>
+                <li>"Try a different domino if it doesn't fit"</li>
+            </ul>
+            <p><strong>Goal:</strong> Match grammar phrases with noun phrases that work together!</p>
+        </div>
+
+        <div class="instructions">
+            <h3>🎯 How to Play:</h3>
+            <p>Match dominoes by connecting grammar phrases (like "There is a") with appropriate noun phrases. "There is" goes with singular/uncountable nouns, "There are" goes with plural/countable nouns.</p>
+        </div>
+
+        <div class="score" id="score">Score: 0 | Dominoes Placed: 0/40</div>
+
+        <div class="message" id="message" style="display: none;"></div>
+
+        <div class="game-board" id="gameBoard">
+            <div style="text-align: center; color: #666; padding: 40px; font-size: 1.2em;">
+                Select a domino from below to start the chain!
+            </div>
+        </div>
+
+        <div class="available-dominoes">
+            <h3>🎲 Available Dominoes:</h3>
+            <div class="dominoes-container" id="dominoesContainer">
+                <!-- Dominoes will be generated here -->
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="placeStartBtn" disabled>Place at Start</button>
+            <button class="btn btn-primary" id="placeEndBtn" disabled>Place at End</button>
+            <button class="btn btn-secondary" id="hintBtn">Get Hint</button>
+            <button class="btn btn-reset" id="resetBtn">Reset Game</button>
+        </div>
+    </div>
+
+    <script>
+        class DominoesGame {
+            constructor() {
+                this.dominoes = [
+                    ["animals in the zoo", "There is a"],
+                    ["glass on the table", "There are many"],
+                    ["children in the swimming pool", "There is a lot of"],
+                    ["work to do", "There aren't many"],
+                    ["sugar left in the bowl", "There are a lot of"],
+                    ["people in the room", "There isn't much"],
+                    ["milk in the fridge", "Are there many"],
+                    ["students in class today?", "There isn't any"],
+                    ["shops near our school", "Is there a"],
+                    ["chair in the garden?", "There aren't any"],
+                    ["bottles on the table", "There is a"],
+                    ["book on the desk", "There are a few"],
+                    ["money in the bank", "There is an"],
+                    ["umbrella in the cupboard", "There is a lot of"],
+                    ["tickets left for the game", "There are a lot of"],
+                    ["dominoes to match", "There aren't many"],
+                    ["tigers in the forest?", "There isn't enough"],
+                    ["time to finish the test", "Are there any"],
+                    ["dog running in the park", "Is there a"],
+                    ["restaurant near here?", "There is a"],
+                    ["coffee in the pot", "There are some"],
+                    ["birds in the sky", "There isn't any"],
+                    ["bread on the counter", "There are several"],
+                    ["flowers in the vase", "There is some"],
+                    ["water in the glass", "There are too many"],
+                    ["cars in the parking lot", "There isn't a"],
+                    ["computer in the office", "There are enough"],
+                    ["cookies in the jar", "There is no"],
+                    ["information about the trip", "There are quite a few"],
+                    ["books on the shelf", "There isn't a lot of"],
+                    ["noise in the street", "There are only a few"],
+                    ["pictures on the wall", "There is little"],
+                    ["hope for tomorrow", "There are tons of"],
+                    ["problems to solve", "There isn't enough"],
+                    ["space in the closet", "There are hardly any"],
+                    ["teachers at the meeting", "There is plenty of"],
+                    ["food for the party", "There are no"],
+                    ["mistakes in the homework", "There is another"],
+                    ["way to do this", "There are loads of"],
+                    ["things to remember", "There isn't much"]
+                ];
+                
+                this.placedDominoes = [];
+                this.selectedDomino = null;
+                this.score = 0;
+                this.availableDominoes = [...this.dominoes];
+                
+                this.initializeGame();
+            }
+            
+            initializeGame() {
+                this.shuffleDominoes();
+                this.renderAvailableDominoes();
+                this.updateScore();
+                this.setupEventListeners();
+            }
+            
+            shuffleDominoes() {
+                for (let i = this.availableDominoes.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this.availableDominoes[i], this.availableDominoes[j]] = [this.availableDominoes[j], this.availableDominoes[i]];
+                }
+            }
+            
+            renderAvailableDominoes() {
+                const container = document.getElementById('dominoesContainer');
+                container.innerHTML = '';
+                
+                this.availableDominoes.forEach((domino, index) => {
+                    const dominoEl = document.createElement('div');
+                    dominoEl.className = 'domino';
+                    dominoEl.dataset.index = index;
+                    dominoEl.innerHTML = `
+                        <div class="domino-half">${domino[0]}</div>
+                        <div class="domino-half">${domino[1]}</div>
+                    `;
+                    dominoEl.addEventListener('click', () => this.selectDomino(index));
+                    container.appendChild(dominoEl);
+                });
+            }
+            
+            selectDomino(index) {
+                // Remove previous selection
+                document.querySelectorAll('.domino').forEach(d => d.classList.remove('selected'));
+                
+                // Select new domino
+                this.selectedDomino = index;
+                document.querySelector(`[data-index="${index}"]`).classList.add('selected');
+                
+                // Enable placement buttons
+                document.getElementById('placeStartBtn').disabled = false;
+                document.getElementById('placeEndBtn').disabled = false;
+                
+                this.showMessage(`Selected: "${this.availableDominoes[index][0]} | ${this.availableDominoes[index][1]}"`, 'info');
+            }
+            
+            canPlaceAt(position) {
+                if (this.selectedDomino === null) return false;
+                if (this.placedDominoes.length === 0) return true;
+                
+                // Always allow placement - let students learn from trying
+                return true;
+            }
+            
+            canConnect(piece1, piece2) {
+                // Check if grammar structures match appropriately
+                const isGrammarPhrase = (phrase) => {
+                    return phrase.startsWith('There is') || phrase.startsWith('There are') || 
+                           phrase.startsWith('There isn\'t') || phrase.startsWith('There aren\'t') ||
+                           phrase.startsWith('Is there') || phrase.startsWith('Are there');
+                };
+                
+                const isNounPhrase = (phrase) => {
+                    return !isGrammarPhrase(phrase);
+                };
+                
+                // One must be grammar, one must be noun phrase
+                if (isGrammarPhrase(piece1) && isNounPhrase(piece2)) {
+                    return this.checkGrammarMatch(piece1, piece2);
+                }
+                if (isGrammarPhrase(piece2) && isNounPhrase(piece1)) {
+                    return this.checkGrammarMatch(piece2, piece1);
+                }
+                
+                return false;
+            }
+            
+            checkGrammarMatch(grammarPhrase, nounPhrase) {
+                const isSingular = grammarPhrase.includes('There is') || grammarPhrase.includes('There isn\'t') || grammarPhrase.includes('Is there');
+                const isPlural = grammarPhrase.includes('There are') || grammarPhrase.includes('There aren\'t') || grammarPhrase.includes('Are there');
+                
+                // Check if noun phrase suggests singular or plural
+                const pluralIndicators = ['animals', 'people', 'children', 'students', 'shops', 'bottles', 'dominoes', 'tickets', 'tigers', 'computers', 'flowers', 'hotels'];
+                const uncountableIndicators = ['work', 'sugar', 'milk', 'money', 'time', 'traffic'];
+                
+                const hasPlural = pluralIndicators.some(indicator => nounPhrase.includes(indicator));
+                const hasUncountable = uncountableIndicators.some(indicator => nounPhrase.includes(indicator));
+                
+                if (isSingular && (hasPlural)) return false;
+                if (isPlural && (hasUncountable || (!hasPlural && !nounPhrase.includes('a few')))) return false;
+                
+                return true;
+            }
+            
+            placeDomino(position) {
+                const domino = this.availableDominoes[this.selectedDomino];
+                let placedDomino = [...domino];
+                
+                if (position === 'start') {
+                    this.placedDominoes.unshift(placedDomino);
+                } else if (position === 'end') {
+                    this.placedDominoes.push(placedDomino);
+                } else {
+                    this.placedDominoes.push(placedDomino);
+                }
+                
+                this.availableDominoes.splice(this.selectedDomino, 1);
+                this.selectedDomino = null;
+                this.score += 10;
+                
+                this.renderGameBoard();
+                this.renderAvailableDominoes();
+                this.updateScore();
+                
+                document.getElementById('placeStartBtn').disabled = true;
+                document.getElementById('placeEndBtn').disabled = true;
+                
+                this.showMessage('Domino placed! Keep building the chain!', 'success');
+                
+                if (this.availableDominoes.length === 0) {
+                    this.showMessage('🎉 Congratulations! You completed the game!', 'success');
+                }
+            }
+            
+            renderGameBoard() {
+                const board = document.getElementById('gameBoard');
+                board.innerHTML = '';
+                
+                this.placedDominoes.forEach((domino, index) => {
+                    const dominoEl = document.createElement('div');
+                    dominoEl.className = 'domino placed';
+                    dominoEl.innerHTML = `
+                        <div class="domino-half">${domino[0]}</div>
+                        <div class="domino-half">${domino[1]}</div>
+                    `;
+                    board.appendChild(dominoEl);
+                });
+            }
+            
+            updateScore() {
+                document.getElementById('score').textContent = 
+                    `Score: ${this.score} | Dominoes Placed: ${this.placedDominoes.length}/${this.dominoes.length}`;
+            }
+            
+            showMessage(text, type) {
+                const messageEl = document.getElementById('message');
+                messageEl.textContent = text;
+                messageEl.className = `message ${type}`;
+                messageEl.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 3000);
+            }
+            
+            getHint() {
+                if (this.selectedDomino === null) {
+                    this.showMessage('Please select a domino first!', 'info');
+                    return;
+                }
+                
+                const domino = this.availableDominoes[this.selectedDomino];
+                const grammarPart = domino[0].startsWith('There') || domino[0].startsWith('Is') || domino[0].startsWith('Are') ? domino[0] : domino[1];
+                
+                let hint = '';
+                if (grammarPart.includes('There is') || grammarPart.includes('There isn\'t') || grammarPart.includes('Is there')) {
+                    hint = 'This domino uses singular form - look for singular or uncountable nouns!';
+                } else if (grammarPart.includes('There are') || grammarPart.includes('There aren\'t') || grammarPart.includes('Are there')) {
+                    hint = 'This domino uses plural form - look for plural or countable nouns!';
+                }
+                
+                this.showMessage(`Hint: ${hint}`, 'info');
+            }
+            
+            resetGame() {
+                this.placedDominoes = [];
+                this.selectedDomino = null;
+                this.score = 0;
+                this.availableDominoes = [...this.dominoes];
+                
+                document.getElementById('gameBoard').innerHTML = `
+                    <div style="text-align: center; color: #666; padding: 40px; font-size: 1.2em;">
+                        Select a domino from below to start the chain!
+                    </div>
+                `;
+                
+                document.getElementById('placeStartBtn').disabled = true;
+                document.getElementById('placeEndBtn').disabled = true;
+                
+                this.shuffleDominoes();
+                this.renderAvailableDominoes();
+                this.updateScore();
+                this.showMessage('Game reset! Start fresh!', 'info');
+            }
+            
+            setupEventListeners() {
+                document.getElementById('placeStartBtn').addEventListener('click', () => this.placeDomino('start'));
+                document.getElementById('placeEndBtn').addEventListener('click', () => this.placeDomino('end'));
+                document.getElementById('hintBtn').addEventListener('click', () => this.getHint());
+                document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
+            }
+        }
+        
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new DominoesGame();
+        });
+    </script>
+</body>
+</html>
