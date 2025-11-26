@@ -1880,8 +1880,13 @@ body.warm-mode {
         el.style.top = (offset + extraSpacing) + 'px';
         el.style.overflowY = 'auto';
         // keep the passage scrollable but not taller than viewport minus controls
-        const max = window.innerHeight - (settingsRect.bottom) - (extraSpacing * 2);
-        el.style.maxHeight = (max > 120 ? max + 'px' : '200px');
+        let max = window.innerHeight - (settingsRect.bottom) - (extraSpacing * 2);
+        // On very small screens cap the passage to a fraction of the viewport so questions remain visible
+        if (window.innerWidth <= 480) {
+          const cap = Math.floor(window.innerHeight * 0.35); // 35% of viewport height
+          max = Math.min(max, cap);
+        }
+        el.style.maxHeight = (max > 120 ? max + 'px' : '120px');
         el.style.zIndex = 2; /* ensure it sits above question background but below settings-panel (z-index 100) */
       });
     }
