@@ -1912,6 +1912,27 @@ body.warm-mode {
       });
       // Also ensure Part 4 sticky is set on load in case test is already started
       updatePart4Sticky();
+      // Provide default images for Part 7 so candidates see them immediately
+      // These default to local assets placed in `./assets/` next to this HTML file.
+      // Add files: ./assets/story1.jpg, ./assets/story2.jpg, ./assets/story3.jpg
+      const defaultImageUrls = [
+        './assets/story1.jpg',
+        './assets/story2.jpg',
+        './assets/story3.jpg'
+      ];
+
+      // Only set defaults if there are no uploaded images yet
+      if (!state.uploadedImages || state.uploadedImages.length === 0) {
+        state.uploadedImages = defaultImageUrls.map((url, i) => ({ id: i, dataUrl: url, order: i }));
+        // render previews on landing screen
+        try {
+          renderImagePreviews();
+        } catch (e) {
+          /* ignore if renderImagePreviews isn't available yet */
+        }
+        const startBtn = document.getElementById('startTestBtn');
+        if (startBtn) startBtn.disabled = false;
+      }
       // Recompute sticky offsets when orientation changes or when the top bar content may change
       window.addEventListener('orientationchange', updatePart4Sticky);
     });
