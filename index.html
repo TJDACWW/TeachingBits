@@ -1192,10 +1192,17 @@ body.warm-mode {
       Array.from(files).forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function(e) {
-          state.uploadedImages.push({id: index, dataUrl: e.target.result, order: index});
+          // try to infer order from filename (e.g., story1, story2) if present
+          let order = index;
+          const m = file.name.match(/(\d+)/);
+          if (m) order = parseInt(m[1], 10);
+          state.uploadedImages.push({id: index, dataUrl: e.target.result, order: order});
           loadedCount++;
-          
-          if (loadedCount === 3) {
+
+          if (loadedCount === files.length) {
+            // sort and normalize orders to 0..n-1
+            state.uploadedImages.sort((a, b) => a.order - b.order);
+            state.uploadedImages.forEach((it, i) => it.order = i);
             renderImagePreviews();
             document.getElementById('startTestBtn').disabled = false;
           }
@@ -1248,14 +1255,20 @@ body.warm-mode {
     function moveImage(currentIndex, direction) {
       const sortedImages = [...state.uploadedImages].sort((a, b) => a.order - b.order);
       const newIndex = currentIndex + direction;
-      
+
       if (newIndex < 0 || newIndex >= sortedImages.length) return;
-      
-      // Swap orders
-      const tempOrder = sortedImages[currentIndex].order;
-      sortedImages[currentIndex].order = sortedImages[newIndex].order;
-      sortedImages[newIndex].order = tempOrder;
-      
+
+      // Swap orders in the original state.uploadedImages by id
+      const idA = sortedImages[currentIndex].id;
+      const idB = sortedImages[newIndex].id;
+      const itemA = state.uploadedImages.find(i => i.id === idA);
+      const itemB = state.uploadedImages.find(i => i.id === idB);
+      if (itemA && itemB) {
+        const tmp = itemA.order;
+        itemA.order = itemB.order;
+        itemB.order = tmp;
+      }
+
       renderImagePreviews();
     }
 
@@ -1734,19 +1747,47 @@ body.warm-mode {
 
     // Submit Test
     function submitTest() {
+      // Ask for confirmation first
       if (!confirm('Are you sure you want to submit your test?')) {
         return;
       }
-      
+
+      // Ask candidate for full name (Name Surname) before sending
+      let fullName = '';
+      while (true) {
+        fullName = prompt('Please enter your full name (Name and Surname) before submitting:');
+        if (fullName === null) {
+          // User cancelled
+          alert('Submission cancelled. You can submit when ready.');
+          return;
+        }
+        fullName = fullName.trim();
+        if (fullName.length === 0) {
+          alert('Name cannot be empty. Please enter your full name.');
+          continue;
+        }
+        // Simple validation: require at least two words
+        if (!/\s+/.test(fullName)) {
+          if (!confirm('It looks like you entered only one name. Do you want to continue with this?')) {
+            continue;
+          }
+        }
+        break;
+      }
+
+      // Save candidate name in state for later use
+      state.candidateName = fullName;
+
       // Stop timer
       if (state.timerInterval) {
         clearInterval(state.timerInterval);
       }
-      
-      // Format answers
+
+      // Format answers and include candidate name at the top
       const timestamp = new Date().toLocaleString();
-      let emailBody = `CAMBRIDGE ENGLISH A2 KET - MOCK TEST 1%0D%0ASubmission Time: ${encodeURIComponent(timestamp)}%0D%0A%0D%0A`;
-      
+      let emailBody = `Candidate Name: ${encodeURIComponent(fullName)}%0D%0A`;
+      emailBody += `CAMBRIDGE ENGLISH A2 KET - MOCK TEST 1%0D%0ASubmission Time: ${encodeURIComponent(timestamp)}%0D%0A%0D%0A`;
+
       // Parts 1-4
       emailBody += `PART 1-4 (Multiple Choice):%0D%0A`;
       for (let part = 1; part <= 4; part++) {
@@ -1755,43 +1796,48 @@ body.warm-mode {
           emailBody += `Q${qNum}: ${partAnswers[qNum]}%0D%0A`;
         }
       }
-      
+
       // Part 5
       emailBody += `%0D%0APART 5 (Gapped Text):%0D%0A`;
       const part5Answers = state.answers.part5;
       for (let gap = 25; gap <= 30; gap++) {
         emailBody += `Gap ${gap}: ${part5Answers[gap] || '(not answered)'}%0D%0A`;
       }
-      
+
       // Part 6
       emailBody += `%0D%0APART 6 (Email Writing):%0D%0A`;
       const part6Text = state.answers.part6 || '(not answered)';
       emailBody += encodeURIComponent(part6Text);
       emailBody += `%0D%0AWord Count: ${countWords(part6Text)}%0D%0A`;
-      
+
       // Part 7
       emailBody += `%0D%0APART 7 (Story Writing):%0D%0A`;
       const part7Text = state.answers.part7 || '(not answered)';
       emailBody += encodeURIComponent(part7Text);
       emailBody += `%0D%0AWord Count: ${countWords(part7Text)}%0D%0A`;
-      
-      // Create mailto link
-      const mailtoLink = `mailto:?subject=Cambridge%20A2%20KET%20Mock%20Test%201%20-%20Submission%20${encodeURIComponent(timestamp)}&body=${emailBody}`;
-      
+
+      // Create mailto link with recipient set to timothy@english-world.it
+      const recipient = 'timothy@english-world.it';
+      const mailtoLink = `mailto:${recipient}?subject=Cambridge%20A2%20KET%20Mock%20Test%201%20-%20Submission%20${encodeURIComponent(timestamp)}&body=${emailBody}`;
+
       // Try to open email client
       window.location.href = mailtoLink;
-      
+
       // Also show a copy option
       setTimeout(() => {
         if (confirm('Email client opened. Would you like to copy your answers to clipboard as backup?')) {
-          copyAnswersToClipboard(timestamp);
+          copyAnswersToClipboard(timestamp, fullName);
         }
       }, 1000);
     }
 
     // Copy Answers to Clipboard
-    function copyAnswersToClipboard(timestamp) {
+    function copyAnswersToClipboard(timestamp, fullName) {
       let text = `CAMBRIDGE ENGLISH A2 KET - MOCK TEST 1\nSubmission Time: ${timestamp}\n\n`;
+      if (fullName || state.candidateName) {
+        const nameToUse = fullName || state.candidateName || '';
+        text = `Candidate Name: ${nameToUse}\n\n` + text;
+      }
       
       text += `PART 1-4 (Multiple Choice):\n`;
       for (let part = 1; part <= 4; part++) {
@@ -1875,19 +1921,51 @@ body.warm-mode {
       const extraSpacing = 6; // small gap below the settings panel
 
       part4Areas.forEach(el => {
-        // Always use sticky positioning but compute top from the content area so it doesn't overlap questions
-        el.style.position = 'sticky';
-        el.style.top = (offset + extraSpacing) + 'px';
-        el.style.overflowY = 'auto';
-        // keep the passage scrollable but not taller than viewport minus controls
-        let max = window.innerHeight - (settingsRect.bottom) - (extraSpacing * 2);
-        // On very small screens cap the passage to a fraction of the viewport so questions remain visible
+        // On very small screens pin the passage to the top (fixed) so it appears directly under the top bar
         if (window.innerWidth <= 480) {
+          // compute top relative to viewport: settingsRect.bottom is viewport coordinate
+          const topPx = settingsRect.bottom + extraSpacing;
+          el.style.position = 'fixed';
+          el.style.top = topPx + 'px';
+          // position horizontally to match content area
+          el.style.left = contentRect.left + 'px';
+          el.style.width = contentRect.width + 'px';
+          el.style.overflowY = 'auto';
+          // cap height to a reasonable fraction so questions remain visible
           const cap = Math.floor(window.innerHeight * 0.35); // 35% of viewport height
+          let max = window.innerHeight - (settingsRect.bottom) - (extraSpacing * 2);
           max = Math.min(max, cap);
+          el.style.maxHeight = (max > 80 ? max + 'px' : '80px');
+          el.style.zIndex = 90; /* below settings-panel (100) but above content */
+
+          // Reserve space for the fixed passage by adding top margin to the questions area
+          const wrapper = el.closest('.part-content-wrapper');
+          if (wrapper) {
+            const questions = wrapper.querySelector('.questions-area');
+            if (questions) {
+              questions.style.marginTop = (parseInt(el.style.maxHeight, 10) + extraSpacing) + 'px';
+            }
+          }
+        } else {
+          // Default behavior: sticky within content area
+          el.style.position = 'sticky';
+          el.style.top = (offset + extraSpacing) + 'px';
+          el.style.left = '';
+          el.style.width = '';
+          el.style.overflowY = 'auto';
+          let max = window.innerHeight - (settingsRect.bottom) - (extraSpacing * 2);
+          el.style.maxHeight = (max > 120 ? max + 'px' : '120px');
+          el.style.zIndex = 2;
+
+          // Clear any reserved margin on questions area
+          const wrapper = el.closest('.part-content-wrapper');
+          if (wrapper) {
+            const questions = wrapper.querySelector('.questions-area');
+            if (questions) {
+              questions.style.marginTop = '';
+            }
+          }
         }
-        el.style.maxHeight = (max > 120 ? max + 'px' : '120px');
-        el.style.zIndex = 2; /* ensure it sits above question background but below settings-panel (z-index 100) */
       });
     }
 
