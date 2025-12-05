@@ -1,0 +1,845 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English Entry Test – Everyday English & Travel</title>
+    <style>
+        :root {
+            --primary: #22577A;
+            --primary-light: #5584A6;
+            --accent: #38A3A5;
+            --bg: #f3f5f8;
+            --card-bg: #ffffff;
+            --text-main: #1f2933;
+            --text-muted: #6b7280;
+            --border-soft: #dde3ea;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 24px;
+            background: radial-gradient(circle at top left, #e6f2ff 0, #f3f5f8 45%, #f9fafb 100%);
+            color: var(--text-main);
+        }
+        .container {
+            max-width: 940px;
+            margin: 0 auto;
+        }
+        .header-card {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            padding: 22px 26px;
+            color: #ffffff;
+            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.25);
+            margin-bottom: 26px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-card::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 28px solid rgba(255, 255, 255, 0.12);
+            top: -80px;
+            right: -70px;
+        }
+        .header-card h1 {
+            margin: 0 0 4px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 24px;
+        }
+        .header-main-left h2 {
+            margin: 0 0 8px;
+            font-size: 1.8rem;
+        }
+        .header-main-left p {
+            margin: 0;
+            max-width: 560px;
+            font-size: 0.98rem;
+            opacity: 0.95;
+        }
+        .header-tag {
+            background-color: rgba(15, 23, 42, 0.35);
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .header-tag span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background-color: #A7F3D0;
+        }
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+        .step-indicator-label {
+            white-space: nowrap;
+        }
+        .step-badges {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            max-width: 180px;
+            justify-content: flex-end;
+        }
+        .step-badge {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            opacity: 0.75;
+        }
+        .step-badge.active {
+            background-color: #ffffff;
+            color: var(--primary);
+            opacity: 1;
+            border-color: #ffffff;
+        }
+        .step-badge.completed {
+            background-color: rgba(255, 255, 255, 0.18);
+            opacity: 0.95;
+        }
+
+        .wizard-shell {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 18px 22px 22px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        }
+
+        .wizard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .wizard-header-left h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .wizard-header-left p {
+            margin: 2px 0 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .wizard-header-right {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .progress-bar {
+            width: 160px;
+            height: 5px;
+            background-color: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, var(--accent), var(--primary-light));
+            border-radius: 999px;
+            transition: width 0.25s ease-out;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .step.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+        .step-intro {
+            margin-top: 0;
+            margin-bottom: 14px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px 18px;
+            border: 1px solid var(--border-soft);
+            margin-bottom: 8px;
+        }
+        .card h4 {
+            margin: 0 0 4px;
+            font-size: 1.02rem;
+        }
+        .card p {
+            margin: 4px 0;
+        }
+        .card ul, .card ol {
+            margin: 4px 0 4px 22px;
+            padding: 0;
+        }
+        .label {
+            font-weight: 600;
+        }
+        .muted {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .inline-blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 1px solid #9ca3af;
+            margin: 0 3px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .nav-buttons .spacer {
+            flex: 1;
+        }
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background-color 0.2s ease, transform 0.08s ease;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+            transform: none;
+        }
+
+        .step-footer-hint {
+            margin-top: 10px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 16px;
+            }
+            .header-main {
+                flex-direction: column;
+            }
+            .wizard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .wizard-header-right {
+                text-align: left;
+            }
+            .progress-bar {
+                width: 100%;
+            }
+            .step-badges {
+                max-width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header-card">
+            <div class="header-main">
+                <div class="header-main-left">
+                    <h1>English Entry Test</h1>
+                    <h2>Everyday Communication and Travel</h2>
+                    <p>
+                        This guided test explores how you use English in daily life and how you can
+                        adapt that same language when you are travelling. Move through each page one by one.
+                    </p>
+                    <div class="header-tag">
+                        <span></span>
+                        <div>Level check · Everyday tasks · Travel adaptation</div>
+                    </div>
+                </div>
+                <div class="header-main-right">
+                    <div class="step-indicator">
+                        <div class="step-indicator-label">Pages</div>
+                        <div class="step-badges" id="stepBadges"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="wizard-shell">
+            <div class="wizard-header">
+                <div class="wizard-header-left">
+                    <h3 id="wizard-step-title">Page 1 of 19</h3>
+                    <p id="wizard-step-subtitle">Getting started and understanding how the test works.</p>
+                </div>
+                <div class="wizard-header-right">
+                    <div>Progress</div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 1: Instructions -->
+            <section class="step active" data-step="1">
+                <h3 class="step-title">Welcome</h3>
+                <p class="step-intro">
+                    This test is not an exam. It is a way for your teacher to see how you communicate in English
+                    in situations that are familiar to you, and then in similar situations when you are travelling.
+                </p>
+                <div class="card">
+                    <h4>How to complete this test</h4>
+                    <ul>
+                        <li>Answer in simple, clear English.</li>
+                        <li>Do not worry about making mistakes. Focus on sharing your ideas.</li>
+                        <li>You can answer by speaking or writing, depending on your teacher’s instructions.</li>
+                        <li>Take your time with each page before you move on.</li>
+                    </ul>
+                </div>
+                <p class="step-footer-hint">
+                    When you are ready, go to the next page to begin the first task.
+                </p>
+            </section>
+
+            <!-- Page 2: Part 1 - Q1 -->
+            <section class="step" data-step="2">
+                <h3 class="step-title">Everyday life: typical day</h3>
+                <p class="step-intro">
+                    First, talk about your daily life during the week.
+                </p>
+                <div class="card">
+                    <h4>1. Daily life</h4>
+                    <p>Describe a typical day in your life during the week. What do you usually do?</p>
+                </div>
+                <p class="step-footer-hint">
+                    Try to use full sentences. Imagine you are telling a new friend about your routine.
+                </p>
+            </section>
+
+            <!-- Page 3: Part 1 - Q1 travel -->
+            <section class="step" data-step="3">
+                <h3 class="step-title">Travel: typical day on holiday</h3>
+                <p class="step-intro">
+                    Now think about a similar day when you are travelling.
+                </p>
+                <div class="card">
+                    <h4>1. Holiday day</h4>
+                    <p>Imagine you are on holiday in another country. Describe a typical day on your trip.</p>
+                </div>
+                <p class="step-footer-hint">
+                    You can talk about where you go, what you see, what you eat, and who you meet.
+                </p>
+            </section>
+
+            <!-- Page 4: Part 1 - Q2 everyday -->
+            <section class="step" data-step="4">
+                <h3 class="step-title">Everyday life: small problem</h3>
+                <p class="step-intro">
+                    Everyone has small problems from time to time. Here you describe one of yours.
+                </p>
+                <div class="card">
+                    <h4>2. Everyday problem</h4>
+                    <p>Describe a small problem you had recently (for example: with a bill, an appointment, or something you bought).</p>
+                    <p>What happened, and how did you solve it?</p>
+                </div>
+                <p class="step-footer-hint">
+                    Focus on telling the story clearly: what went wrong and what you did.
+                </p>
+            </section>
+
+            <!-- Page 5: Part 1 - Q2 travel -->
+            <section class="step" data-step="5">
+                <h3 class="step-title">Travel: problem abroad</h3>
+                <p class="step-intro">
+                    Now imagine a similar problem while you are travelling.
+                </p>
+                <div class="card">
+                    <h4>2. Problem abroad</h4>
+                    <p>Imagine a similar problem happens while you are abroad (for example: at a hotel or with a train ticket).</p>
+                    <p>What would you say to explain the problem and ask for help?</p>
+                </div>
+                <p class="step-footer-hint">
+                    Think about how you would stay calm and make sure the other person understands the situation.
+                </p>
+            </section>
+
+            <!-- Page 6: Part 1 - Q3 everyday -->
+            <section class="step" data-step="6">
+                <h3 class="step-title">Everyday life: favourite place</h3>
+                <p class="step-intro">
+                    Next, talk about a place you enjoy in your own town or city.
+                </p>
+                <div class="card">
+                    <h4>3. Favourite place</h4>
+                    <p>Talk about a place in your town or city that you really like. Why do you like it?</p>
+                </div>
+                <p class="step-footer-hint">
+                    You can talk about what you do there, how it looks or feels, and why it is special to you.
+                </p>
+            </section>
+
+            <!-- Page 7: Part 1 - Q3 travel -->
+            <section class="step" data-step="7">
+                <h3 class="step-title">Travel: place you want to visit</h3>
+                <p class="step-intro">
+                    Finally in this section, think about a place you would like to visit in another country.
+                </p>
+                <div class="card">
+                    <h4>3. Place to visit</h4>
+                    <p>Talk about a place in another country that you would like to visit one day. Why do you want to go there?</p>
+                </div>
+                <p class="step-footer-hint">
+                    You can mention what you know about this place and what you would like to see or do there.
+                </p>
+            </section>
+
+            <!-- Page 8: Part 2 - Situation 1 -->
+            <section class="step" data-step="8">
+                <h3 class="step-title">Functional language: in a café</h3>
+                <p class="step-intro">
+                    Now you will practise short, useful sentences for common situations.
+                </p>
+                <div class="card">
+                    <h4>Situation 1 – In a café</h4>
+                    <p>You are in a café (at home or in another country). You want to order a coffee politely.</p>
+                    <p><em>What would you say?</em></p>
+                </div>
+                <p class="step-footer-hint">
+                    Think about a polite way to order, as if you are speaking to the person at the counter.
+                </p>
+            </section>
+
+            <!-- Page 9: Part 2 - Situation 2 -->
+            <section class="step" data-step="9">
+                <h3 class="step-title">Functional language: in a shop</h3>
+                <p class="step-intro">
+                    This situation also works in an airport or station shop.
+                </p>
+                <div class="card">
+                    <h4>Situation 2 – In a shop or supermarket</h4>
+                    <p>You cannot find an item, but you think the shop sells it.</p>
+                    <p><em>What would you say to the shop assistant?</em></p>
+                </div>
+                <p class="step-footer-hint">
+                    Imagine you are standing in the aisle and need help to find the item.
+                </p>
+            </section>
+
+            <!-- Page 10: Part 2 - Situation 3 -->
+            <section class="step" data-step="10">
+                <h3 class="step-title">Functional language: when you do not understand</h3>
+                <p class="step-intro">
+                    Here you ask someone to repeat or explain something again.
+                </p>
+                <div class="card">
+                    <h4>Situation 3 – Not understanding</h4>
+                    <p>You did not understand what someone just said (in a conversation, on the phone, or while travelling).</p>
+                    <p><em>What would you say?</em></p>
+                </div>
+                <p class="step-footer-hint">
+                    Try to be polite and clear so the other person is happy to repeat or explain.
+                </p>
+            </section>
+
+            <!-- Page 11: Part 2 - Situation 4 -->
+            <section class="step" data-step="11">
+                <h3 class="step-title">Functional language: polite request</h3>
+                <p class="step-intro">
+                    Now you ask someone to do something for you in a polite way.
+                </p>
+                <div class="card">
+                    <h4>Situation 4 – Request</h4>
+                    <p>You are in a waiting room and you are cold. The window is open.</p>
+                    <p><em>What would you say to the other person?</em></p>
+                </div>
+                <p class="step-footer-hint">
+                    Think of a sentence you would feel comfortable using with a stranger.
+                </p>
+            </section>
+
+            <!-- Page 12: Part 2 - Situation 5 -->
+            <section class="step" data-step="12">
+                <h3 class="step-title">Functional language: making a booking</h3>
+                <p class="step-intro">
+                    Finally in this section, you make a simple booking.
+                </p>
+                <div class="card">
+                    <h4>Situation 5 – Booking</h4>
+                    <p>You want to book a time for something (for example: a haircut, a table in a restaurant, a lesson, and so on).</p>
+                    <p>Imagine you are phoning or speaking to someone at the desk.</p>
+                    <p><em>What would you say to make the booking?</em></p>
+                </div>
+                <p class="step-footer-hint">
+                    Include what you want to book, for when, and any other important details.
+                </p>
+            </section>
+
+            <!-- Page 13: Part 3 - Grammar Q1 -->
+            <section class="step" data-step="13">
+                <h3 class="step-title">Grammar in context: 1 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol>
+                        <li>
+                            If I<span class="inline-blank"></span>more free time, I would start a new hobby.
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 14: Part 3 - Grammar Q2 -->
+            <section class="step" data-step="14">
+                <h3 class="step-title">Grammar in context: 2 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol start="2">
+                        <li>
+                            I have never<span class="inline-blank"></span>to Canada, but I would really like to go one day.
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 15: Part 3 - Grammar Q3 -->
+            <section class="step" data-step="15">
+                <h3 class="step-title">Grammar in context: 3 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol start="3">
+                        <li>
+                            When I arrived, they told me the meeting<span class="inline-blank"></span>delayed.
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 16: Part 3 - Grammar Q4 -->
+            <section class="step" data-step="16">
+                <h3 class="step-title">Grammar in context: 4 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol start="4">
+                        <li>
+                            If I miss the bus, I<span class="inline-blank"></span>late for work.
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 17: Part 3 - Grammar Q5 -->
+            <section class="step" data-step="17">
+                <h3 class="step-title">Grammar in context: 5 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol start="5">
+                        <li>
+                            I usually<span class="inline-blank"></span>to work by train, but today I am driving.
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 18: Part 3 - Grammar Q6 -->
+            <section class="step" data-step="18">
+                <h3 class="step-title">Grammar in context: 6 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol start="6">
+                        <li>
+                            I am<span class="inline-blank"></span>to book my next holiday in English.
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 19: Part 3 - Grammar Q7 -->
+            <section class="step" data-step="19">
+                <h3 class="step-title">Grammar in context: 7 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol start="7">
+                        <li>
+                            Could you<span class="inline-blank"></span>me where the station is?
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 20: Part 3 - Grammar Q8 -->
+            <section class="step" data-step="20">
+                <h3 class="step-title">Grammar in context: 8 of 8</h3>
+                <p class="step-intro">
+                    Complete the sentence with one correct word.
+                </p>
+                <div class="card">
+                    <ol start="8">
+                        <li>
+                            We have<span class="inline-blank"></span>in this hotel many times before.
+                        </li>
+                    </ol>
+                    <p class="muted">
+                        Write only one word in the space.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Page 21: Part 4 - Task 1 -->
+            <section class="step" data-step="21">
+                <h3 class="step-title">Explaining problems: everyday life</h3>
+                <p class="step-intro">
+                    In the last part of the test, you explain two situations. This one is from everyday life.
+                </p>
+                <div class="card">
+                    <h4>Task 1 – Online order</h4>
+                    <p>You ordered something online and it never arrived.</p>
+                    <p>Write or say three to five sentences explaining:</p>
+                    <ul>
+                        <li>what you ordered</li>
+                        <li>what the problem is</li>
+                        <li>what you want the company to do (refund, send it again, and so on)</li>
+                    </ul>
+                    <p>Imagine you are writing an email or speaking on the phone.</p>
+                </div>
+                <p class="step-footer-hint">
+                    Try to be clear and polite so that the company understands the problem and can help you.
+                </p>
+            </section>
+
+            <!-- Page 22: Part 4 - Task 2 -->
+            <section class="step" data-step="22">
+                <h3 class="step-title">Explaining problems: travel</h3>
+                <p class="step-intro">
+                    Now imagine a similar kind of problem when you are travelling.
+                </p>
+                <div class="card">
+                    <h4>Task 2 – Lost bag at the airport</h4>
+                    <p>You are at an airport in another country and your bag is missing.</p>
+                    <p>Write or say three to five sentences explaining:</p>
+                    <ul>
+                        <li>what happened</li>
+                        <li>what your bag looks like (colour, size, and so on)</li>
+                        <li>what you want the staff to do (check, call you, deliver it, and so on)</li>
+                    </ul>
+                    <p>Try to use similar language to Task 1, but adapted to this travel situation.</p>
+                </div>
+                <p class="step-footer-hint">
+                    When you finish this page, you have completed the test. Your teacher will review your answers
+                    to plan the best next steps for your course.
+                </p>
+            </section>
+
+            <div class="nav-buttons">
+                <button id="prevBtn" class="btn btn-secondary" disabled>Previous</button>
+                <div class="spacer"></div>
+                <button id="nextBtn" class="btn btn-primary">Next page</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        (function() {
+            const steps = Array.from(document.querySelectorAll('.step'));
+            const badgesContainer = document.getElementById('stepBadges');
+            const titleEl = document.getElementById('wizard-step-title');
+            const subtitleEl = document.getElementById('wizard-step-subtitle');
+            const progressFill = document.getElementById('progress-fill');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            // Subtitles per page index (1-based)
+            const subtitles = {
+                1: 'Getting started and understanding how the test works.',
+                2: 'Talking about your typical day during the week.',
+                3: 'Describing a typical day when you are on holiday.',
+                4: 'Explaining a small problem from everyday life.',
+                5: 'Explaining a similar problem while travelling.',
+                6: 'Describing a favourite place in your town or city.',
+                7: 'Talking about a place you would like to visit in another country.',
+                8: 'Practising a polite sentence for ordering in a café.',
+                9: 'Asking for help finding something in a shop.',
+                10: 'Asking someone to repeat or explain something again.',
+                11: 'Making a polite request in a shared space.',
+                12: 'Making a simple booking by phone or in person.',
+                13: 'Completing a sentence about free time and wishes.',
+                14: 'Completing a sentence about life experience and travel.',
+                15: 'Completing a sentence about receiving information.',
+                16: 'Completing a sentence about consequences if something happens.',
+                17: 'Completing a sentence about usual transport to work.',
+                18: 'Completing a sentence about future plans for a holiday.',
+                19: 'Completing a sentence about asking for information.',
+                20: 'Completing a sentence about past stays in a hotel.',
+                21: 'Explaining a problem with an online order.',
+                22: 'Explaining a lost bag problem at an airport.'
+            };
+
+            // Create step badges dynamically
+            steps.forEach((step, index) => {
+                const badge = document.createElement('div');
+                badge.className = 'step-badge';
+                badge.dataset.index = String(index);
+                badge.textContent = index + 1;
+                badgesContainer.appendChild(badge);
+            });
+            const badges = Array.from(document.querySelectorAll('.step-badge'));
+
+            let currentStepIndex = 0;
+
+            function updateUI() {
+                steps.forEach((step, index) => {
+                    step.classList.toggle('active', index === currentStepIndex);
+                });
+
+                const pageNumber = currentStepIndex + 1;
+                const totalPages = steps.length;
+
+                titleEl.textContent = 'Page ' + pageNumber + ' of ' + totalPages;
+                subtitleEl.textContent = subtitles[pageNumber] || '';
+
+                const progressPercent = (pageNumber - 1) / (totalPages - 1) * 100;
+                progressFill.style.width = progressPercent + '%';
+
+                badges.forEach((badge, index) => {
+                    badge.classList.remove('active', 'completed');
+                    if (index === currentStepIndex) {
+                        badge.classList.add('active');
+                    } else if (index < currentStepIndex) {
+                        badge.classList.add('completed');
+                    }
+                });
+
+                prevBtn.disabled = currentStepIndex === 0;
+                if (currentStepIndex === steps.length - 1) {
+                    nextBtn.textContent = 'Finish';
+                } else {
+                    nextBtn.textContent = 'Next page';
+                }
+            }
+
+            prevBtn.addEventListener('click', function() {
+                if (currentStepIndex > 0) {
+                    currentStepIndex -= 1;
+                    updateUI();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                if (currentStepIndex < steps.length - 1) {
+                    currentStepIndex += 1;
+                    updateUI();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+
+            updateUI();
+        })();
+    </script>
+</body>
+</html>
