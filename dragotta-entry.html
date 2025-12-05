@@ -54,7 +54,7 @@
             margin: 0 0 4px;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 14px;
             opacity: 0.9;
         }
         .header-main {
@@ -65,19 +65,19 @@
         }
         .header-main-left h2 {
             margin: 0 0 8px;
-            font-size: 1.8rem;
+            font-size: 28px;
         }
         .header-main-left p {
             margin: 0;
             max-width: 560px;
-            font-size: 0.98rem;
+            font-size: 16px;
             opacity: 0.95;
         }
         .header-tag {
             background-color: rgba(15, 23, 42, 0.35);
             border-radius: 999px;
             padding: 6px 12px;
-            font-size: 0.8rem;
+            font-size: 13px;
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -95,7 +95,7 @@
             align-items: center;
             gap: 16px;
             margin-top: 10px;
-            font-size: 0.8rem;
+            font-size: 13px;
         }
         .step-indicator-label {
             white-space: nowrap;
@@ -115,7 +115,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: 11px;
             opacity: 0.75;
         }
         .step-badge.active {
@@ -277,7 +277,53 @@
             color: var(--text-muted);
         }
 
-        @keyframes fadeIn {
+        
+        .font-size-controls {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .font-size-button {
+            border: 1px solid var(--border-soft);
+            background-color: #f3f4f6;
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            line-height: 1.3;
+        }
+        .font-size-button:hover {
+            background-color: #e5e7eb;
+        }
+
+        .header-toggle {
+            border-radius: 999px;
+            padding: 4px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            background-color: rgba(15, 23, 42, 0.25);
+            color: #ffffff;
+            font-size: 13px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+        .header-toggle:hover {
+            background-color: rgba(15, 23, 42, 0.4);
+        }
+        .header-card.collapsed {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .header-card.collapsed .header-main-left {
+            display: none;
+        }
+        .header-card.collapsed .header-main {
+            align-items: center;
+        }
+@keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(4px);
@@ -330,6 +376,7 @@
                     </div>
                 </div>
                 <div class="header-main-right">
+                    <button type="button" id="headerToggle" class="header-toggle" aria-label="Hide or show header">Hide header</button>
                     <div class="step-indicator">
                         <div class="step-indicator-label">Pages</div>
                         <div class="step-badges" id="stepBadges"></div>
@@ -348,6 +395,11 @@
                     <div>Progress</div>
                     <div class="progress-bar">
                         <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="font-size-controls">
+                        <span>Text size</span>
+                        <button type="button" id="fontDecrease" class="font-size-button" aria-label="Decrease text size">A-</button>
+                        <button type="button" id="fontIncrease" class="font-size-button" aria-label="Increase text size">A+</button>
                     </div>
                 </div>
             </div>
@@ -752,6 +804,46 @@
             const progressFill = document.getElementById('progress-fill');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
+            const fontIncreaseBtn = document.getElementById('fontIncrease');
+            const fontDecreaseBtn = document.getElementById('fontDecrease');
+            const headerToggleBtn = document.getElementById('headerToggle');
+            const headerCard = document.querySelector('.header-card');
+            const root = document.documentElement;
+
+            // Base font size of root (for content scaling)
+            const baseFontSizePx = parseFloat(getComputedStyle(root).fontSize) || 16;
+            let fontScale = window.innerWidth <= 720 ? 1.1 : 1;
+
+            function applyFontScale() {
+                root.style.fontSize = (baseFontSizePx * fontScale) + 'px';
+            }
+            applyFontScale();
+
+            if (fontIncreaseBtn) {
+                fontIncreaseBtn.addEventListener('click', function() {
+                    if (fontScale < 1.6) {
+                        fontScale += 0.1;
+                        applyFontScale();
+                    }
+                });
+            }
+            if (fontDecreaseBtn) {
+                fontDecreaseBtn.addEventListener('click', function() {
+                    if (fontScale > 0.8) {
+                        fontScale -= 0.1;
+                        applyFontScale();
+                    }
+                });
+            }
+
+            if (headerToggleBtn && headerCard) {
+                headerToggleBtn.addEventListener('click', function() {
+                    const collapsed = headerCard.classList.toggle('collapsed');
+                    headerToggleBtn.textContent = collapsed ? 'Show header' : 'Hide header';
+                });
+            }
+
+
 
             // Subtitles per page index (1-based)
             const subtitles = {
