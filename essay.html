@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B2 First Essay — Task Lab</title>
+  <style>
+    :root {
+      --paper: #f4efe6;
+      --card: #fffdf9;
+      --ink: #1a1917;
+      --muted: #6b655c;
+      --accent: #c84b31;
+      --sage: #2d6a4f;
+      --ochre: #b45309;
+      --line: #d6cfc2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px 18px 72px;
+    }
+
+    /* Editorial Masthead */
+    .masthead {
+      border-top: 3px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      padding: 18px 0 0;
+      margin-bottom: 24px;
+    }
+
+    .kicker {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .tab-btn {
+      cursor: pointer;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 10px 16px;
+      border: 1px solid var(--ink);
+      border-bottom: none;
+      background: #e8e1d3;
+      color: var(--ink);
+      transition: background 0.15s;
+    }
+
+    .tab-btn.active {
+      background: var(--card);
+      font-weight: 700;
+      position: relative;
+      top: 1px;
+      padding-bottom: 11px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    button.action {
+      cursor: pointer;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 7px 12px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--card);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    button.action:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    button.ghost {
+      background: var(--card);
+      color: var(--ink);
+    }
+
+    /* Section Blocks */
+    .lesson-block {
+      background: var(--card);
+      border: 1px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      padding: 22px;
+      margin-bottom: 26px;
+    }
+
+    .block-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px dashed var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+
+    .block-head h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.3rem;
+    }
+
+    /* Manual Word Highlighting */
+    .prompt-sheet {
+      background: #faf6ee;
+      border: 1px solid var(--line);
+      padding: 16px 18px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.02rem;
+      margin-bottom: 14px;
+      line-height: 1.8;
+    }
+
+    .word-btn {
+      cursor: pointer;
+      padding: 1px 2px;
+      border-radius: 2px;
+      transition: background 0.1s;
+    }
+
+    .word-btn:hover { background: #efe6d5; }
+    .word-btn.highlighted { background: #fde68a; font-weight: 600; }
+
+    /* Drag & Drop Card System */
+    .tray-label {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .card-tray {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-height: 62px;
+      padding: 12px;
+      background: #f7f3eb;
+      border: 1px dashed var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .drag-card {
+      background: var(--card);
+      border: 1px solid var(--ink);
+      box-shadow: 2px 2px 0 var(--ink);
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.1s, opacity 0.15s;
+    }
+
+    .drag-card:active { cursor: grabbing; }
+    .drag-card.dragging { opacity: 0.45; transform: scale(0.98); }
+    .drag-card.correct { border-color: var(--sage); background: #ecfdf5; box-shadow: 2px 2px 0 var(--sage); }
+    .drag-card.wrong { border-color: var(--accent); background: #fef2f2; box-shadow: 2px 2px 0 var(--accent); }
+
+    .columns-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .columns-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .drop-col {
+      border: 1px solid var(--ink);
+      background: #faf8f4;
+      min-height: 130px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+
+    .drop-col.over { background: #efe9dc; }
+
+    .col-title {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 6px;
+      margin-bottom: 4px;
+    }
+
+    /* Vertical Sortable Stack (Tab 4 Ex 1) */
+    .stack-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stack-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--ink);
+      box-shadow: 2px 2px 0 var(--ink);
+      padding: 10px 14px;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .stack-item.dragging { opacity: 0.4; }
+    .stack-item.correct { border-color: var(--sage); background: #ecfdf5; box-shadow: 2px 2px 0 var(--sage); }
+    .stack-item.wrong { border-color: var(--accent); background: #fef2f2; box-shadow: 2px 2px 0 var(--accent); }
+
+    .stack-handle {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    /* Inputs & Tables */
+    .note-grid {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .note-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .note-row { grid-template-columns: 1fr; gap: 4px; }
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--ink);
+      background: #fff;
+      font-family: inherit;
+      font-size: 0.92rem;
+    }
+
+    textarea { resize: vertical; line-height: 1.5; }
+
+    .item-row {
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--line);
+      display: grid;
+      gap: 8px;
+    }
+
+    .item-row:last-child { border-bottom: none; }
+
+    .status-msg {
+      margin-top: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85rem;
+      padding: 10px 12px;
+      display: none;
+    }
+
+    .status-msg.show { display: block; border: 1px solid var(--ink); background: #f7f3eb; }
+
+    /* Clickable Option Boxes (Tab 2 Ex 2) */
+    .choice-boxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .choice-box {
+      cursor: pointer;
+      padding: 6px 14px;
+      border: 1px solid var(--ink);
+      background: #faf8f4;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85rem;
+      transition: all 0.1s;
+    }
+
+    .choice-box:hover { background: #efe9dc; }
+    .choice-box.selected { background: var(--ink); color: var(--card); font-weight: 700; }
+    .choice-box.correct { background: var(--sage); color: #fff; border-color: var(--sage); }
+    .choice-box.wrong { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Inline Error Spotter (Tab 2 Ex 1) */
+    .err-sentence {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .err-fix-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Inline Noun Replacement (Tab 4 Ex 2) */
+    .inline-select {
+      width: auto;
+      display: inline-block;
+      padding: 2px 6px;
+      margin: 0 3px;
+      font-weight: 600;
+      border: 1px solid var(--accent);
+      background: #fff5f2;
+    }
+
+    /* Vocab Deck */
+    .vocab-deck {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .vocab-card {
+      border: 1px solid var(--ink);
+      padding: 10px;
+      background: #faf8f4;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .vocab-card.picked {
+      background: #ecfdf5;
+      border-color: var(--sage);
+      box-shadow: 2px 2px 0 var(--sage);
+    }
+
+    .vocab-term {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+
+    .vocab-ex { font-size: 0.84rem; color: var(--muted); }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .radio-opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      background: #faf8f4;
+      cursor: pointer;
+    }
+
+    .word-counter {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 6px;
+      color: var(--sage);
+    }
+  </style>
+<style>
+
+/* Language Lab contents sidebar. Desktop dock; mobile drawer. */
+:root{--ll-side-width:264px;--ll-side-bg:#172d38;--ll-side-text:#f5f1e8;--ll-side-muted:#b7c8ce;--ll-side-line:#405762;--ll-side-active:#174b60}
+html.ll-sidebar-ready body{box-sizing:border-box;min-width:0;padding-left:0;transition:none}
+html.ll-sidebar-ready #ll-contents[hidden],html.ll-sidebar-ready #ll-shade[hidden]{display:none!important}
+html.ll-sidebar-ready .ll-header select.ll-select,html.ll-sidebar-ready #jump{display:none!important}
+html.ll-sidebar-ready #ll-contents{position:fixed;inset:0 auto 0 0;width:var(--ll-side-width);max-width:calc(100vw - 44px);height:100vh;height:100dvh;z-index:300;background:var(--ll-side-bg);color:var(--ll-side-text);display:flex;flex-direction:column;overflow:hidden;font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-sizing:border-box;text-align:left;box-shadow:none}
+#ll-contents *{box-sizing:border-box;min-width:0;overflow-wrap:anywhere}
+#ll-contents .ll-menu-head{padding:13px 12px;border-bottom:1px solid var(--ll-side-line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none}
+#ll-contents .ll-menu-brand{font:750 11px/1.35 system-ui,sans-serif;letter-spacing:.1em;color:#fff}
+#ll-contents .ll-menu-title{font:600 16px/1.25 Georgia,serif;color:#f5f1e8;margin:3px 0 0}
+#ll-contents .ll-menu-close{background:transparent;color:white;border:1px solid #8299a2;border-radius:3px;padding:5px 8px;min-height:36px;min-width:38px;font:14px/1.3 system-ui,sans-serif;flex:none;cursor:pointer}
+#ll-contents .ll-menu-scroll{overflow:auto;overscroll-behavior:contain;flex:1;min-height:0;padding:9px 0 18px;scrollbar-width:thin;scrollbar-color:#657e88 var(--ll-side-bg)}
+#ll-contents .ll-menu-label{color:var(--ll-side-muted);font:700 10px/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;margin:11px 12px 5px}
+#ll-contents .ll-menu-guides{padding-bottom:10px;margin-bottom:8px;border-bottom:1px solid var(--ll-side-line)}
+#ll-contents .ll-menu-link,#ll-contents .ll-menu-item{display:block;width:100%;color:var(--ll-side-text);background:transparent;border:0;border-left:3px solid transparent;border-radius:0;box-shadow:none;text-decoration:none;text-align:left;font:14px/1.4 system-ui,sans-serif;padding:9px 11px 9px 14px;min-height:40px;margin:0;cursor:pointer;transform:none}
+#ll-contents .ll-menu-link[aria-current=page],#ll-contents .ll-menu-item[aria-current=step]{background:var(--ll-side-active);border-left-color:#edb28b;color:#fff;font-weight:650}
+#ll-contents .ll-menu-link:hover,#ll-contents .ll-menu-item:hover,#ll-contents summary:hover{background:#284754;color:#fff;box-shadow:none;transform:none}
+#ll-contents details{border:0;margin:0;padding:0}
+#ll-contents details>summary{cursor:pointer;color:#e2ecef;padding:9px 12px;min-height:40px;font:650 12px/1.45 system-ui,sans-serif;letter-spacing:.035em;border-top:1px solid #314953;list-style-position:inside}
+#ll-contents details>summary::marker{color:#edb28b}
+#ll-contents .ll-menu-number{color:#b9cbd1;font:12px/1.35 system-ui,sans-serif;display:inline-block;min-width:25px;margin-right:4px;font-variant-numeric:tabular-nums}
+#ll-contents .ll-menu-item[aria-current=step] .ll-menu-number{color:#f4c3a7}
+#ll-contents :focus-visible,#ll-contents summary:focus-visible,#ll-menu-toggle:focus-visible{outline:2px solid #f0b077;outline-offset:-3px}
+#ll-contents .ll-menu-count{padding:10px 12px;border-top:1px solid var(--ll-side-line);font:12px/1.35 system-ui,sans-serif;color:var(--ll-side-muted);flex:none;font-variant-numeric:tabular-nums}
+#ll-shade{position:fixed;inset:0;z-index:299;background:#172d387d;border:0;padding:0;margin:0;cursor:pointer}
+#ll-menu-toggle{background:#172d38;color:#fff;border:1px solid #a9b8bf;border-radius:3px;font:650 14px/1.3 system-ui,sans-serif;padding:5px 9px;min-height:36px;max-width:100%;cursor:pointer}
+#ll-menu-toggle:hover{background:#284754;border-color:#f4c3a7}
+html.ll-sidebar-ready .ll-header-inner,html.ll-sidebar-ready body>header:not(.ll-header){min-width:0}
+@media(min-width:901px){html.ll-sidebar-ready.ll-menu-open body{padding-left:var(--ll-side-width)}html.ll-sidebar-ready #ll-shade{display:none!important}}
+@media(min-width:901px) and (max-width:1100px){html.ll-menu-open .layout,html.ll-menu-open .pair-grid{grid-template-columns:1fr}html.ll-menu-open #screen,html.ll-menu-open #main,html.ll-menu-open .wrap{padding:24px 18px}html.ll-menu-open .chapter-header h2,html.ll-menu-open .ll-screen-heading{font-size:1.8rem}}
+@media(max-width:900px){html.ll-sidebar-ready body{padding-left:0}html.ll-sidebar-ready #ll-contents{box-shadow:5px 0 18px #172d3850}html.ll-sidebar-ready.ll-menu-open body{overflow:hidden}}
+@media print{html.ll-sidebar-ready body{padding-left:0!important;overflow:visible!important}#ll-contents,#ll-shade,#ll-menu-toggle{display:none!important}}
+
+</style>
+<style>
+/* Language Lab: embedded, standalone visual system. */
+:root{--ll-paper:#f5f1e8;--ll-ink:#202a30;--ll-blue:#174b60;--ll-deep:#172d38;--ll-accent:#a33f27;--ll-line:#c9c5ba;--ll-card:#fffdf7;--ll-muted:#59636a;--main-bg:var(--ll-paper);--sidebar-bg:var(--ll-deep);--text:var(--ll-ink);--text-light:var(--ll-muted);--ink:var(--ll-ink);--accent:var(--ll-accent);--border:var(--ll-line);--line:var(--ll-line);--blue-note:var(--ll-blue);--green-note:#2d6043;--sage:#2d6043;--amber:#8b541b;--ochre:#8b541b;--table-head:#e9e3d8;--muted:var(--ll-muted);--card:var(--ll-card)}
+html{font-size:20px}html.ll-guide{--paper:var(--ll-card)}html.ll-essay{--paper:var(--ll-paper)}
+.ll-ready body{display:block;margin:0;min-width:0;background:var(--ll-paper);color:var(--ll-ink);font:1rem/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-wrap:anywhere}
+.ll-ready #sidebar,.ll-ready #sidebarToggle,.ll-ready .panel-nav,.ll-ready .masthead{display:none!important}
+.ll-ready body.sidebar-open{overflow:auto}.ll-ready body.sidebar-open main::before{display:none}
+.ll-ready #main,.ll-ready .wrap{margin:0 auto;width:100%;max-width:1200px;min-width:0;min-height:60vh;padding:clamp(16px,4vw,52px);overflow:visible}
+.ll-ready .chapter-header{background:transparent;padding:0 0 16px;border:0}
+.ll-ready .chapter-header h2,.ll-ready .ll-screen-heading{font:600 2.25rem/1.14 Georgia,"Times New Roman",serif;letter-spacing:-.035em;color:var(--ll-ink);margin:0 0 .5em;overflow-wrap:anywhere}
+.ll-ready .chapter-header .part-label,.ll-ready .chapter-header .ch-number,.ll-stage{font:650 .7rem/1.4 system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ll-accent);margin:0 0 12px}
+.ll-ready .chapter-body{padding:0;max-width:none;min-width:0}.ll-ready .chapter-body h3,.ll-ready .block-head h2{font:650 1.12rem/1.3 system-ui,sans-serif;letter-spacing:0;color:var(--ll-ink);border-bottom:1px solid var(--ll-line);padding-bottom:8px;margin:1.6em 0 .65em}.ll-ready .chapter-body h3:first-child{margin-top:0}
+.ll-ready .chapter-body h4{font:700 .82rem/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:1.2em 0 .5em;color:var(--ll-blue)}
+.ll-ready p{margin:0 0 .75em}.ll-ready .chapter-body ul,.ll-ready .chapter-body ol{padding-left:1.2em;margin:.5em 0 .85em}.ll-ready .chapter-body li{margin:.3em 0}.ll-ready .intro-lead{font:1.35rem/1.4 Georgia,serif;color:var(--ll-blue)}.ll-ready a{color:var(--ll-blue);text-underline-offset:.15em}.ll-ready strong{color:inherit}
+.ll-ready .example-sentence,.ll-ready .task-block,.ll-ready .prompt-sheet{background:var(--ll-card);color:var(--ll-ink);border:0;border-left:3px solid var(--ll-blue);border-radius:0;box-shadow:none;padding:.7em .85em;margin:.8em 0;font:1.12rem/1.45 Georgia,serif}
+.ll-ready .task-block,.ll-ready .prompt-sheet{background:var(--ll-blue);color:white;border-left:3px solid var(--ll-accent)}.ll-ready .task-block strong,.ll-ready .prompt-sheet strong,.ll-ready .task-block a,.ll-ready .prompt-sheet a{color:white}
+.ll-ready .task-block .key-tag,.ll-ready .example-sentence .key-word{background:#f5e2bc;color:var(--ll-deep);border:0;font:750 .78rem/1.45 system-ui,sans-serif;padding:.12em .5em}.ll-ready .task-block .gap-line,.ll-ready .example-sentence .gap-marker{min-width:min(5em,100%);max-width:100%;border-color:#d4ae7e}
+.ll-ready .answer-block,.ll-ready .rule-box,.ll-ready .thinking-box,.ll-ready .check-box,.ll-ready .danger-box,.ll-ready .note-box,.ll-ready .formula-box,.ll-ready .step-block,.ll-ready .aspect-card,.ll-ready .routine-display,.ll-ready .pair-card{border:0;border-left:3px solid var(--ll-blue);border-radius:0;box-shadow:none;padding:.7em .85em;margin:.75em 0;background:var(--ll-card);color:var(--ll-ink)}
+.ll-ready .answer-block{background:#e1ebdf;border-color:#46784c}.ll-ready .danger-box{background:#f2e0da;border-color:var(--ll-accent)}.ll-ready .rule-box{background:#eee7d9;border-color:var(--ll-accent);font-size:1rem}.ll-ready .thinking-box{background:#e9e3d8;border-color:#8b541b}.ll-ready .check-box,.ll-ready .note-box{background:#e6eceb;border-color:var(--ll-blue)}
+.ll-ready .pattern-box,.ll-ready .formula-box{background:var(--ll-blue);color:white;border-color:var(--ll-accent);white-space:normal;overflow-wrap:anywhere}.ll-ready .pattern-box{border-radius:0;padding:.7em .85em;font:.95rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.ll-ready .formula-box code,.ll-ready .pattern-box code{background:#e6eceb;color:var(--ll-deep)}.ll-ready .formula-box strong,.ll-ready .formula-box a,.ll-ready .pattern-box strong,.ll-ready .pattern-box a{color:white}
+.ll-ready .part-intro{background:var(--ll-blue);color:white;padding:.8em 1em;font:1.05rem/1.5 Georgia,serif}.ll-ready .answer-text,.ll-ready .full-sentence,.ll-ready .check-box li,.ll-ready .routine-display{font-size:1rem}.ll-ready .routine-tag,.ll-ready .step-label{border-radius:3px}
+.ll-ready .pair-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.ll-ready .pair-grid>*{min-width:0}.ll-ready table{border-collapse:collapse;box-shadow:none;border-radius:0;font-size:.9rem;max-width:none;width:100%;margin:0;overflow:visible}.ll-ready th,.ll-ready td{font-family:inherit;font-size:inherit;white-space:normal;overflow-wrap:normal;vertical-align:top;padding:.45em .5em;border-bottom:1px solid var(--ll-line)}.ll-ready th{background:#e9e3d8;color:var(--ll-ink);text-transform:none;letter-spacing:0;font-weight:700}
+.ll-table{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;margin:.8em 0}.ll-table table{min-width:var(--ll-table-width,0px)}.ll-ready code{font:.85em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.ll-ready .footnotes{font-size:.8rem;margin-top:1.5em;padding-top:1em}.ll-answer{margin:.65em 0;border-bottom:1px solid var(--ll-line);padding-bottom:.4em}.ll-answer summary{cursor:pointer;color:var(--ll-blue);font:650 14px/1.4 system-ui,sans-serif;padding:8px 0;min-height:38px}
+.ll-ready .lesson-block{box-shadow:none;border:0;border-radius:0;background:transparent;padding:0;margin:0;min-width:0}.ll-ready .lesson-block .block-head{display:none}.ll-ready .tab-panel.active>.lesson-block:not(.ll-current){display:none}.ll-ready .word-btn{cursor:pointer;border-bottom:1px dotted #b3b2aa}.ll-ready .prompt-sheet .word-btn:hover,.ll-ready .prompt-sheet .word-btn.highlighted{color:var(--ll-ink);background:#f5e2bc}
+.ll-ready .card-tray,.ll-ready .drop-col{background:#eee9df;border:1px solid var(--ll-line);border-radius:0;min-width:0;padding:10px}.ll-ready .drop-col{border-top:3px solid var(--ll-blue);min-height:74px}.ll-ready .columns-3,.ll-ready .columns-4,.ll-ready .vocab-deck{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px}
+.ll-ready .drag-card,.ll-ready .stack-item,.ll-ready .vocab-card,.ll-ready .radio-opt{background:var(--ll-card);color:var(--ll-ink);border:1px solid #9da5a0;box-shadow:none;border-radius:3px;max-width:100%;min-width:0;padding:.45em .55em;overflow-wrap:anywhere;font-size:1rem}.ll-ready .drag-card.correct,.ll-ready .stack-item.correct,.ll-ready .vocab-card.picked{background:#dce9d8;color:#163b21;border-color:#46784c}.ll-ready .drag-card.wrong,.ll-ready .stack-item.wrong{background:#f2dbd4;color:#652319;border-color:#a33f27}.ll-ready .drag-card.ll-selected{outline:3px solid #a33f27;outline-offset:-3px}.ll-ready .drop-zone.ll-target{outline:2px dashed #174b60;outline-offset:-2px;cursor:pointer}
+.ll-ready .stack-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto}.ll-ready .ll-stack-controls{display:flex;gap:4px;flex-wrap:wrap;justify-content:end}.ll-ready .ll-stack-controls button{font:650 16px/1 system-ui,sans-serif;padding:5px 8px;min-height:36px}.ll-ready .col-title,.ll-ready .tray-label{font:700 .72rem/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em}.ll-ready .vocab-term{font-size:1rem}.ll-ready .vocab-ex{font-size:.86rem}
+.ll-ready .status-msg.show{background:#e6eceb;color:var(--ll-ink);border:0;border-left:3px solid var(--ll-blue);font:.9rem/1.5 system-ui,sans-serif;padding:.65em .8em}.ll-ready button,.ll-ready input,.ll-ready select,.ll-ready textarea{font-family:inherit}.ll-ready button{border-radius:3px;cursor:pointer;max-width:100%;overflow-wrap:anywhere}.ll-ready button.action,.ll-ready .choice-box{background:var(--ll-blue);color:white;border:1px solid var(--ll-blue);min-height:40px;font:600 .85rem/1.4 system-ui,sans-serif;letter-spacing:0;text-transform:none;padding:7px 11px;box-shadow:none;transform:none}.ll-ready button.action.ghost,.ll-ready .choice-box{background:var(--ll-card);color:var(--ll-ink);border-color:#8b918f}.ll-ready .choice-box.selected{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-ready .choice-box.correct{background:#2d6043;color:white}.ll-ready .choice-box.wrong{background:var(--ll-accent);color:white}.ll-ready button:hover{border-color:var(--ll-accent);transform:none;box-shadow:none}.ll-ready button:disabled{cursor:default;opacity:1;background:#e6e3db;color:#59636a;border-color:#b3b2aa}
+.ll-ready button:focus-visible,.ll-ready input:focus-visible,.ll-ready select:focus-visible,.ll-ready textarea:focus-visible,.ll-ready [tabindex]:focus-visible{outline:3px solid #cb8433;outline-offset:2px}.ll-ready input[type=text],.ll-ready select:not(.ll-select),.ll-ready textarea{max-width:100%;min-width:0;font:inherit;color:var(--ll-ink);background:var(--ll-card);border:1px solid #8b918f;border-radius:3px}.ll-ready .note-row,.ll-ready .err-fix-row{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}.ll-ready .inline-select{width:auto;max-width:100%;font-size:.9em}.ll-ready .word-counter{font:600 .8rem/1.4 system-ui,sans-serif}.ll-ready .radio-opt input{flex:none;margin-top:.35em}.ll-ready .radio-opt{align-items:flex-start}.ll-ready .checkbox-cell{width:24px;height:24px;vertical-align:middle}.ll-ready .chapter-panel.active{animation:none}
+.ll-header{background:var(--ll-deep);color:white}.ll-header-inner{max-width:1200px;margin:auto;padding:8px 12px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;font:14px/1.4 system-ui,sans-serif}.ll-brand{font-size:12px;letter-spacing:.095em;font-weight:750}.ll-controls{display:flex;gap:5px;align-items:center;flex-wrap:wrap;min-width:0;max-width:100%}.ll-header button,.ll-header select.ll-select{font:14px/1.3 system-ui,sans-serif;min-height:36px;color:white;background:var(--ll-deep);border:1px solid #a9b8bf;border-radius:3px;padding:5px 8px;max-width:100%;min-width:0;width:auto}.ll-header select.ll-select{max-width:260px}.ll-header option{background:var(--ll-deep);color:white}.ll-header button:disabled{color:#c7d1d5;background:#334853;border-color:#75858a}.ll-progress{height:4px;background:#d8d5ca}.ll-progress>div{height:100%;background:var(--ll-accent);width:0}
+.ll-footer{max-width:1200px;margin:auto;padding:12px clamp(12px,4vw,52px);border-top:1px solid var(--ll-line);display:flex;justify-content:space-between;align-items:center;gap:8px;font:14px/1.4 system-ui,sans-serif}.ll-footer button{font:600 14px/1.4 system-ui,sans-serif;min-height:40px;border:1px solid #8b918f;background:var(--ll-card);color:var(--ll-ink);padding:6px 12px;border-radius:3px}.ll-footer .ll-next{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-footer button:disabled{color:#59636a;background:#e6e3db;border-color:#b3b2aa}.ll-position{font-variant-numeric:tabular-nums;text-align:center;white-space:nowrap;color:var(--ll-muted)}.ll-shortcuts{font:12px/1.5 system-ui,sans-serif;text-align:center;color:var(--ll-muted);margin:0 0 16px}.ll-touch-tip{font:.8rem/1.45 system-ui,sans-serif;color:var(--ll-muted)}.ll-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:650px){.ll-ready #main,.ll-ready .wrap{padding:20px 14px;min-height:0}.ll-ready .chapter-header h2,.ll-ready .ll-screen-heading{font-size:1.65rem}.ll-ready .chapter-header{padding:0 0 10px}.ll-ready .pair-grid{grid-template-columns:1fr}.ll-ready .note-row,.ll-ready .err-fix-row{grid-template-columns:minmax(0,1fr)}.ll-header select.ll-select{max-width:min(100%,200px)}.ll-ready .stack-item{grid-template-columns:minmax(0,1fr) auto}.ll-ready .stack-handle{display:none}.ll-ready .task-block,.ll-ready .prompt-sheet{padding:.6em}.ll-footer{padding:10px 12px}}
+@media(max-width:380px){.ll-header-inner{gap:6px}.ll-controls{gap:4px}.ll-header select.ll-select{max-width:165px}.ll-header button,.ll-header select.ll-select{padding:4px 6px}}
+@media(prefers-reduced-motion:reduce){.ll-ready *{animation:none!important;transition:none!important}}
+@media print{.ll-header,.ll-footer,.ll-shortcuts,.ll-progress{display:none!important}.ll-ready #main,.ll-ready .wrap{padding:0;max-width:none}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div class="kicker">Cambridge B2 First · Writing Workshop</div>
+      <h1>B2 Essay Task Lab</h1>
+      <nav class="tab-bar">
+        <button class="tab-btn active" onclick="openTab('tab1', this)">1. Decode the Task</button>
+        <button class="tab-btn" onclick="openTab('tab2', this)">2. Grammar Accuracy</button>
+        <button class="tab-btn" onclick="openTab('tab3', this)">3. Paragraph Structure</button>
+        <button class="tab-btn" onclick="openTab('tab4', this)">4. Cohesion &amp; Word Count</button>
+      </nav>
+    </header>
+
+    <!-- ==================== TAB 1: DECODE THE TASK ==================== -->
+    <div id="tab1" class="tab-panel active">
+      <section class="lesson-block">
+        <div class="block-head"><h2>1. Highlight the Requirements</h2></div>
+        <p>Click any words in the prompt below to highlight the <strong>question</strong>, the <strong>three notes</strong>, and the <strong>word limit</strong>.</p>
+        <div class="prompt-sheet" id="promptSheet"></div>
+        <button class="action ghost" onclick="clearHighlights('promptSheet')">Clear Highlights</button>
+        <button class="action ghost" onclick="toggleEl('key1')">Show Key Requirements</button>
+        <div id="key1" class="status-msg">
+          <strong>Key Requirements:</strong><br>
+          • Question: <em>Do you agree?</em><br>
+          • Notes: <em>1. studying</em>, <em>2. getting experience</em>, <em>3. exploitation (your own idea)</em><br>
+          • Word limit: <em>140–190 words</em>
+        </div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>2. Sort the Cards</h2></div>
+        <p>Drag each card from the tray into the correct column.</p>
+        <div class="tray-label">Card Tray</div>
+        <div class="card-tray drop-zone" id="tray2" data-zone="tray"></div>
+        <div class="columns-3">
+          <div class="drop-col drop-zone" data-zone="Must include"><div class="col-title">Must Include</div></div>
+          <div class="drop-col drop-zone" data-zone="Optional"><div class="col-title">Optional</div></div>
+          <div class="drop-col drop-zone" data-zone="Irrelevant"><div class="col-title">Irrelevant</div></div>
+        </div>
+        <button class="action" onclick="checkZoneGroup('sort2', 'msg2')">Check Sorting</button>
+        <button class="action ghost" onclick="resetZoneGroup('tray2', sort2Data, 'sort2')">Reset Cards</button>
+        <div id="msg2" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>3. Turn Notes into Questions</h2></div>
+        <p>Write one guiding question for each required note.</p>
+        <div class="note-grid">
+          <div class="note-row"><strong>1. Studying</strong><input type="text" placeholder="e.g. How can a part-time job affect studying?" /></div>
+          <div class="note-row"><strong>2. Experience</strong><input type="text" placeholder="e.g. What skills can teenagers gain?" /></div>
+          <div class="note-row"><strong>3. Exploitation</strong><input type="text" placeholder="e.g. What are the risks of exploitation?" /></div>
+        </div>
+        <button class="action ghost" onclick="toggleEl('sample3')">Toggle Sample Questions</button>
+        <div id="sample3" class="status-msg">
+          • Studying: How can a part-time job affect studying?<br>
+          • Getting experience: What experience or skills can teenagers gain?<br>
+          • Exploitation: What are the risks of exploitation for young workers?
+        </div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>4. Match Ideas to Notes</h2></div>
+        <p>Drag each idea card into the matching note, or into <strong>Reject</strong> if it is off-topic.</p>
+        <div class="tray-label">Idea Cards</div>
+        <div class="card-tray drop-zone" id="tray4" data-zone="tray"></div>
+        <div class="columns-4">
+          <div class="drop-col drop-zone" data-zone="Studying"><div class="col-title">1. Studying</div></div>
+          <div class="drop-col drop-zone" data-zone="Getting experience"><div class="col-title">2. Experience</div></div>
+          <div class="drop-col drop-zone" data-zone="Exploitation"><div class="col-title">3. Exploitation</div></div>
+          <div class="drop-col drop-zone" data-zone="Reject"><div class="col-title">Reject (Off-topic)</div></div>
+        </div>
+        <button class="action" onclick="checkZoneGroup('match4', 'msg4')">Check Matches</button>
+        <button class="action ghost" onclick="resetZoneGroup('tray4', match4Data, 'match4')">Reset Cards</button>
+        <div id="msg4" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>5. 5-Line Outline &amp; Target Vocabulary</h2></div>
+        <p>Draft short phrases only. Click at least <strong>3 vocabulary cards</strong> below to include in your homework.</p>
+        <div class="note-grid">
+          <div class="note-row"><strong>Introduction</strong><input type="text" placeholder="Topic + clear opinion" /></div>
+          <div class="note-row"><strong>Note 1: Studying</strong><input type="text" placeholder="Point + reason/example" /></div>
+          <div class="note-row"><strong>Note 2: Experience</strong><input type="text" placeholder="Point + reason/example" /></div>
+          <div class="note-row"><strong>Note 3: Exploitation</strong><input type="text" placeholder="Point + reason/example" /></div>
+          <div class="note-row"><strong>Conclusion</strong><input type="text" placeholder="Restate opinion" /></div>
+        </div>
+        <button class="action ghost" onclick="toggleEl('sample5')">Toggle Example Outline</button>
+        <div id="sample5" class="status-msg">
+          Introduction: I believe part-time jobs can be beneficial.<br>
+          Note 1: Studying — manage time, but school comes first.<br>
+          Note 2: Experience — gain skills, meet people, work under pressure.<br>
+          Note 3: Exploitation — low pay, long hours, unfair conditions.<br>
+          Conclusion: Useful if safe, fair, and balanced with study.
+        </div>
+        <div class="vocab-deck" id="vocabDeck"></div>
+      </section>
+
+      <section class="lesson-block" style="border-left: 6px solid var(--sage);">
+        <div class="block-head"><h2>Homework: New Essay Prompt</h2></div>
+        <p>Apply the same decoding and planning steps to this <strong>new task</strong>, then write a full essay of <strong>170–185 words</strong>. Include at least <strong>3 selected vocabulary items</strong> naturally.</p>
+        <div class="prompt-sheet" style="margin-bottom:0;">
+          <p style="margin-top:0;"><em>Some people say that schools should spend more time teaching practical life skills instead of academic subjects.</em></p>
+          <p>Do you agree?</p>
+          <p>Write about:<br>1. future careers<br>2. daily independence<br>3. <em>your own idea</em></p>
+          <p style="margin-bottom:0;">Write your answer in 140–190 words in an appropriate style.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== TAB 2: GRAMMAR ACCURACY ==================== -->
+    <div id="tab2" class="tab-panel">
+      <section class="lesson-block">
+        <div class="block-head"><h2>1. Spot &amp; Fix 8 Deliberate Errors</h2></div>
+        <p>Step 1: Click the <strong>faulty word(s)</strong> in each sentence. Step 2: Type the <strong>correction</strong> in the box and click Check.</p>
+        <div id="grammarFixList"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>2. Quick Choice: Articles, Prepositions &amp; Verb Forms</h2></div>
+        <p>Click the correct option box for each of the 10 items.</p>
+        <div id="quickChoiceList"></div>
+        <button class="action" onclick="checkQuickChoice()" style="margin-top:10px;">Check Answers</button>
+        <div id="qcMsg" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>3. Fix 3 Unclear Sentences</h2></div>
+        <p>Rewrite each unclear sentence in natural B2 English, then compare with the multiple suggested versions.</p>
+        <div class="item-row">
+          <div><strong>1.</strong> <em>"Is this point of view that don’t grant to have young people to work."</em></div>
+          <input type="text" placeholder="Rewrite clearly..." />
+        </div>
+        <div class="item-row">
+          <div><strong>2.</strong> <em>"Nobody can imagine a day without speak, tell or also call in for something happen."</em></div>
+          <input type="text" placeholder="Rewrite clearly..." />
+        </div>
+        <div class="item-row">
+          <div><strong>3.</strong> <em>"Also, they come across in authentic and trusted relationship."</em></div>
+          <input type="text" placeholder="Rewrite clearly..." />
+        </div>
+        <button class="action ghost" onclick="toggleEl('unclearKey')" style="margin-top:10px;">Show Suggested Versions</button>
+        <div id="unclearKey" class="status-msg">
+          <strong>1.</strong><br>
+          • <em>This is why some people oppose teenagers having part-time jobs.</em><br>
+          • <em>For this reason, many people believe young people should not work.</em><br><br>
+          <strong>2.</strong><br>
+          • <em>People communicate every day to share news, ask for help, and stay in touch.</em><br>
+          • <em>It is hard to imagine a day without messaging, calling, or talking to others.</em><br><br>
+          <strong>3.</strong><br>
+          • <em>They can also build genuine, trusting relationships.</em><br>
+          • <em>In addition, spending time together helps people form stronger and more authentic bonds.</em>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== TAB 3: PARAGRAPH STRUCTURE ==================== -->
+    <div id="tab3" class="tab-panel">
+      <section class="lesson-block">
+        <div class="block-head"><h2>1. Order the Cut-Up Paragraph</h2></div>
+        <p>Drag the 4 sentence cards into the correct order: <strong>Topic Sentence → Explanation → Example → Link</strong>.</p>
+        <div class="tray-label">Sentence Cards</div>
+        <div class="card-tray drop-zone" id="trayP1" data-zone="tray"></div>
+        <div class="columns-4">
+          <div class="drop-col drop-zone" data-zone="1. Topic"><div class="col-title">1. Topic Sentence</div></div>
+          <div class="drop-col drop-zone" data-zone="2. Explanation"><div class="col-title">2. Explanation</div></div>
+          <div class="drop-col drop-zone" data-zone="3. Example"><div class="col-title">3. Example</div></div>
+          <div class="drop-col drop-zone" data-zone="4. Link"><div class="col-title">4. Link</div></div>
+        </div>
+        <button class="action" onclick="checkZoneGroup('paraOrder', 'msgP1')">Check Order</button>
+        <button class="action ghost" onclick="resetZoneGroup('trayP1', paraOrderData, 'paraOrder')">Reset Cards</button>
+        <div id="msgP1" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>2. Identify the Topic Sentence</h2></div>
+        <p>Select the topic sentence in each short paragraph.</p>
+        <div class="item-row">
+          <div><strong>Paragraph A:</strong></div>
+          <div class="radio-group">
+            <label class="radio-opt"><input type="radio" name="tsA" value="1"> A part-time job helps teenagers develop essential life skills.</label>
+            <label class="radio-opt"><input type="radio" name="tsA" value="0"> For example, working in a café teaches them how to deal with customers.</label>
+            <label class="radio-opt"><input type="radio" name="tsA" value="0"> As a result, they become more confident and independent.</label>
+          </div>
+        </div>
+        <div class="item-row">
+          <div><strong>Paragraph B:</strong></div>
+          <div class="radio-group">
+            <label class="radio-opt"><input type="radio" name="tsB" value="0"> Without the internet, keeping regular contact would be much harder.</label>
+            <label class="radio-opt"><input type="radio" name="tsB" value="1"> Online communication is especially valuable for people who live far from their families.</label>
+            <label class="radio-opt"><input type="radio" name="tsB" value="0"> Video calls allow relatives to share daily moments despite the distance.</label>
+          </div>
+        </div>
+        <button class="action" onclick="checkTopicSentences()">Check Selection</button>
+        <div id="tsMsg" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>3. Match Supporting Sentences to Main Ideas</h2></div>
+        <p>Drag each supporting sentence card to the matching main idea.</p>
+        <div class="tray-label">Supporting Sentences</div>
+        <div class="card-tray drop-zone" id="traySupp" data-zone="tray"></div>
+        <div class="columns-3">
+          <div class="drop-col drop-zone" data-zone="Time Management"><div class="col-title">Time Management</div></div>
+          <div class="drop-col drop-zone" data-zone="Exploitation"><div class="col-title">Exploitation</div></div>
+          <div class="drop-col drop-zone" data-zone="Face-to-Face"><div class="col-title">Face-to-Face</div></div>
+        </div>
+        <button class="action" onclick="checkZoneGroup('suppMatch', 'msgSupp')">Check Matches</button>
+        <button class="action ghost" onclick="resetZoneGroup('traySupp', suppData, 'suppMatch')">Reset Cards</button>
+        <div id="msgSupp" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>4. Choose the Best Topic Sentence</h2></div>
+        <p>Read the supporting ideas: <em>"Some employers pay teenagers low wages while expecting them to work long hours. Therefore, young workers need clear legal protection."</em></p>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="bestTS" value="0"> Teenagers often spend their money on clothes and entertainment.</label>
+          <label class="radio-opt"><input type="radio" name="bestTS" value="1"> On the other hand, there is a serious risk of exploitation when teenagers work.</label>
+          <label class="radio-opt"><input type="radio" name="bestTS" value="0"> Studying for exams requires a quiet environment at home.</label>
+        </div>
+        <button class="action" onclick="checkBestTS()">Check Choice</button>
+        <div id="bestTSMsg" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>5. Add a Missing Explanation or Example</h2></div>
+        <p>Complete the paragraph below by writing one supporting explanation or example:</p>
+        <div class="prompt-sheet">
+          "Online communication is fast and convenient. <strong>[Add your explanation or example here]</strong>. However, it cannot fully replace meeting someone in person."
+        </div>
+        <input type="text" placeholder="e.g. For instance, a quick message or video call lets busy friends stay in touch..." />
+      </section>
+    </div>
+
+    <!-- ==================== TAB 4: COHESION & WORD COUNT ==================== -->
+    <div id="tab4" class="tab-panel">
+      <section class="lesson-block">
+        <div class="block-head"><h2>1. Reorder the Cut-Up Essay (Vertical Stack)</h2></div>
+        <p>Drag the cards <strong>up or down</strong> into a logical essay sequence (Introduction → Body 1 → Body 2 → Body 3 → Conclusion).</p>
+        <div class="stack-list" id="essayStack"></div>
+        <button class="action" onclick="checkStackOrder()">Check Sequence</button>
+        <div id="msgEssay" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>2. Replace Repeated Nouns</h2></div>
+        <p>Choose a pronoun or synonym from the inline boxes to avoid repeating the same noun.</p>
+        <div class="prompt-sheet" id="repExercise">
+          <p style="margin-top:0;">1. Many <strong>teenagers</strong> want a part-time job. However,
+            <select class="inline-select" data-ans="they">
+              <option value="">--</option><option value="they">they</option><option value="teenagers">teenagers</option>
+            </select>
+            must remember that studying comes first for
+            <select class="inline-select" data-ans="young people">
+              <option value="">--</option><option value="young people">young people</option><option value="teenagers">teenagers</option>
+            </select>.
+          </p>
+          <p>2. Online <strong>communication</strong> is convenient, and
+            <select class="inline-select" data-ans="it">
+              <option value="">--</option><option value="it">it</option><option value="communication">communication</option>
+            </select>
+            helps families stay close.
+          </p>
+          <p>3. Some <strong>employers</strong> pay low wages. For this reason,
+            <select class="inline-select" data-ans="these companies">
+              <option value="">--</option><option value="these companies">these companies</option><option value="employers">employers</option>
+            </select>
+            should be regulated.
+          </p>
+          <p style="margin-bottom:0;">4. Learning <strong>time management</strong> is useful because
+            <select class="inline-select" data-ans="this skill">
+              <option value="">--</option><option value="this skill">this skill</option><option value="time management">time management</option>
+            </select>
+            prepares students for university.
+          </p>
+        </div>
+        <button class="action" onclick="checkInlineReps()">Check Replacements</button>
+        <div id="repMsg" class="status-msg"></div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>3. Highlight Repetition &amp; Vague Phrases</h2></div>
+        <p>Click on any words that feel repetitive, vague, or unnecessary in this paragraph:</p>
+        <div class="prompt-sheet" id="vagueSheet"></div>
+        <button class="action ghost" onclick="clearHighlights('vagueSheet')">Clear Highlights</button>
+        <button class="action ghost" onclick="toggleEl('vagueKey')">Show Suggested Answers</button>
+        <div id="vagueKey" class="status-msg">
+          <strong>Repetitive / Vague Phrases to Cut:</strong><br>
+          • <em>"something without which it is impossible to live"</em> → vague &amp; wordy (replace with <em>"essential"</em>)<br>
+          • <em>"in modern society today"</em> → repetitive (<em>"Nowadays"</em> and <em>"today"</em> mean the same thing)<br>
+          • <em>"many different things and reasons every single day"</em> → vague filler (specify 1–2 concrete reasons instead)
+        </div>
+      </section>
+
+      <section class="lesson-block">
+        <div class="block-head"><h2>4. Choose the Best Shorter Version</h2></div>
+        <div id="shortList"></div>
+        <button class="action" onclick="checkShortAll()" style="margin-top:10px;">Check Choices</button>
+        <div id="shortMsg" class="status-msg"></div>
+      </section>
+
+<section class="lesson-block">
+  <div class="block-head"><h2>5. Trim a 220-Word Text to ~180 Words</h2></div>
+  <div class="prompt-sheet" style="margin-bottom:12px;">
+    <strong>Essay Prompt:</strong> <em>Some people think that cars should be banned from city centres. Do you agree?</em><br>
+    Write about: <strong>1.</strong> pollution &nbsp; <strong>2.</strong> public transport &nbsp; <strong>3.</strong> local businesses (your own idea)
+  </div>
+  <p>Delete repetition, cut vague filler, or combine sentences below to bring the word count between <strong>170 and 185 words</strong>.</p>
+  <textarea id="trimBox" rows="9" oninput="updateWordCount()">Nowadays, in modern society today, traffic in big cities has become a very serious problem that affects everyone. In my personal opinion, I completely agree that cars should be banned from city centres. First of all, banning cars would significantly reduce air pollution in the city. At the moment, there are far too many cars on the roads, and these cars produce dangerous exhaust fumes that are bad for people’s lungs and health. As a result, cleaner air would make the city centre a much healthier place to live and walk around. Furthermore, if cars are not allowed in the centre, governments will need to improve public transport. Buses and trains would have to be more frequent, reliable, and affordable for all citizens. When public transport is fast and convenient, people will be happy to leave their private vehicles at home. On the other hand, some shop owners worry that banning cars might be a threat to local businesses. They think that fewer customers will visit their shops. However, pedestrian-only streets often attract more shoppers who enjoy walking safely without traffic. In conclusion, to sum up everything I have said, banning cars from city centres is a great idea because it reduces pollution and encourages better public transport.</textarea>
+  <div class="word-counter" id="wcDisplay">Word count: 0 words</div>
+  <button class="action ghost" onclick="toggleEl('trimKey')" style="margin-top:10px;">Show Visual Comparison (~178 Words)</button>
+  <div id="trimKey" class="status-msg" style="line-height:1.7;">
+    <strong>Visual Diff (Red = Cut, Green = Tightened):</strong><br><br>
+    Nowadays, <span style="text-decoration:line-through;color:#c84b31;">in modern society today,</span> traffic in big cities has become a <span style="text-decoration:line-through;color:#c84b31;">very</span> serious problem <span style="text-decoration:line-through;color:#c84b31;">that affects everyone</span>. <span style="text-decoration:line-through;color:#c84b31;">In my personal opinion,</span> I completely agree that cars should be banned from city centres.<br><br>
+    First of all, <span style="color:#2d6a4f;font-weight:700;">this measure</span> <span style="text-decoration:line-through;color:#c84b31;">banning cars</span> would significantly reduce air pollution <span style="text-decoration:line-through;color:#c84b31;">in the city</span>. <span style="text-decoration:line-through;color:#c84b31;">At the moment, there are far too many cars on the roads, and these cars</span> <span style="color:#2d6a4f;font-weight:700;">Currently, vehicles</span> produce dangerous <span style="text-decoration:line-through;color:#c84b31;">exhaust</span> fumes that <span style="color:#2d6a4f;font-weight:700;">harm</span> <span style="text-decoration:line-through;color:#c84b31;">are bad for</span> people’s lungs <span style="text-decoration:line-through;color:#c84b31;">and health</span>. <span style="text-decoration:line-through;color:#c84b31;">As a result,</span> Cleaner air would make the city centre <span style="text-decoration:line-through;color:#c84b31;">a much</span> healthier <span style="text-decoration:line-through;color:#c84b31;">place</span> to live and walk around.<br><br>
+    Furthermore, <span style="color:#2d6a4f;font-weight:700;">banning cars</span> <span style="text-decoration:line-through;color:#c84b31;">if cars are not allowed in the centre, governments</span> would <span style="color:#2d6a4f;font-weight:700;">encourage</span> <span style="text-decoration:line-through;color:#c84b31;">need to improve</span> <span style="color:#2d6a4f;font-weight:700;">better</span> public transport. Buses and trains would have to be more frequent, reliable, and affordable <span style="text-decoration:line-through;color:#c84b31;">for all citizens</span>. When public transport is <span style="color:#2d6a4f;font-weight:700;">convenient</span> <span style="text-decoration:line-through;color:#c84b31;">fast and convenient</span>, people will <span style="text-decoration:line-through;color:#c84b31;">be happy to</span> leave their <span style="text-decoration:line-through;color:#c84b31;">private</span> vehicles at home.<br><br>
+    On the other hand, some shop owners worry that <span style="color:#2d6a4f;font-weight:700;">this ban</span> <span style="text-decoration:line-through;color:#c84b31;">banning cars</span> might <span style="color:#2d6a4f;font-weight:700;">threaten</span> <span style="text-decoration:line-through;color:#c84b31;">be a threat to</span> local businesses <span style="text-decoration:line-through;color:#c84b31;">They think that fewer customers will visit their shops</span>. However, pedestrian-only streets often attract more shoppers who enjoy walking safely <span style="text-decoration:line-through;color:#c84b31;">without traffic</span>.<br><br>
+    In conclusion, <span style="text-decoration:line-through;color:#c84b31;">to sum up everything I have said,</span> banning cars from city centres is <span style="color:#2d6a4f;font-weight:700;">beneficial</span> <span style="text-decoration:line-through;color:#c84b31;">a great idea</span> because it reduces pollution and <span style="color:#2d6a4f;font-weight:700;">improves</span> <span style="text-decoration:line-through;color:#c84b31;">encourages better</span> public transport.
+  </div>
+</section>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function openTab(tabId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function toggleEl(id) {
+      document.getElementById(id).classList.toggle('show');
+    }
+
+    // Manual word-by-word highlighting helper
+    function buildHighlightSheet(containerId, lines) {
+      const container = document.getElementById(containerId);
+      lines.forEach(line => {
+        const p = document.createElement('p');
+        p.style.margin = '4px 0';
+        const words = line.split(' ');
+        words.forEach((word, i) => {
+          const span = document.createElement('span');
+          span.className = 'word-btn';
+          span.textContent = word;
+          span.addEventListener('click', () => span.classList.toggle('highlighted'));
+          p.appendChild(span);
+          if (i < words.length - 1) p.appendChild(document.createTextNode(' '));
+        });
+        container.appendChild(p);
+      });
+    }
+
+    function clearHighlights(containerId) {
+      document.querySelectorAll(`#${containerId} .word-btn.highlighted`).forEach(el => el.classList.remove('highlighted'));
+    }
+
+    buildHighlightSheet('promptSheet', [
+      "Some people think teenagers should have a part-time job in their free time.",
+      "Do you agree?",
+      "Write about:",
+      "1. studying",
+      "2. getting experience",
+      "3. exploitation (your own idea)",
+      "Write your answer in 140–190 words in an appropriate style."
+    ]);
+
+    buildHighlightSheet('vagueSheet', [
+      "Nowadays, online communication is considered something without which it is impossible to live in modern society today. Also, people use it for many different things and reasons every single day."
+    ]);
+
+    // Drag & Drop Engine (Columns)
+    let draggedCard = null;
+    function createCard(text, ans, group) {
+      const div = document.createElement('div');
+      div.className = 'drag-card';
+      div.draggable = true;
+      div.textContent = text;
+      div.dataset.ans = ans;
+      div.dataset.group = group;
+      div.addEventListener('dragstart', () => { draggedCard = div; div.classList.add('dragging'); });
+      div.addEventListener('dragend', () => { div.classList.remove('dragging'); draggedCard = null; });
+      return div;
+    }
+
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('over');
+        if (draggedCard) {
+          draggedCard.classList.remove('correct', 'wrong');
+          zone.appendChild(draggedCard);
+        }
+      });
+    });
+
+    function resetZoneGroup(trayId, data, group) {
+      document.querySelectorAll(`.drag-card[data-group="${group}"]`).forEach(c => c.remove());
+      const tray = document.getElementById(trayId);
+      data.forEach(item => tray.appendChild(createCard(item.text, item.ans, group)));
+    }
+
+    function checkZoneGroup(group, msgId) {
+      const cards = document.querySelectorAll(`.drag-card[data-group="${group}"]`);
+      let correct = 0;
+      cards.forEach(card => {
+        const parentZone = card.parentElement.dataset.zone;
+        card.classList.remove('correct', 'wrong');
+        if (parentZone === card.dataset.ans) {
+          card.classList.add('correct');
+          correct++;
+        } else if (parentZone !== 'tray') {
+          card.classList.add('wrong');
+        }
+      });
+      const msg = document.getElementById(msgId);
+      msg.className = 'status-msg show';
+      msg.textContent = `${correct} of ${cards.length} cards placed correctly.`;
+    }
+
+    // Tab 1 Data
+    const sort2Data = [
+      { text: 'Studying', ans: 'Must include' },
+      { text: 'Getting experience', ans: 'Must include' },
+      { text: 'Exploitation (your own idea)', ans: 'Must include' },
+      { text: 'A clear opinion', ans: 'Must include' },
+      { text: '140–190 words', ans: 'Must include' },
+      { text: 'History of teenage work', ans: 'Optional' },
+      { text: 'A brief example of a typical part-time job', ans: 'Optional' },
+      { text: 'List of every possible job', ans: 'Irrelevant' },
+      { text: 'Adult unemployment', ans: 'Irrelevant' },
+      { text: 'How to write a CV', ans: 'Irrelevant' },
+      { text: 'Your favourite school subject', ans: 'Irrelevant' }
+    ];
+
+    const match4Data = [
+      { text: 'Teaches time management', ans: 'Studying' },
+      { text: 'Cooperate with colleagues', ans: 'Getting experience' },
+      { text: 'Employers pay low wages', ans: 'Exploitation' },
+      { text: 'Adults should also work', ans: 'Reject' },
+      { text: 'A job can replace school', ans: 'Reject' },
+      { text: 'Online chat is useful', ans: 'Reject' },
+      { text: 'University tuition is expensive', ans: 'Reject' },
+      { text: 'Public transport is often delayed', ans: 'Reject' },
+      { text: 'Teaches responsibility', ans: 'Getting experience' }
+    ];
+
+    resetZoneGroup('tray2', sort2Data, 'sort2');
+    resetZoneGroup('tray4', match4Data, 'match4');
+
+    // Vocab Deck
+    const vocabList = [
+      { word: 'Face', ex: 'Teenagers face pressure to balance school and work.' },
+      { word: 'Lack of', ex: 'A lack of time can affect homework.' },
+      { word: 'Get stuck', ex: 'Students may get stuck if they fall behind.' },
+      { word: 'Go through', ex: 'Many students go through stress before exams.' },
+      { word: 'Gather', ex: 'Work helps teenagers gather practical experience.' },
+      { word: 'Lead to', ex: 'A lack of sleep can lead to poor concentration.' },
+      { word: 'Sum up', ex: 'To sum up, part-time jobs can be beneficial.' },
+      { word: 'Threat', ex: 'Exploitation is a threat to young workers.' },
+      { word: 'On behalf of', ex: 'I am writing on behalf of my class.' },
+      { word: 'Come across', ex: 'I came across an article about teen jobs.' }
+    ];
+    const deck = document.getElementById('vocabDeck');
+    vocabList.forEach(v => {
+      const card = document.createElement('div');
+      card.className = 'vocab-card';
+      card.innerHTML = `<div class="vocab-term">${v.word}</div><div class="vocab-ex">${v.ex}</div>`;
+      card.addEventListener('click', () => card.classList.toggle('picked'));
+      deck.appendChild(card);
+    });
+
+    // Tab 2 Ex 1: Spot & Fix 8 Deliberate Errors
+    const grammarErrors = [
+      { sent: 'Is obviously that studying is their main priority.', fix: 'It is obvious', hint: 'Missing dummy subject "It" + adjective "obvious".' },
+      { sent: 'It allows to develop a sense of organisation.', fix: 'allows teenagers to develop', hint: '"allow" needs an object (e.g. teenagers) before "to + verb".' },
+      { sent: 'Doesn’t matter what job a teenager choose.', fix: 'It does not matter', hint: 'Needs "It" at the start; also "a teenager chooses".' },
+      { sent: 'They enter in the world of job early.', fix: 'enter the world of work', hint: '"enter" takes no preposition; use "work" (uncountable).' },
+      { sent: 'Nobody can imagine a day without speak.', fix: 'without speaking', hint: 'Use a gerund (-ing) after a preposition ("without").' },
+      { sent: 'They pay small amount of money to teenager.', fix: 'a small amount', hint: 'Singular countable nouns need an article ("a").' },
+      { sent: 'Work under pressure are valuable skills.', fix: 'Working under pressure is', hint: 'Gerund subject "Working" takes singular verb "is".' },
+      { sent: 'Facing with a part-time job teach them discipline.', fix: 'teaches', hint: 'Singular subject ("Having a part-time job") takes "teaches".' }
+    ];
+
+    const gList = document.getElementById('grammarFixList');
+    grammarErrors.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      const sentDiv = document.createElement('div');
+      sentDiv.className = 'err-sentence';
+      sentDiv.innerHTML = `<strong>${i + 1}.</strong> `;
+      item.sent.split(' ').forEach((w, wi) => {
+        const sp = document.createElement('span');
+        sp.className = 'word-btn';
+        sp.textContent = w;
+        sp.addEventListener('click', () => sp.classList.toggle('highlighted'));
+        sentDiv.appendChild(sp);
+        if (wi < item.sent.split(' ').length - 1) sentDiv.appendChild(document.createTextNode(' '));
+      });
+
+      const fixRow = document.createElement('div');
+      fixRow.className = 'err-fix-row';
+      fixRow.innerHTML = `
+        <input type="text" id="gfix_${i}" placeholder="Type the corrected part..." />
+        <button class="action ghost" onclick="toggleEl('ghint_${i}')">Check / Hint</button>
+      `;
+
+      const hintBox = document.createElement('div');
+      hintBox.id = `ghint_${i}`;
+      hintBox.className = 'status-msg';
+      hintBox.innerHTML = `<strong>Suggested fix:</strong> <em>${item.fix}</em> — ${item.hint}`;
+
+      row.appendChild(sentDiv);
+      row.appendChild(fixRow);
+      row.appendChild(hintBox);
+      gList.appendChild(row);
+    });
+
+    // Tab 2 Ex 2: Clickable Choice Boxes
+    const qcData = [
+      { q: '1. A part-time job allows teenagers ___ practical skills.', opts: ['develop', 'to develop', 'developing'], ans: 'to develop' },
+      { q: '2. Without ___ regularly, relationships can weaken.', opts: ['speak', 'to speak', 'speaking'], ans: 'speaking' },
+      { q: '3. Studying should remain ___ main priority.', opts: ['a', 'the', 'an'], ans: 'the' },
+      { q: '4. Every teenager ___ different challenges.', opts: ['face', 'faces', 'facing'], ans: 'faces' },
+      { q: '5. A lack ___ experience can be a disadvantage.', opts: ['of', 'for', 'in'], ans: 'of' },
+      { q: '6. They learn to cooperate ___ colleagues.', opts: ['to', 'with', 'for'], ans: 'with' },
+      { q: '7. ___ under pressure is a useful skill.', opts: ['Work', 'Working', 'Worked'], ans: 'Working' },
+      { q: '8. Employers should pay ___ fair wage.', opts: ['a', 'an', 'the'], ans: 'a' },
+      { q: '9. Teenagers may ___ stuck if they have too much work.', opts: ['get', 'make', 'do'], ans: 'get' },
+      { q: '10. Poor sleep can lead ___ lower grades.', opts: ['in', 'at', 'to'], ans: 'to' }
+    ];
+
+    const qcList = document.getElementById('quickChoiceList');
+    qcData.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'item-row';
+      div.innerHTML = `<div>${item.q}</div>`;
+      const boxes = document.createElement('div');
+      boxes.className = 'choice-boxes';
+      boxes.dataset.idx = i;
+      item.opts.forEach(o => {
+        const b = document.createElement('div');
+        b.className = 'choice-box';
+        b.textContent = o;
+        b.addEventListener('click', () => {
+          boxes.querySelectorAll('.choice-box').forEach(x => x.classList.remove('selected', 'correct', 'wrong'));
+          b.classList.add('selected');
+        });
+        boxes.appendChild(b);
+      });
+      div.appendChild(boxes);
+      qcList.appendChild(div);
+    });
+
+    function checkQuickChoice() {
+      let score = 0;
+      qcData.forEach((item, i) => {
+        const boxes = document.querySelector(`.choice-boxes[data-idx="${i}"]`);
+        const sel = boxes.querySelector('.choice-box.selected');
+        if (sel) {
+          if (sel.textContent === item.ans) { sel.classList.add('correct'); score++; }
+          else { sel.classList.add('wrong'); }
+        }
+      });
+      const msg = document.getElementById('qcMsg');
+      msg.className = 'status-msg show';
+      msg.textContent = `You scored ${score} out of ${qcData.length}.`;
+    }
+
+    // Tab 3 Data
+    const paraOrderData = [
+      { text: 'For example, working in a shop teaches young people how to deal with customers.', ans: '3. Example' },
+      { text: 'Therefore, part-time work is a valuable way to prepare for adult life.', ans: '4. Link' },
+      { text: 'Firstly, a part-time job helps teenagers gain practical experience.', ans: '1. Topic' },
+      { text: 'They learn how to manage their time and follow a schedule.', ans: '2. Explanation' }
+    ];
+    resetZoneGroup('trayP1', paraOrderData, 'paraOrder');
+
+    const suppData = [
+      { text: 'Students must still complete homework before going to work.', ans: 'Time Management' },
+      { text: 'Some employers pay low wages for long hours.', ans: 'Exploitation' },
+      { text: 'Body language and eye contact build deeper trust.', ans: 'Face-to-Face' },
+      { text: 'Young workers should have fair contracts.', ans: 'Exploitation' },
+      { text: 'Facial expressions help people understand emotions.', ans: 'Face-to-Face' },
+      { text: 'Planning a weekly schedule prevents falling behind.', ans: 'Time Management' }
+    ];
+    resetZoneGroup('traySupp', suppData, 'suppMatch');
+
+    function checkTopicSentences() {
+      const a = document.querySelector('input[name="tsA"]:checked')?.value === '1';
+      const b = document.querySelector('input[name="tsB"]:checked')?.value === '1';
+      const msg = document.getElementById('tsMsg');
+      msg.className = 'status-msg show';
+      msg.textContent = `${(a ? 1 : 0) + (b ? 1 : 0)} of 2 topic sentences identified correctly.`;
+    }
+
+    function checkBestTS() {
+      const ok = document.querySelector('input[name="bestTS"]:checked')?.value === '1';
+      const msg = document.getElementById('bestTSMsg');
+      msg.className = 'status-msg show';
+      msg.textContent = ok ? 'Correct! It introduces the exploitation argument clearly.' : 'Try again—look for the sentence that introduces exploitation.';
+    }
+
+    // Tab 4 Ex 1: Vertical Sortable Stack
+    const stackItemsData = [
+      { order: 3, text: 'In addition, online communication helps people who live far from relatives stay close.' },
+      { order: 1, text: 'Nowadays, online communication is essential, yet I disagree that it is as good as meeting in person.' },
+      { order: 5, text: 'In conclusion, although online tools are convenient, face-to-face contact remains the best way to communicate.' },
+      { order: 2, text: 'Firstly, people communicate to maintain relationships, and video calls make this fast and convenient.' },
+      { order: 4, text: 'Nevertheless, being in the same room builds deeper trust through body language and eye contact.' }
+    ];
+
+    const stackEl = document.getElementById('essayStack');
+    let draggedStack = null;
+
+    stackItemsData.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'stack-item';
+      div.draggable = true;
+      div.dataset.order = item.order;
+      div.innerHTML = `<span class="stack-handle">::</span><span>${item.text}</span>`;
+      div.addEventListener('dragstart', () => { draggedStack = div; div.classList.add('dragging'); });
+      div.addEventListener('dragend', () => { div.classList.remove('dragging'); draggedStack = null; });
+      div.addEventListener('dragover', e => {
+        e.preventDefault();
+        if (draggedStack && draggedStack !== div) {
+          const rect = div.getBoundingClientRect();
+          const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+          stackEl.insertBefore(draggedStack, next ? div.nextSibling : div);
+        }
+      });
+      stackEl.appendChild(div);
+    });
+
+    function checkStackOrder() {
+      const items = Array.from(stackEl.children);
+      let correct = 0;
+      items.forEach((el, idx) => {
+        el.classList.remove('correct', 'wrong');
+        if (Number(el.dataset.order) === idx + 1) {
+          el.classList.add('correct');
+          correct++;
+        } else {
+          el.classList.add('wrong');
+        }
+      });
+      const msg = document.getElementById('msgEssay');
+      msg.className = 'status-msg show';
+      msg.textContent = `${correct} of ${items.length} cards in the right position.`;
+    }
+
+    // Tab 4 Ex 2: Inline Noun Replacement
+    function checkInlineReps() {
+      const sels = document.querySelectorAll('#repExercise .inline-select');
+      let correct = 0;
+      sels.forEach(s => {
+        if (s.value === s.dataset.ans) {
+          correct++;
+          s.style.borderColor = '#2d6a4f';
+          s.style.background = '#ecfdf5';
+        } else {
+          s.style.borderColor = '#c84b31';
+          s.style.background = '#fef2f2';
+        }
+      });
+      const msg = document.getElementById('repMsg');
+      msg.className = 'status-msg show';
+      msg.textContent = `${correct} of ${sels.length} replacements correct.`;
+    }
+
+    // Tab 4 Ex 4: Choose the Best Shorter Version (4 items)
+    const shortData = [
+      {
+        wordy: '1. "In my personal opinion, I really think that it is a very good idea for young people to have a job."',
+        opts: [
+          { t: 'In my opinion, having a part-time job is beneficial for young people.', ok: true },
+          { t: 'Personally, I think that maybe a job is something good for youth.', ok: false }
+        ]
+      },
+      {
+        wordy: '2. "Due to the fact that students have a lot of homework to do, they need time."',
+        opts: [
+          { t: 'Because students have a lot of homework, they need enough time.', ok: true },
+          { t: 'For the reason of having many homeworks, students are needing time.', ok: false }
+        ]
+      },
+      {
+        wordy: '3. "Online platforms give us the ability to be able to talk to people who live in other countries."',
+        opts: [
+          { t: 'Online platforms allow us to communicate with people abroad.', ok: true },
+          { t: 'Online platforms make us have the ability to talk with far people.', ok: false }
+        ]
+      },
+      {
+        wordy: '4. "To sum up everything that I have said in this essay, meeting in person is still better."',
+        opts: [
+          { t: 'In conclusion, meeting in person remains the better option.', ok: true },
+          { t: 'To sum up all the things mentioned above in my writing, meeting is better.', ok: false }
+        ]
+      }
+    ];
+
+    const shortList = document.getElementById('shortList');
+    shortData.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'item-row';
+      div.innerHTML = `<div><strong>Wordy:</strong> <em>${item.wordy}</em></div>`;
+      const rg = document.createElement('div');
+      rg.className = 'radio-group';
+      item.opts.forEach(o => {
+        rg.innerHTML += `<label class="radio-opt"><input type="radio" name="sh_${i}" value="${o.ok ? 1 : 0}"> ${o.t}</label>`;
+      });
+      div.appendChild(rg);
+      shortList.appendChild(div);
+    });
+
+    function checkShortAll() {
+      let score = 0;
+      shortData.forEach((_, i) => {
+        if (document.querySelector(`input[name="sh_${i}"]:checked`)?.value === '1') score++;
+      });
+      const msg = document.getElementById('shortMsg');
+      msg.className = 'status-msg show';
+      msg.textContent = `You chose ${score} out of ${shortData.length} concise versions.`;
+    }
+
+    // Tab 4 Ex 5: Live Word Counter
+    function updateWordCount() {
+      const text = document.getElementById('trimBox').value.trim();
+      const count = text ? text.split(/\s+/).length : 0;
+      const el = document.getElementById('wcDisplay');
+      el.textContent = `Word count: ${count} words ${count >= 170 && count <= 185 ? '(Target reached!)' : '(Target: 170–185)'}`;
+      el.style.color = (count >= 170 && count <= 185) ? '#2d6a4f' : '#c84b31';
+    }
+    updateWordCount();
+  </script>
+<script>
+
+/* Language Lab navigation. Original lesson DOM and engines stay in place. */
+(function(){
+  "use strict";
+  const root=document.documentElement,essay=!!document.querySelector('.tab-panel');
+  const chapters=Array.from(document.querySelectorAll('.chapter-panel'));
+  const tabs=Array.from(document.querySelectorAll('.tab-panel'));
+  const chapterLinks=Array.from(document.querySelectorAll('.chapter-link'));
+  const tabButtons=Array.from(document.querySelectorAll('.tab-btn'));
+  const records=essay?tabs.flatMap((tab,t)=>Array.from(tab.querySelectorAll(':scope > .lesson-block')).map((block,i)=>({id:tab.id,tab:t,block,group:tabButtons[t]?.textContent.trim()||'Writing workshop',title:block.querySelector('.block-head h2')?.textContent.trim()||'Activity '+(i+1)}))):chapters.map((el,i)=>({id:el.id.slice(6),el,title:el.querySelector('.chapter-header h2')?.textContent.trim()||chapterLinks[i]?.textContent.trim()||'Chapter '+(i+1)}));
+  const original=essay?window.openTab:window.showChapter;
+  const host=document.querySelector(essay?'.wrap':'#main');
+  if(!records.length||!host||typeof original!=='function')return;
+  const guidePaths=[['index.html','Home'],['key-word-transformations.html','Key Word Transformations'],['tense-building-blocks.html','Tense Building Blocks'],['english-articles.html','English Articles'],['active-passive-voice.html','Active and Passive Voice'],['essay.html','Essay Writing'],['B2Reported_Speech_and_Report.html','Reported Speech & Report Writing']];
+  let current=0,font=20,clearSelection=()=>{};
+  try{let n=Number(localStorage.getItem('language-lab-text-size'));if(n>=16&&n<=34)font=n}catch(e){}
+  function applyFont(n){font=Math.max(16,Math.min(34,n));root.style.fontSize=font+'px';try{localStorage.setItem('language-lab-text-size',String(font))}catch(e){}}
+  function make(tag,cls,text){let el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el}
+  function button(text,label,fn,cls){const b=make('button',cls,text);b.type='button';b.setAttribute('aria-label',label);b.title=label;b.addEventListener('click',fn);return b}
+  function select(label){const el=make('select','ll-select');el.setAttribute('aria-label',label);el.title=label;return el}
+  function option(s,val,label){const o=make('option','',label);o.value=val;s.append(o)}
+  const header=make('header','ll-header'),inner=make('div','ll-header-inner'),brand=make('strong','ll-brand','LANGUAGE LAB / B2'),nav=make('nav','ll-controls');nav.setAttribute('aria-label','Lesson navigation');
+  const guide=select('Choose guide'),jump=select('Choose section');
+  guidePaths.forEach(([path,label])=>option(guide,path,label));guide.value="essay.html";guide.onchange=()=>{location.href=guide.value};
+  if(essay){let last=-1,group;records.forEach((r,i)=>{if(r.tab!==last){group=document.createElement('optgroup');group.label=r.group;jump.append(group);last=r.tab}option(group,String(i),r.title)})}else records.forEach((r,i)=>option(jump,String(i),(i===0?'Overview: ':i+'. ')+r.title));
+  const smaller=button('A−','Decrease text size',()=>applyFont(font-2)),larger=button('A+','Increase text size',()=>applyFont(font+2)),topPrev=button('←','Previous section',()=>go(current-1)),topNext=button('→','Next section',()=>go(current+1));
+  topPrev.setAttribute('aria-keyshortcuts','ArrowLeft');topNext.setAttribute('aria-keyshortcuts','ArrowRight');
+  nav.append(smaller,larger,guide,jump,topPrev,topNext);inner.append(brand,nav);header.append(inner);
+  const progress=make('div','ll-progress'),fill=make('div');progress.append(fill);progress.setAttribute('role','progressbar');progress.setAttribute('aria-label','Section position');progress.setAttribute('aria-valuemin','1');progress.setAttribute('aria-valuemax',String(records.length));document.body.prepend(header,progress);
+  const footer=make('div','ll-footer'),prev=button('← Previous','Previous section',()=>go(current-1)),next=button('Next →','Next section',()=>go(current+1),'ll-next'),position=make('span','ll-position');position.setAttribute('aria-live','polite');footer.append(prev,position,next);host.after(footer);footer.after(make('p','ll-shortcuts','Keyboard: ← previous section · → next section (when not typing)'));
+  const essayHead=essay?make('div','ll-essay-heading'):null,stage=essay?make('div','ll-stage'):null,heading=essay?make('h1','ll-screen-heading'):null;
+  if(essay){essayHead.append(stage,heading);host.insertBefore(essayHead,tabs[0])}
+  function sync(i){current=i;const r=records[i];jump.value=String(i);position.textContent=(i+1)+' / '+records.length;fill.style.width=((i+1)/records.length*100)+'%';progress.setAttribute('aria-valuenow',String(i+1));prev.disabled=topPrev.disabled=i===0;next.disabled=topNext.disabled=i===records.length-1;if(essay){records.forEach(item=>item.block.classList.toggle('ll-current',item===r));stage.textContent=r.group+' · Activity '+(i+1)+' / '+records.length;heading.textContent=r.title}}
+  let navigating=false;
+  function go(i){if(i<0||i>=records.length)return;clearSelection();const r=records[i];navigating=true;try{if(essay)original(r.id,tabButtons[r.tab]);else{let b=chapterLinks.find(x=>x.getAttribute('onclick')?.includes("'"+r.id+"'"));original(r.id,b)}sync(i);window.scrollTo(0,0)}finally{navigating=false}}
+  if(essay){window.openTab=function(id,b){const first=records.findIndex(r=>r.id===id);if(first>=0&&!navigating){go(first);return}return original(id,b)}}else{window.showChapter=function(id,b){const result=original(id,b);const i=records.findIndex(r=>r.id===id);if(i>=0&&!navigating)sync(i);return result}}
+  jump.addEventListener('change',()=>go(Number(jump.value)));
+  document.addEventListener('keydown',e=>{if(e.defaultPrevented||e.isComposing||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey||e.repeat||document.querySelector('dialog[open]'))return;const target=e.target;if(target instanceof Element&&target.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="textbox"],[role="combobox"],[role="slider"],.ll-table,.drag-card,.stack-item,.drop-zone'))return;if(e.key==='ArrowLeft'&&current>0){e.preventDefault();go(current-1)}else if(e.key==='ArrowRight'&&current<records.length-1){e.preventDefault();go(current+1)}});
+  host.querySelectorAll('table').forEach(t=>{if(t.closest('.ll-table'))return;const w=make('div','ll-table');w.tabIndex=0;w.setAttribute('role','region');w.setAttribute('aria-label','Table; scroll horizontally if needed');const cols=Math.max(...Array.from(t.rows).map(r=>Array.from(r.cells).reduce((n,c)=>n+(c.colSpan||1),0)),1);w.style.setProperty('--ll-table-width',cols>3?(cols*6)+'rem':cols>1?(cols*4.5)+'rem':'0px');t.before(w);w.append(t)});
+  if(!essay){host.querySelectorAll('.answer-block').forEach(block=>{const d=make('details','ll-answer'),sum=make('summary','','Show answer / explanation');d.addEventListener('toggle',()=>sum.textContent=d.open?'Hide answer / explanation':'Show answer / explanation');block.before(d);d.append(sum,block)})}
+  if(essay){
+    let selected=null;
+    const live=make('div','ll-sr');live.setAttribute('aria-live','polite');host.append(live);
+    function clearCard(){if(selected){selected.classList.remove('ll-selected');selected.setAttribute('aria-pressed','false')}selected=null;host.querySelectorAll('.ll-target').forEach(z=>z.classList.remove('ll-target'))}
+    clearSelection=clearCard;
+    function selectCard(card){if(selected===card){clearCard();return}clearCard();selected=card;card.classList.add('ll-selected');card.setAttribute('aria-pressed','true');card.closest('.lesson-block').querySelectorAll('.drop-zone').forEach(z=>z.classList.add('ll-target'));live.textContent='Card selected. Choose a destination.'}
+    function moveCard(zone){if(!selected||!selected.isConnected||selected.closest('.lesson-block')!==zone.closest('.lesson-block')){clearCard();return}const card=selected;card.classList.remove('correct','wrong');zone.appendChild(card);clearCard();live.textContent='Card moved to '+(zone.dataset.zone||'destination')+'.';card.focus()}
+    function prepareCards(){host.querySelectorAll('.drag-card:not([data-ll-card])').forEach(card=>{card.dataset.llCard='1';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-pressed','false')})}
+    host.querySelectorAll('.drop-zone').forEach(zone=>{zone.tabIndex=0;zone.setAttribute('aria-label','Destination: '+(zone.dataset.zone||'card tray'));zone.addEventListener('dragstart',clearCard);zone.addEventListener('drop',clearCard)});
+    host.querySelectorAll('.lesson-block').forEach(block=>{const tray=block.querySelector('.card-tray');if(tray)tray.before(make('p','ll-touch-tip','Drag a card, or tap a card and then tap its destination.'))});
+    prepareCards();new MutationObserver(()=>{if(selected&&!selected.isConnected)clearCard();prepareCards()}).observe(host,{childList:true,subtree:true});
+    host.addEventListener('click',e=>{const target=e.target;if(!(target instanceof Element))return;const card=target.closest('.drag-card');if(card){if(selected&&selected!==card&&card.parentElement.classList.contains('drop-zone')&&selected.closest('.lesson-block')===card.closest('.lesson-block'))moveCard(card.parentElement);else selectCard(card);return}const zone=target.closest('.drop-zone');if(zone&&selected)moveCard(zone)});
+    host.addEventListener('keydown',e=>{if(!['Enter',' '].includes(e.key)||!(e.target instanceof Element))return;const c=e.target.closest('.drag-card'),z=e.target.closest('.drop-zone');if(c&&e.target===c){e.preventDefault();selectCard(c)}else if(z&&e.target===z&&selected){e.preventDefault();moveCard(z)}});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')clearCard()});
+    const stack=document.getElementById('essayStack');if(stack){stack.before(make('p','ll-touch-tip','Drag paragraphs into order, or use the up and down buttons.'));Array.from(stack.children).forEach(item=>{const bar=make('span','ll-stack-controls');function move(dir){const neighbor=dir<0?item.previousElementSibling:item.nextElementSibling;if(!neighbor)return;if(dir<0)stack.insertBefore(item,neighbor);else stack.insertBefore(neighbor,item);Array.from(stack.children).forEach(x=>x.classList.remove('correct','wrong'));live.textContent='Paragraph moved.'}bar.append(button('↑','Move paragraph up',()=>move(-1)),button('↓','Move paragraph down',()=>move(1)));item.append(bar)})}
+  }
+  root.classList.add(essay?'ll-essay':'ll-guide','ll-ready');applyFont(font);go(0);
+})();
+</script>
+<script>
+
+/* Unified side panel. Retains the existing navigation and exercise state. */
+(function(){
+ "use strict";
+ const root=document.documentElement;
+ const isReport="essay.html"==="B2Reported_Speech_and_Report.html";
+ const jump=isReport?document.getElementById('jump'):document.querySelector('.ll-header select[aria-label="Choose section"]');
+ const position=isReport?document.getElementById('position'):document.querySelector('.ll-position');
+ const bar=isReport?document.querySelector('body>header nav'):document.querySelector('.ll-controls');
+ if(!jump||!position||!bar||!jump.options.length)return;
+ const guides=[['index.html','Home'],['key-word-transformations.html','Key Word Transformations'],['tense-building-blocks.html','Tense Building Blocks'],['english-articles.html','English Articles'],['active-passive-voice.html','Active and Passive Voice'],['essay.html','Essay Writing'],["B2Reported_Speech_and_Report.html",'Reported Speech & Report Writing']];
+ const title=guides.find(([p])=>p==="essay.html")?.[1]||document.title;
+ const make=(tag,cls,label)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(label!==undefined)e.textContent=label;return e};
+ const menu=make('aside');menu.id='ll-contents';menu.hidden=true;menu.setAttribute('aria-label','Guide and section contents');
+ const head=make('div','ll-menu-head'),name=make('div');name.append(make('div','ll-menu-brand','LANGUAGE LAB / B2'),make('div','ll-menu-title',title));
+ const close=make('button','ll-menu-close','×');close.type='button';close.setAttribute('aria-label','Close contents');close.title='Close contents';head.append(name,close);menu.append(head);
+ const scroll=make('div','ll-menu-scroll'),guideNav=make('nav','ll-menu-guides');guideNav.setAttribute('aria-label','Guides');guideNav.append(make('div','ll-menu-label','Guides'));
+ guides.forEach(([path,label])=>{const a=make('a','ll-menu-link',label);a.href=path;if(path==="essay.html")a.setAttribute('aria-current','page');guideNav.append(a)});
+ const sections=make('nav');sections.setAttribute('aria-label','Sections in this guide');sections.append(make('div','ll-menu-label','Contents'));scroll.append(guideNav,sections);menu.append(scroll);
+ const count=make('div','ll-menu-count');menu.append(count);
+ const groups=new Map(),items=[];
+ const opts=Array.from(jump.options);
+ const oldChapterLinks=Array.from(document.querySelectorAll('#sidebar .chapter-link'));
+ function groupName(opt,i){
+   if(isReport)return i<10?'Reported speech':i<15?'Active/passive & Part 4':'Report writing';
+   if(opt.parentElement?.tagName==='OPTGROUP')return opt.parentElement.label;
+   const old=oldChapterLinks[i];const part=old?.closest('.part-group');
+   const label=part?.querySelector('.part-toggle')?.textContent.replace(/▶|▼|▾|▸/g,'').trim();
+   return label&&label!=='Chapter List'?label:'Chapters';
+ }
+ function tidy(opt,i){let t=opt.textContent.trim();return t.replace(/^\d+\.\s*/,'').replace(/^Overview:\s*/,'')}
+ opts.forEach((opt,i)=>{
+   const group=groupName(opt,i);let d=groups.get(group);
+   if(!d){d=make('details');d.append(make('summary','',group));sections.append(d);groups.set(group,d)}
+   const b=make('button','ll-menu-item');b.type='button';b.append(make('span','ll-menu-number',String(i+1).padStart(2,'0')),document.createTextNode(tidy(opt,i)));
+   b.addEventListener('click',()=>{jump.value=opt.value;jump.dispatchEvent(new Event('change',{bubbles:true}));if(!wide.matches)setOpen(false,true);else sync()});
+   d.append(b);items.push({b,d,value:opt.value});
+ });
+ const shade=make('div');shade.id='ll-shade';shade.hidden=true;shade.setAttribute('aria-hidden','true');document.body.append(shade,menu);
+ const toggle=make('button','','Contents');toggle.id='ll-menu-toggle';toggle.type='button';toggle.setAttribute('aria-controls',menu.id);toggle.setAttribute('aria-expanded','false');toggle.title='Show or hide contents';bar.prepend(toggle);
+ // Old list controls remain available to the lesson engines but not to the visual or keyboard UI.
+ jump.hidden=true;jump.tabIndex=-1;jump.setAttribute('aria-hidden','true');
+ const oldGuide=document.querySelector('.ll-header select[aria-label="Choose guide"]');if(oldGuide){oldGuide.hidden=true;oldGuide.tabIndex=-1;oldGuide.setAttribute('aria-hidden','true')}
+ const wide=matchMedia('(min-width:901px)');
+ let opened=false,lastValue=null;
+ function sync(){
+   const val=jump.value;const changed=lastValue!==val;lastValue=val;
+   items.forEach(({b,d,value})=>{if(value===val){b.setAttribute('aria-current','step');if(changed)d.open=true}else b.removeAttribute('aria-current')});
+   count.textContent='Section '+position.textContent.trim();
+   if(changed&&opened){const active=items.find(x=>x.value===val)?.b;if(active){const r=active.getBoundingClientRect(),v=scroll.getBoundingClientRect();if(r.bottom>v.bottom)scroll.scrollTop+=r.bottom-v.bottom+10;else if(r.top<v.top)scroll.scrollTop-=v.top-r.top+10}}
+ }
+ function setOpen(open,returnFocus=false){
+   opened=open;root.classList.toggle('ll-menu-open',open);menu.hidden=!open;shade.hidden=!open||wide.matches;toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Hide contents':'Contents';
+   if(open&&!wide.matches){menu.setAttribute('role','dialog');menu.setAttribute('aria-modal','true');close.focus({preventScroll:true})}else{menu.removeAttribute('role');menu.removeAttribute('aria-modal')}
+   if(!open&&returnFocus)toggle.focus({preventScroll:true});if(open)sync();
+ }
+ toggle.addEventListener('click',()=>setOpen(!opened));close.addEventListener('click',()=>setOpen(false,true));shade.addEventListener('click',()=>setOpen(false,true));
+ document.addEventListener('keydown',e=>{
+   if(!opened||document.querySelector('dialog[open]'))return;
+   if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();setOpen(false,true);return}
+   if(!wide.matches){
+     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.stopImmediatePropagation();return}
+     if(e.key==='Tab'){const focusables=Array.from(menu.querySelectorAll('button,a[href],summary')).filter(el=>el.getClientRects().length&&!el.disabled);if(!focusables.length)return;const first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&(document.activeElement===first||!menu.contains(document.activeElement))){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||!menu.contains(document.activeElement))){e.preventDefault();first.focus()}}
+   }
+ },true);
+ if(wide.addEventListener)wide.addEventListener('change',()=>setOpen(wide.matches));else wide.addListener(()=>setOpen(wide.matches));
+ new MutationObserver(sync).observe(position,{childList:true,characterData:true,subtree:true});
+ root.classList.add('ll-sidebar-ready');sync();setOpen(wide.matches);
+})();
+
+</script>
+</body>
+</html>

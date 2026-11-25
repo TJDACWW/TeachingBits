@@ -1,0 +1,3396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B2 First — Key Word Transformations Guide</title>
+<style>
+  :root {
+    --sidebar-bg: #1b2c3e;
+    --sidebar-text: #c9c4bc;
+    --sidebar-hover: #243649;
+    --sidebar-active: #e9a060;
+    --sidebar-part: #8fadc4;
+    --sidebar-width: 270px;
+    --main-bg: #f5f1ea;
+    --paper: #fdfaf5;
+    --text: #252320;
+    --text-light: #5a5550;
+    --accent: #8b3a2a;
+    --accent-light: #c4533f;
+    --amber: #d4862a;
+    --blue-note: #2a4f72;
+    --green-note: #2a5c3f;
+    --border: #ddd8cc;
+    --table-head: #e8e1d5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, Georgia, serif;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--main-bg);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: #3a5268 var(--sidebar-bg);
+  }
+  #sidebar::-webkit-scrollbar { width: 5px; }
+  #sidebar::-webkit-scrollbar-thumb { background: #3a5268; border-radius: 3px; }
+
+  .sidebar-title {
+    padding: 24px 20px 18px;
+    border-bottom: 1px solid #2d4156;
+  }
+  .sidebar-title h1 {
+    font-family: Georgia, serif;
+    font-size: 0.8333rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+  }
+  .sidebar-title p {
+    font-size: 0.6389rem;
+    color: var(--sidebar-part);
+    margin-top: 4px;
+    font-family: system-ui, serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-nav { flex: 1; padding: 10px 0 30px; }
+
+  .part-group { border-bottom: 1px solid #243649; }
+
+  .part-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: var(--sidebar-part);
+    font-family: system-ui, serif;
+    font-size: 0.6111rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.15s;
+  }
+  .part-toggle:hover { background: var(--sidebar-hover); }
+  .part-toggle .arrow {
+    font-size: 0.5rem;
+    transition: transform 0.2s;
+    color: #4a6b84;
+  }
+  .part-toggle.open .arrow { transform: rotate(90deg); }
+
+  .chapter-list {
+    display: none;
+    flex-direction: column;
+  }
+  .chapter-list.open { display: flex; }
+
+  .chapter-link {
+    display: block;
+    padding: 7px 20px 7px 28px;
+    color: var(--sidebar-text);
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    font-family: system-ui, serif;
+    font-size: 0.7778rem;
+    line-height: 1.4;
+    text-align: left;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .chapter-link:hover {
+    background: var(--sidebar-hover);
+    color: #fff;
+    border-left-color: #3a5a74;
+  }
+  .chapter-link.active {
+    color: var(--sidebar-active);
+    border-left-color: var(--sidebar-active);
+    background: rgba(233,160,96,0.08);
+    font-weight: 600;
+  }
+  .chapter-link .ch-num {
+    font-size: 0.5556rem;
+    color: #4a6b84;
+    display: block;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+
+  .guide-group {
+    border-bottom: 1px solid #243649;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+  .guide-links {
+    display: flex;
+    flex-direction: column;
+  }
+  .guide-link {
+    display: block;
+    padding: 9px 20px 9px 28px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    font-family: system-ui, serif;
+    font-size: 0.7778rem;
+    line-height: 1.35;
+    text-align: left;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .guide-link:hover {
+    background: var(--sidebar-hover);
+    color: #fff;
+    border-left-color: #3a5a74;
+  }
+  .guide-link.active {
+    color: var(--sidebar-active);
+    border-left-color: var(--sidebar-active);
+    background: rgba(233,160,96,0.08);
+    font-weight: 600;
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  .chapter-panel { display: none; }
+  .chapter-panel.active {
+    display: block;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .chapter-header {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 60px 36px;
+  }
+  .chapter-header .part-label {
+    font-size: 0.6111rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .chapter-header h2 {
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .chapter-header .ch-number {
+    font-family: Georgia, serif;
+    font-size: 0.7222rem;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .chapter-body {
+    padding: 48px 60px 80px;
+    max-width: 860px;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .chapter-body h3 {
+    font-family: Georgia, serif;
+    font-size: 1.2222rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 44px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .chapter-body h3:first-child { margin-top: 0; }
+
+  .chapter-body h4 {
+    font-family: system-ui, serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--blue-note);
+    margin: 28px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.6667rem;
+  }
+
+  .chapter-body p { margin-bottom: 14px; }
+
+  .chapter-body ul, .chapter-body ol {
+    margin: 12px 0 18px 24px;
+  }
+  .chapter-body li { margin-bottom: 6px; }
+
+  strong { color: var(--text); font-weight: 600; }
+
+  /* ── SENTENCE EXAMPLES ── */
+  .example-sentence {
+    font-style: italic;
+    padding: 12px 20px;
+    border-left: 4px solid var(--border);
+    margin: 12px 0;
+    background: var(--paper);
+    border-radius: 0 4px 4px 0;
+  }
+  .example-sentence .key-word {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.7222rem;
+    padding: 1px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+    margin: 6px 0;
+  }
+  .example-sentence .gap-marker {
+    display: inline-block;
+    min-width: 160px;
+    border-bottom: 2px solid var(--amber);
+    margin: 0 4px;
+    color: transparent;
+    font-style: normal;
+  }
+
+  /* ── TASK BLOCK ── */
+  .task-block {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 20px 24px;
+    margin: 20px 0;
+    font-style: italic;
+  }
+  .task-block .key-tag {
+    display: inline-block;
+    background: var(--amber);
+    color: #fff;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.7222rem;
+    padding: 2px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    margin: 6px 0;
+  }
+  .task-block .gap-line {
+    display: inline-block;
+    min-width: 180px;
+    border-bottom: 2px solid #aaa;
+    vertical-align: bottom;
+    margin: 0 4px;
+  }
+
+  /* ── ANSWER BLOCK ── */
+  .answer-block {
+    background: #eef6ee;
+    border: 1px solid #b8d9b8;
+    border-left: 5px solid var(--green-note);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 22px;
+    margin: 14px 0;
+  }
+  .answer-block .answer-label {
+    font-size: 0.6111rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--green-note);
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-style: normal;
+  }
+  .answer-text {
+    font-family: ui-monospace, monospace;
+    font-size: 0.8333rem;
+    color: var(--green-note);
+    font-weight: 500;
+  }
+  .full-sentence {
+    font-style: italic;
+    color: var(--text-light);
+    margin-top: 6px;
+    font-size: 0.8889rem;
+  }
+
+  /* ── CHECK YOURSELF ── */
+  .check-box {
+    background: #f0f4f8;
+    border: 1px solid #c0d0df;
+    border-radius: 6px;
+    padding: 16px 22px;
+    margin: 16px 0;
+  }
+  .check-box .check-title {
+    font-size: 0.6111rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--blue-note);
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .check-box .check-title::before {
+    content: '✓';
+    display: inline-flex;
+    width: 18px; height: 18px;
+    background: var(--blue-note);
+    color: #fff;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.5556rem;
+  }
+  .check-box ul { margin-left: 0; list-style: none; }
+  .check-box li {
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 4px;
+    font-size: 0.8889rem;
+  }
+  .check-box li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--blue-note);
+    font-size: 0.7222rem;
+    top: 2px;
+  }
+
+  /* ── DANGER BOX ── */
+  .danger-box {
+    background: #fdf0ee;
+    border: 1px solid #e8b8b0;
+    border-left: 5px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 22px;
+    margin: 16px 0;
+  }
+  .danger-box .danger-title {
+    font-size: 0.6111rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .danger-box .wrong { color: var(--accent); font-weight: 600; }
+  .danger-box .correct { color: var(--green-note); font-weight: 600; }
+
+  /* ── RULE BOX ── */
+  .rule-box {
+    background: #fffbf0;
+    border: 1px solid #e8d8a0;
+    border-left: 5px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 20px;
+    margin: 14px 0;
+    font-weight: 600;
+    font-size: 0.9444rem;
+  }
+  .rule-box .rule-label {
+    font-size: 0.5556rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--amber);
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  /* ── STUDENT THINKING ── */
+  .thinking-box {
+    background: #f4f0f8;
+    border: 1px solid #c8bede;
+    border-radius: 6px;
+    padding: 16px 22px;
+    margin: 16px 0;
+    font-style: italic;
+  }
+  .thinking-box .thinking-label {
+    font-size: 0.6111rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #6040a0;
+    font-weight: 700;
+    font-style: normal;
+    margin-bottom: 8px;
+  }
+
+  /* ── TABLES ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.8889rem;
+    background: var(--paper);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  th {
+    background: var(--table-head);
+    color: var(--text);
+    font-weight: 700;
+    padding: 10px 16px;
+    text-align: left;
+    font-family: system-ui, serif;
+    font-size: 0.7778rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f8f4ee; }
+  td code, th code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7222rem;
+    background: #e8e0d4;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* ── CODE / PATTERN ── */
+  .pattern-box {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7778rem;
+    background: #1b2c3e;
+    color: #a8d4f5;
+    padding: 14px 20px;
+    border-radius: 6px;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+
+  /* ── STEP SECTIONS (for walkthroughs) ── */
+  .step-block {
+    margin: 20px 0;
+    padding: 20px 24px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .step-label {
+    display: inline-block;
+    background: var(--blue-note);
+    color: #fff;
+    font-size: 0.6111rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
+
+  /* ── INLINE CODE ── */
+  code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7778rem;
+    background: #e8e2d8;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  /* ── HORIZONTAL RULE ── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* ── PART DIVIDER ── */
+  .part-intro {
+    background: var(--blue-note);
+    color: #fff;
+    padding: 20px 60px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 0.9444rem;
+    margin-bottom: 0;
+  }
+
+  /* ── FOOTNOTES ── */
+  .footnote-ref {
+    font-size: 0.6667rem;
+    color: var(--blue-note);
+    vertical-align: super;
+    font-family: system-ui, serif;
+  }
+  .footnotes {
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+    padding-top: 24px;
+    font-size: 0.7778rem;
+    color: var(--text-light);
+  }
+  .footnotes a { color: var(--blue-note); }
+
+  /* ── PATTERN BANK TABLE HEADER ── */
+  .pattern-title {
+    font-family: Georgia, serif;
+    font-size: 0.8889rem;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    color: var(--blue-note);
+  }
+
+  /* ── COMMON MISTAKE INLINE ── */
+  .mistake { color: var(--accent); }
+  .correct-word { color: var(--green-note); font-weight: 600; }
+
+  /* ── NAV FOOTER IN PANEL ── */
+  .panel-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 60px 60px;
+    border-top: 1px solid var(--border);
+    max-width: 860px;
+  }
+  .nav-btn {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: system-ui, serif;
+    font-size: 0.8333rem;
+    color: var(--text-light);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-btn:hover {
+    background: var(--blue-note);
+    color: #fff;
+    border-color: var(--blue-note);
+  }
+  .nav-btn.disabled { opacity: 0.3; pointer-events: none; }
+  .nav-btn .nav-ch { font-size: 0.6667rem; display: block; color: var(--amber); }
+  .nav-btn:hover .nav-ch { color: #f0c080; }
+
+  /* ── MASTERY TABLE ── */
+  .mastery-table { font-size: 0.8333rem; }
+  .mastery-table th:last-child,
+  .mastery-table th:nth-child(2),
+  .mastery-table th:nth-child(3) { width: 90px; text-align: center; }
+  .mastery-table td:last-child,
+  .mastery-table td:nth-child(2),
+  .mastery-table td:nth-child(3) { text-align: center; }
+  .checkbox-cell {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  /* ── ROUTINE HIGHLIGHT ── */
+  .routine-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7222rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    margin: 8px 4px;
+  }
+  .routine-display {
+    text-align: center;
+    padding: 20px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  .routine-display .arrow { color: var(--text-light); margin: 0 2px; }
+
+  /* ── SCROLLBAR ── */
+  #main { scrollbar-width: thin; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    :root { --sidebar-width: 220px; }
+    body {
+      display: block;
+    }
+    #main {
+      margin-left: 0;
+    }
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      z-index: 120;
+      padding: 6px 10px;
+      font-size: 0.7778rem;
+      font-family: system-ui, serif;
+      border-radius: 4px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      border: 1px solid #243649;
+    }
+    #sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.25s ease-out;
+      width: min(var(--sidebar-width), 85vw);
+      min-width: 0;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+    }
+    #sidebar.sidebar-open {
+      transform: translateX(0);
+    }
+    body.sidebar-open {
+      overflow: hidden;
+    }
+    body.sidebar-open main::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 90;
+    }
+    .chapter-header, .chapter-body { padding-left: 28px; padding-right: 28px; }
+    .chapter-header h2 { font-size: 1.4444rem; }
+    .panel-nav { padding: 24px 28px 48px; }
+  }
+
+  /* ── INTRO PANEL SPECIAL ── */
+  .intro-lead {
+    font-size: 1.2222rem;
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--text-light);
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+
+  /* ── DANGER ZONE NUMBERED ── */
+  .danger-number {
+    display: inline-flex;
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.7778rem;
+    flex-shrink: 0;
+  }
+  .danger-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .danger-item:last-child { border-bottom: none; }
+  .danger-item-body h4 { margin-top: 0; font-size: 0.9444rem; text-transform: none; letter-spacing: 0; color: var(--accent); }
+
+  /* ── WALKTHROUGH COUNTER ── */
+  .walkthrough-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 40px 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .walkthrough-header:first-child { margin-top: 0; }
+  .wt-num {
+    display: inline-flex;
+    width: 40px; height: 40px;
+    background: var(--blue-note);
+    color: #fff;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .wt-title {
+    font-family: Georgia, serif;
+    font-size: 1.1111rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+</style>
+<style>
+
+/* Language Lab contents sidebar. Desktop dock; mobile drawer. */
+:root{--ll-side-width:264px;--ll-side-bg:#172d38;--ll-side-text:#f5f1e8;--ll-side-muted:#b7c8ce;--ll-side-line:#405762;--ll-side-active:#174b60}
+html.ll-sidebar-ready body{box-sizing:border-box;min-width:0;padding-left:0;transition:none}
+html.ll-sidebar-ready #ll-contents[hidden],html.ll-sidebar-ready #ll-shade[hidden]{display:none!important}
+html.ll-sidebar-ready .ll-header select.ll-select,html.ll-sidebar-ready #jump{display:none!important}
+html.ll-sidebar-ready #ll-contents{position:fixed;inset:0 auto 0 0;width:var(--ll-side-width);max-width:calc(100vw - 44px);height:100vh;height:100dvh;z-index:300;background:var(--ll-side-bg);color:var(--ll-side-text);display:flex;flex-direction:column;overflow:hidden;font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-sizing:border-box;text-align:left;box-shadow:none}
+#ll-contents *{box-sizing:border-box;min-width:0;overflow-wrap:anywhere}
+#ll-contents .ll-menu-head{padding:13px 12px;border-bottom:1px solid var(--ll-side-line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none}
+#ll-contents .ll-menu-brand{font:750 11px/1.35 system-ui,sans-serif;letter-spacing:.1em;color:#fff}
+#ll-contents .ll-menu-title{font:600 16px/1.25 Georgia,serif;color:#f5f1e8;margin:3px 0 0}
+#ll-contents .ll-menu-close{background:transparent;color:white;border:1px solid #8299a2;border-radius:3px;padding:5px 8px;min-height:36px;min-width:38px;font:14px/1.3 system-ui,sans-serif;flex:none;cursor:pointer}
+#ll-contents .ll-menu-scroll{overflow:auto;overscroll-behavior:contain;flex:1;min-height:0;padding:9px 0 18px;scrollbar-width:thin;scrollbar-color:#657e88 var(--ll-side-bg)}
+#ll-contents .ll-menu-label{color:var(--ll-side-muted);font:700 10px/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;margin:11px 12px 5px}
+#ll-contents .ll-menu-guides{padding-bottom:10px;margin-bottom:8px;border-bottom:1px solid var(--ll-side-line)}
+#ll-contents .ll-menu-link,#ll-contents .ll-menu-item{display:block;width:100%;color:var(--ll-side-text);background:transparent;border:0;border-left:3px solid transparent;border-radius:0;box-shadow:none;text-decoration:none;text-align:left;font:14px/1.4 system-ui,sans-serif;padding:9px 11px 9px 14px;min-height:40px;margin:0;cursor:pointer;transform:none}
+#ll-contents .ll-menu-link[aria-current=page],#ll-contents .ll-menu-item[aria-current=step]{background:var(--ll-side-active);border-left-color:#edb28b;color:#fff;font-weight:650}
+#ll-contents .ll-menu-link:hover,#ll-contents .ll-menu-item:hover,#ll-contents summary:hover{background:#284754;color:#fff;box-shadow:none;transform:none}
+#ll-contents details{border:0;margin:0;padding:0}
+#ll-contents details>summary{cursor:pointer;color:#e2ecef;padding:9px 12px;min-height:40px;font:650 12px/1.45 system-ui,sans-serif;letter-spacing:.035em;border-top:1px solid #314953;list-style-position:inside}
+#ll-contents details>summary::marker{color:#edb28b}
+#ll-contents .ll-menu-number{color:#b9cbd1;font:12px/1.35 system-ui,sans-serif;display:inline-block;min-width:25px;margin-right:4px;font-variant-numeric:tabular-nums}
+#ll-contents .ll-menu-item[aria-current=step] .ll-menu-number{color:#f4c3a7}
+#ll-contents :focus-visible,#ll-contents summary:focus-visible,#ll-menu-toggle:focus-visible{outline:2px solid #f0b077;outline-offset:-3px}
+#ll-contents .ll-menu-count{padding:10px 12px;border-top:1px solid var(--ll-side-line);font:12px/1.35 system-ui,sans-serif;color:var(--ll-side-muted);flex:none;font-variant-numeric:tabular-nums}
+#ll-shade{position:fixed;inset:0;z-index:299;background:#172d387d;border:0;padding:0;margin:0;cursor:pointer}
+#ll-menu-toggle{background:#172d38;color:#fff;border:1px solid #a9b8bf;border-radius:3px;font:650 14px/1.3 system-ui,sans-serif;padding:5px 9px;min-height:36px;max-width:100%;cursor:pointer}
+#ll-menu-toggle:hover{background:#284754;border-color:#f4c3a7}
+html.ll-sidebar-ready .ll-header-inner,html.ll-sidebar-ready body>header:not(.ll-header){min-width:0}
+@media(min-width:901px){html.ll-sidebar-ready.ll-menu-open body{padding-left:var(--ll-side-width)}html.ll-sidebar-ready #ll-shade{display:none!important}}
+@media(min-width:901px) and (max-width:1100px){html.ll-menu-open .layout,html.ll-menu-open .pair-grid{grid-template-columns:1fr}html.ll-menu-open #screen,html.ll-menu-open #main,html.ll-menu-open .wrap{padding:24px 18px}html.ll-menu-open .chapter-header h2,html.ll-menu-open .ll-screen-heading{font-size:1.8rem}}
+@media(max-width:900px){html.ll-sidebar-ready body{padding-left:0}html.ll-sidebar-ready #ll-contents{box-shadow:5px 0 18px #172d3850}html.ll-sidebar-ready.ll-menu-open body{overflow:hidden}}
+@media print{html.ll-sidebar-ready body{padding-left:0!important;overflow:visible!important}#ll-contents,#ll-shade,#ll-menu-toggle{display:none!important}}
+
+</style>
+<style>
+/* Language Lab: embedded, standalone visual system. */
+:root{--ll-paper:#f5f1e8;--ll-ink:#202a30;--ll-blue:#174b60;--ll-deep:#172d38;--ll-accent:#a33f27;--ll-line:#c9c5ba;--ll-card:#fffdf7;--ll-muted:#59636a;--main-bg:var(--ll-paper);--sidebar-bg:var(--ll-deep);--text:var(--ll-ink);--text-light:var(--ll-muted);--ink:var(--ll-ink);--accent:var(--ll-accent);--border:var(--ll-line);--line:var(--ll-line);--blue-note:var(--ll-blue);--green-note:#2d6043;--sage:#2d6043;--amber:#8b541b;--ochre:#8b541b;--table-head:#e9e3d8;--muted:var(--ll-muted);--card:var(--ll-card)}
+html{font-size:20px}html.ll-guide{--paper:var(--ll-card)}html.ll-essay{--paper:var(--ll-paper)}
+.ll-ready body{display:block;margin:0;min-width:0;background:var(--ll-paper);color:var(--ll-ink);font:1rem/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-wrap:anywhere}
+.ll-ready #sidebar,.ll-ready #sidebarToggle,.ll-ready .panel-nav,.ll-ready .masthead{display:none!important}
+.ll-ready body.sidebar-open{overflow:auto}.ll-ready body.sidebar-open main::before{display:none}
+.ll-ready #main,.ll-ready .wrap{margin:0 auto;width:100%;max-width:1200px;min-width:0;min-height:60vh;padding:clamp(16px,4vw,52px);overflow:visible}
+.ll-ready .chapter-header{background:transparent;padding:0 0 16px;border:0}
+.ll-ready .chapter-header h2,.ll-ready .ll-screen-heading{font:600 2.25rem/1.14 Georgia,"Times New Roman",serif;letter-spacing:-.035em;color:var(--ll-ink);margin:0 0 .5em;overflow-wrap:anywhere}
+.ll-ready .chapter-header .part-label,.ll-ready .chapter-header .ch-number,.ll-stage{font:650 .7rem/1.4 system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ll-accent);margin:0 0 12px}
+.ll-ready .chapter-body{padding:0;max-width:none;min-width:0}.ll-ready .chapter-body h3,.ll-ready .block-head h2{font:650 1.12rem/1.3 system-ui,sans-serif;letter-spacing:0;color:var(--ll-ink);border-bottom:1px solid var(--ll-line);padding-bottom:8px;margin:1.6em 0 .65em}.ll-ready .chapter-body h3:first-child{margin-top:0}
+.ll-ready .chapter-body h4{font:700 .82rem/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:1.2em 0 .5em;color:var(--ll-blue)}
+.ll-ready p{margin:0 0 .75em}.ll-ready .chapter-body ul,.ll-ready .chapter-body ol{padding-left:1.2em;margin:.5em 0 .85em}.ll-ready .chapter-body li{margin:.3em 0}.ll-ready .intro-lead{font:1.35rem/1.4 Georgia,serif;color:var(--ll-blue)}.ll-ready a{color:var(--ll-blue);text-underline-offset:.15em}.ll-ready strong{color:inherit}
+.ll-ready .example-sentence,.ll-ready .task-block,.ll-ready .prompt-sheet{background:var(--ll-card);color:var(--ll-ink);border:0;border-left:3px solid var(--ll-blue);border-radius:0;box-shadow:none;padding:.7em .85em;margin:.8em 0;font:1.12rem/1.45 Georgia,serif}
+.ll-ready .task-block,.ll-ready .prompt-sheet{background:var(--ll-blue);color:white;border-left:3px solid var(--ll-accent)}.ll-ready .task-block strong,.ll-ready .prompt-sheet strong,.ll-ready .task-block a,.ll-ready .prompt-sheet a{color:white}
+.ll-ready .task-block .key-tag,.ll-ready .example-sentence .key-word{background:#f5e2bc;color:var(--ll-deep);border:0;font:750 .78rem/1.45 system-ui,sans-serif;padding:.12em .5em}.ll-ready .task-block .gap-line,.ll-ready .example-sentence .gap-marker{min-width:min(5em,100%);max-width:100%;border-color:#d4ae7e}
+.ll-ready .answer-block,.ll-ready .rule-box,.ll-ready .thinking-box,.ll-ready .check-box,.ll-ready .danger-box,.ll-ready .note-box,.ll-ready .formula-box,.ll-ready .step-block,.ll-ready .aspect-card,.ll-ready .routine-display,.ll-ready .pair-card{border:0;border-left:3px solid var(--ll-blue);border-radius:0;box-shadow:none;padding:.7em .85em;margin:.75em 0;background:var(--ll-card);color:var(--ll-ink)}
+.ll-ready .answer-block{background:#e1ebdf;border-color:#46784c}.ll-ready .danger-box{background:#f2e0da;border-color:var(--ll-accent)}.ll-ready .rule-box{background:#eee7d9;border-color:var(--ll-accent);font-size:1rem}.ll-ready .thinking-box{background:#e9e3d8;border-color:#8b541b}.ll-ready .check-box,.ll-ready .note-box{background:#e6eceb;border-color:var(--ll-blue)}
+.ll-ready .pattern-box,.ll-ready .formula-box{background:var(--ll-blue);color:white;border-color:var(--ll-accent);white-space:normal;overflow-wrap:anywhere}.ll-ready .pattern-box{border-radius:0;padding:.7em .85em;font:.95rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.ll-ready .formula-box code,.ll-ready .pattern-box code{background:#e6eceb;color:var(--ll-deep)}.ll-ready .formula-box strong,.ll-ready .formula-box a,.ll-ready .pattern-box strong,.ll-ready .pattern-box a{color:white}
+.ll-ready .part-intro{background:var(--ll-blue);color:white;padding:.8em 1em;font:1.05rem/1.5 Georgia,serif}.ll-ready .answer-text,.ll-ready .full-sentence,.ll-ready .check-box li,.ll-ready .routine-display{font-size:1rem}.ll-ready .routine-tag,.ll-ready .step-label{border-radius:3px}
+.ll-ready .pair-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.ll-ready .pair-grid>*{min-width:0}.ll-ready table{border-collapse:collapse;box-shadow:none;border-radius:0;font-size:.9rem;max-width:none;width:100%;margin:0;overflow:visible}.ll-ready th,.ll-ready td{font-family:inherit;font-size:inherit;white-space:normal;overflow-wrap:normal;vertical-align:top;padding:.45em .5em;border-bottom:1px solid var(--ll-line)}.ll-ready th{background:#e9e3d8;color:var(--ll-ink);text-transform:none;letter-spacing:0;font-weight:700}
+.ll-table{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;margin:.8em 0}.ll-table table{min-width:var(--ll-table-width,0px)}.ll-ready code{font:.85em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.ll-ready .footnotes{font-size:.8rem;margin-top:1.5em;padding-top:1em}.ll-answer{margin:.65em 0;border-bottom:1px solid var(--ll-line);padding-bottom:.4em}.ll-answer summary{cursor:pointer;color:var(--ll-blue);font:650 14px/1.4 system-ui,sans-serif;padding:8px 0;min-height:38px}
+.ll-ready .lesson-block{box-shadow:none;border:0;border-radius:0;background:transparent;padding:0;margin:0;min-width:0}.ll-ready .lesson-block .block-head{display:none}.ll-ready .tab-panel.active>.lesson-block:not(.ll-current){display:none}.ll-ready .word-btn{cursor:pointer;border-bottom:1px dotted #b3b2aa}.ll-ready .prompt-sheet .word-btn:hover,.ll-ready .prompt-sheet .word-btn.highlighted{color:var(--ll-ink);background:#f5e2bc}
+.ll-ready .card-tray,.ll-ready .drop-col{background:#eee9df;border:1px solid var(--ll-line);border-radius:0;min-width:0;padding:10px}.ll-ready .drop-col{border-top:3px solid var(--ll-blue);min-height:74px}.ll-ready .columns-3,.ll-ready .columns-4,.ll-ready .vocab-deck{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px}
+.ll-ready .drag-card,.ll-ready .stack-item,.ll-ready .vocab-card,.ll-ready .radio-opt{background:var(--ll-card);color:var(--ll-ink);border:1px solid #9da5a0;box-shadow:none;border-radius:3px;max-width:100%;min-width:0;padding:.45em .55em;overflow-wrap:anywhere;font-size:1rem}.ll-ready .drag-card.correct,.ll-ready .stack-item.correct,.ll-ready .vocab-card.picked{background:#dce9d8;color:#163b21;border-color:#46784c}.ll-ready .drag-card.wrong,.ll-ready .stack-item.wrong{background:#f2dbd4;color:#652319;border-color:#a33f27}.ll-ready .drag-card.ll-selected{outline:3px solid #a33f27;outline-offset:-3px}.ll-ready .drop-zone.ll-target{outline:2px dashed #174b60;outline-offset:-2px;cursor:pointer}
+.ll-ready .stack-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto}.ll-ready .ll-stack-controls{display:flex;gap:4px;flex-wrap:wrap;justify-content:end}.ll-ready .ll-stack-controls button{font:650 16px/1 system-ui,sans-serif;padding:5px 8px;min-height:36px}.ll-ready .col-title,.ll-ready .tray-label{font:700 .72rem/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em}.ll-ready .vocab-term{font-size:1rem}.ll-ready .vocab-ex{font-size:.86rem}
+.ll-ready .status-msg.show{background:#e6eceb;color:var(--ll-ink);border:0;border-left:3px solid var(--ll-blue);font:.9rem/1.5 system-ui,sans-serif;padding:.65em .8em}.ll-ready button,.ll-ready input,.ll-ready select,.ll-ready textarea{font-family:inherit}.ll-ready button{border-radius:3px;cursor:pointer;max-width:100%;overflow-wrap:anywhere}.ll-ready button.action,.ll-ready .choice-box{background:var(--ll-blue);color:white;border:1px solid var(--ll-blue);min-height:40px;font:600 .85rem/1.4 system-ui,sans-serif;letter-spacing:0;text-transform:none;padding:7px 11px;box-shadow:none;transform:none}.ll-ready button.action.ghost,.ll-ready .choice-box{background:var(--ll-card);color:var(--ll-ink);border-color:#8b918f}.ll-ready .choice-box.selected{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-ready .choice-box.correct{background:#2d6043;color:white}.ll-ready .choice-box.wrong{background:var(--ll-accent);color:white}.ll-ready button:hover{border-color:var(--ll-accent);transform:none;box-shadow:none}.ll-ready button:disabled{cursor:default;opacity:1;background:#e6e3db;color:#59636a;border-color:#b3b2aa}
+.ll-ready button:focus-visible,.ll-ready input:focus-visible,.ll-ready select:focus-visible,.ll-ready textarea:focus-visible,.ll-ready [tabindex]:focus-visible{outline:3px solid #cb8433;outline-offset:2px}.ll-ready input[type=text],.ll-ready select:not(.ll-select),.ll-ready textarea{max-width:100%;min-width:0;font:inherit;color:var(--ll-ink);background:var(--ll-card);border:1px solid #8b918f;border-radius:3px}.ll-ready .note-row,.ll-ready .err-fix-row{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}.ll-ready .inline-select{width:auto;max-width:100%;font-size:.9em}.ll-ready .word-counter{font:600 .8rem/1.4 system-ui,sans-serif}.ll-ready .radio-opt input{flex:none;margin-top:.35em}.ll-ready .radio-opt{align-items:flex-start}.ll-ready .checkbox-cell{width:24px;height:24px;vertical-align:middle}.ll-ready .chapter-panel.active{animation:none}
+.ll-header{background:var(--ll-deep);color:white}.ll-header-inner{max-width:1200px;margin:auto;padding:8px 12px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;font:14px/1.4 system-ui,sans-serif}.ll-brand{font-size:12px;letter-spacing:.095em;font-weight:750}.ll-controls{display:flex;gap:5px;align-items:center;flex-wrap:wrap;min-width:0;max-width:100%}.ll-header button,.ll-header select.ll-select{font:14px/1.3 system-ui,sans-serif;min-height:36px;color:white;background:var(--ll-deep);border:1px solid #a9b8bf;border-radius:3px;padding:5px 8px;max-width:100%;min-width:0;width:auto}.ll-header select.ll-select{max-width:260px}.ll-header option{background:var(--ll-deep);color:white}.ll-header button:disabled{color:#c7d1d5;background:#334853;border-color:#75858a}.ll-progress{height:4px;background:#d8d5ca}.ll-progress>div{height:100%;background:var(--ll-accent);width:0}
+.ll-footer{max-width:1200px;margin:auto;padding:12px clamp(12px,4vw,52px);border-top:1px solid var(--ll-line);display:flex;justify-content:space-between;align-items:center;gap:8px;font:14px/1.4 system-ui,sans-serif}.ll-footer button{font:600 14px/1.4 system-ui,sans-serif;min-height:40px;border:1px solid #8b918f;background:var(--ll-card);color:var(--ll-ink);padding:6px 12px;border-radius:3px}.ll-footer .ll-next{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-footer button:disabled{color:#59636a;background:#e6e3db;border-color:#b3b2aa}.ll-position{font-variant-numeric:tabular-nums;text-align:center;white-space:nowrap;color:var(--ll-muted)}.ll-shortcuts{font:12px/1.5 system-ui,sans-serif;text-align:center;color:var(--ll-muted);margin:0 0 16px}.ll-touch-tip{font:.8rem/1.45 system-ui,sans-serif;color:var(--ll-muted)}.ll-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:650px){.ll-ready #main,.ll-ready .wrap{padding:20px 14px;min-height:0}.ll-ready .chapter-header h2,.ll-ready .ll-screen-heading{font-size:1.65rem}.ll-ready .chapter-header{padding:0 0 10px}.ll-ready .pair-grid{grid-template-columns:1fr}.ll-ready .note-row,.ll-ready .err-fix-row{grid-template-columns:minmax(0,1fr)}.ll-header select.ll-select{max-width:min(100%,200px)}.ll-ready .stack-item{grid-template-columns:minmax(0,1fr) auto}.ll-ready .stack-handle{display:none}.ll-ready .task-block,.ll-ready .prompt-sheet{padding:.6em}.ll-footer{padding:10px 12px}}
+@media(max-width:380px){.ll-header-inner{gap:6px}.ll-controls{gap:4px}.ll-header select.ll-select{max-width:165px}.ll-header button,.ll-header select.ll-select{padding:4px 6px}}
+@media(prefers-reduced-motion:reduce){.ll-ready *{animation:none!important;transition:none!important}}
+@media print{.ll-header,.ll-footer,.ll-shortcuts,.ll-progress{display:none!important}.ll-ready #main,.ll-ready .wrap{padding:0;max-width:none}}
+</style>
+</head>
+<body>
+
+<button id="sidebarToggle" class="menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false">
+  ☰ Contents
+</button>
+
+<!-- ══════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-title">
+    <h1>B2 First<br>Key Word Transformations</h1>
+    <p>A Step-by-Step Guide</p>
+  </div>
+
+  <div class="sidebar-nav">
+
+    <div class="guide-group">
+      <button class="part-toggle open" onclick="togglePart(this)">
+        Guides <span class="arrow">▶</span>
+      </button>
+      <div class="guide-links open chapter-list">
+        <a class="guide-link" href="index.html">Home</a>
+        <a class="guide-link active" href="key-word-transformations.html" aria-current="page">Key Word Transformations</a>
+        <a class="guide-link" href="tense-building-blocks.html">English Tense Building Blocks</a>
+        <a class="guide-link" href="english-articles.html">English Articles</a>
+        <a class="guide-link" href="active-passive-voice.html">Active and Passive Voice</a>
+      </div>
+    </div>
+
+    <!-- INTRO -->
+    <div class="part-group">
+      <button class="part-toggle open" onclick="togglePart(this)">
+        Introduction <span class="arrow">▶</span>
+      </button>
+      <div class="chapter-list open">
+        <button class="chapter-link active" onclick="showChapter('intro', this)">
+          <span class="ch-num">Overview</span>
+          How to Use This Guide
+        </button>
+      </div>
+    </div>
+
+    <!-- PART 1 -->
+    <div class="part-group">
+      <button class="part-toggle open" onclick="togglePart(this)">
+        Part 1 — Understand the Task <span class="arrow">▶</span>
+      </button>
+      <div class="chapter-list open">
+        <button class="chapter-link" onclick="showChapter('ch1', this)">
+          <span class="ch-num">Chapter 1</span>
+          What Part 4 Is
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch2', this)">
+          <span class="ch-num">Chapter 2</span>
+          The Four Rules
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch3', this)">
+          <span class="ch-num">Chapter 3</span>
+          Small Grammar Toolbox
+        </button>
+      </div>
+    </div>
+
+    <!-- PART 2 -->
+    <div class="part-group">
+      <button class="part-toggle" onclick="togglePart(this)">
+        Part 2 — The Solving Method <span class="arrow">▶</span>
+      </button>
+      <div class="chapter-list">
+        <button class="chapter-link" onclick="showChapter('ch4', this)">
+          <span class="ch-num">Chapter 4</span>
+          The Main Routine
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch5', this)">
+          <span class="ch-num">Chapter 5</span>
+          Understanding the Marking
+        </button>
+      </div>
+    </div>
+
+    <!-- PART 3 -->
+    <div class="part-group">
+      <button class="part-toggle" onclick="togglePart(this)">
+        Part 3 — Transformation Patterns <span class="arrow">▶</span>
+      </button>
+      <div class="chapter-list">
+        <button class="chapter-link" onclick="showChapter('ch6', this)">
+          <span class="ch-num">Chapter 6</span>
+          Time and Tenses
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch7', this)">
+          <span class="ch-num">Chapter 7</span>
+          Passive Forms
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch8', this)">
+          <span class="ch-num">Chapter 8</span>
+          Modals and Obligation
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch9', this)">
+          <span class="ch-num">Chapter 9</span>
+          Comparisons
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch10', this)">
+          <span class="ch-num">Chapter 10</span>
+          Gerunds and Infinitives
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch11', this)">
+          <span class="ch-num">Chapter 11</span>
+          Linkers: Contrast and Reason
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch12', this)">
+          <span class="ch-num">Chapter 12</span>
+          Result and Purpose
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch13', this)">
+          <span class="ch-num">Chapter 13</span>
+          Conditionals
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch14', this)">
+          <span class="ch-num">Chapter 14</span>
+          Reported Speech
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch15', this)">
+          <span class="ch-num">Chapter 15</span>
+          Phrasal Verbs and Fixed Expressions
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch16', this)">
+          <span class="ch-num">Chapter 16</span>
+          Common B2 Verb Patterns
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch17', this)">
+          <span class="ch-num">Chapter 17</span>
+          Sentence-Shape Changes
+        </button>
+      </div>
+    </div>
+
+    <!-- PART 4 -->
+    <div class="part-group">
+      <button class="part-toggle" onclick="togglePart(this)">
+        Part 4 — Avoid Common Mistakes <span class="arrow">▶</span>
+      </button>
+      <div class="chapter-list">
+        <button class="chapter-link" onclick="showChapter('ch18', this)">
+          <span class="ch-num">Chapter 18</span>
+          Danger Zones
+        </button>
+      </div>
+    </div>
+
+    <!-- PART 5 -->
+    <div class="part-group">
+      <button class="part-toggle" onclick="togglePart(this)">
+        Part 5 — Build Control <span class="arrow">▶</span>
+      </button>
+      <div class="chapter-list">
+        <button class="chapter-link" onclick="showChapter('ch19', this)">
+          <span class="ch-num">Chapter 19</span>
+          How to Learn the Patterns
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch20', this)">
+          <span class="ch-num">Chapter 20</span>
+          Exam-Day Method
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch21', this)">
+          <span class="ch-num">Chapter 21</span>
+          Full Demonstration Walkthroughs
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch22', this)">
+          <span class="ch-num">Chapter 22</span>
+          Final Mastery Checklist
+        </button>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════ -->
+<main id="main">
+
+<!-- ────────────────────────────────────────
+     INTRO
+──────────────────────────────────────────── -->
+<div id="panel-intro" class="chapter-panel active">
+  <div class="chapter-header">
+    <div class="part-label">Introduction</div>
+    <h2>How to Use This Guide</h2>
+  </div>
+  <div class="chapter-body">
+    <p class="intro-lead">Part 4 is not a guessing task.</p>
+    <p>Do not just put words in the gap.</p>
+    <p>First understand the meaning.<br>
+    Then use the key word.<br>
+    Then fit the answer into the whole sentence.<br>
+    Then check it.</p>
+
+    <p>The routine in this guide is:</p>
+
+    <div class="routine-display">
+      <span class="routine-tag">Meaning</span>
+      <span class="arrow">→</span>
+      <span class="routine-tag">Key Word</span>
+      <span class="arrow">→</span>
+      <span class="routine-tag">Gap Frame</span>
+      <span class="arrow">→</span>
+      <span class="routine-tag">Pattern</span>
+      <span class="arrow">→</span>
+      <span class="routine-tag">Answer</span>
+      <span class="arrow">→</span>
+      <span class="routine-tag">Check</span>
+    </div>
+
+    <p>You will see this routine many times. That is deliberate. In the exam, you need a habit, not a lucky guess.</p>
+
+    <hr>
+
+    <p>The official B2 First Reading and Use of English Part 4 task has six questions plus an example. Each question gives you a first sentence, a key word, and a second sentence with a gap. You must complete the second sentence so that it has a similar meaning to the first sentence. Your answer must use the key word unchanged and must usually be two to five words, including the key word. Cambridge describes the focus as grammar and vocabulary, with a range of structures tested. Cambridge also explains that the skill is expressing a message in a different way.<sup class="footnote-ref">1</sup></p>
+
+    <p>Cambridge teaching tips also say that you should write only the missing words, not the whole sentence, and that you should pay attention to time clues, singular/plural clues, and the words before and after the gap.<sup class="footnote-ref">2</sup></p>
+
+    <div class="footnotes">
+      <p><sup>1</sup> <a href="https://www.cambridgeenglish.org/latinamerica/Images/167791-b2-first-handbook.pdf" target="_blank">B2 First Handbook — Cambridge English</a></p>
+      <p><sup>2</sup> <a href="https://www.cambridgeenglish.org/images/168044-b2-first-and-b2-first-for-schools-teaching-tips.pdf" target="_blank">B2 First Teaching Tips — Cambridge English</a></p>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn disabled">← Previous</button>
+    <button class="nav-btn" onclick="showChapterById('ch1')">
+      <div><span class="nav-ch">Chapter 1</span>What Part 4 Is</div> →
+    </button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 1
+──────────────────────────────────────────── -->
+<div id="panel-ch1" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 1 — Understand the Task</div>
+    <div class="ch-number">Chapter 1</div>
+    <h2>What Part 4 Is</h2>
+  </div>
+  <div class="chapter-body">
+    <p>In Part 4, you see a sentence. Then you see a word in capital letters. Then you see another sentence with a gap. Your job is to complete the second sentence so that it means almost the same as the first sentence.</p>
+
+    <h3>What You See</h3>
+    <p>Example:</p>
+    <div class="task-block">
+      <p>I did not phone Sarah because I was busy.</p>
+      <p><span class="key-tag">TOO</span></p>
+      <p>I was <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Sarah.</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">too busy to phone</div>
+      <div class="full-sentence">I was <strong>too busy to phone</strong> Sarah.</div>
+    </div>
+
+    <h3>Why This Works</h3>
+    <p>The first sentence means:</p>
+    <p style="padding-left:20px; font-style:italic;">I was busy. Because of this, I did not phone Sarah.</p>
+    <p>The second sentence says the same idea in another way:</p>
+    <p style="padding-left:20px; font-style:italic;">I was too busy to phone Sarah.</p>
+    <p>The answer works because:</p>
+
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Same main meaning? <strong>Yes.</strong></li>
+        <li>Key word unchanged? <strong>Yes: <em>too</em>.</strong></li>
+        <li>Two to five words? <strong>Yes: <em>too busy to phone</em> = four words.</strong></li>
+        <li>Full sentence grammatical? <strong>Yes: <em>I was too busy to phone Sarah.</em></strong></li>
+      </ul>
+    </div>
+
+    <h3>Important Words for This Guide</h3>
+    <table>
+      <thead><tr><th>Term</th><th>Student-friendly meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>paraphrase</strong></td><td>say the same idea in another way</td></tr>
+        <tr><td><strong>gap</strong></td><td>the empty space in the second sentence</td></tr>
+        <tr><td><strong>key word</strong></td><td>the word you must use</td></tr>
+        <tr><td><strong>structure</strong></td><td>the grammar shape of the answer</td></tr>
+        <tr><td><strong>fixed expression</strong></td><td>words that usually go together</td></tr>
+      </tbody>
+    </table>
+
+    <div class="rule-box">
+      <div class="rule-label">Rule</div>
+      Part 4 is a paraphrasing task. You are not writing a new idea. You are saying the same main idea in a different way.
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('intro')">← <div><span class="nav-ch">Introduction</span>How to Use This Guide</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch2')"><div><span class="nav-ch">Chapter 2</span>The Four Rules</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 2
+──────────────────────────────────────────── -->
+<div id="panel-ch2" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 1 — Understand the Task</div>
+    <div class="ch-number">Chapter 2</div>
+    <h2>The Four Rules</h2>
+  </div>
+  <div class="chapter-body">
+    <p>There are four main rules.</p>
+    <ol>
+      <li>Keep the same main meaning.</li>
+      <li>Use the key word exactly.</li>
+      <li>Write two to five words, including the key word.</li>
+      <li>Make the whole second sentence grammatical.</li>
+    </ol>
+    <p>One more practical rule:</p>
+    <div class="rule-box">
+      <div class="rule-label">Practical Rule</div>
+      Write only the missing words, not the whole sentence.
+    </div>
+    <p>Cambridge materials state that the answer must contain two to five words, must include the key word unchanged, and should be written as the words needed to fill the gap, not as the full second sentence.<sup class="footnote-ref">1</sup></p>
+
+    <hr>
+
+    <h3>Rule 1: Keep the Same Main Meaning</h3>
+    <div class="task-block">
+      <p>You are not allowed to park here.</p>
+      <p><span class="key-tag">MUST</span></p>
+      <p>You <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> here.</p>
+    </div>
+
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong Answer</div>
+      <p><strong>do not have to park</strong></p>
+      <p>Full sentence: <em>You <strong>do not have to park</strong> here.</em></p>
+      <p><strong>Problem:</strong> This means parking is not necessary. But the first sentence means parking is prohibited.</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Correct Answer</div>
+      <div class="answer-text">must not park</div>
+      <div class="full-sentence">You <strong>must not park</strong> here.</div>
+    </div>
+
+    <div class="danger-box">
+      <div class="danger-title">Common Mistake</div>
+      <p><strong>don't have to</strong> = not necessary</p>
+      <p><strong>must not</strong> = not allowed</p>
+    </div>
+
+    <hr>
+
+    <h3>Rule 2: Use the Key Word Exactly</h3>
+    <div class="task-block">
+      <p>She succeeded in finding a job.</p>
+      <p><span class="key-tag">SUCCESS</span></p>
+      <p>She <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> a job.</p>
+    </div>
+
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong Answer</div>
+      <p><strong>was successful in finding</strong></p>
+      <p><strong>Problem:</strong> The key word changed from <strong>success</strong> to <strong>successful</strong>.</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Correct Style</div>
+      <div class="answer-text">had success in finding</div>
+      <div class="full-sentence">She <strong>had success in finding</strong> a job.</div>
+    </div>
+
+    <div class="rule-box">
+      <div class="rule-label">Rule</div>
+      Even if your grammar is good, changing the key word breaks the task rule.
+    </div>
+
+    <hr>
+
+    <h3>Rule 3: Write Two to Five Words</h3>
+    <div class="task-block">
+      <p>I last met Ana in 2020.</p>
+      <p><span class="key-tag">SINCE</span></p>
+      <p>I <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 2020.</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Correct Answer</div>
+      <div class="answer-text">have not met Ana since</div>
+      <div class="full-sentence">I <strong>have not met Ana since</strong> 2020.</div>
+    </div>
+
+    <p>Word count: <em>have / not / met / Ana / since</em> = <strong>five words</strong></p>
+
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong Answer</div>
+      <p><strong>have not had a meeting with Ana since</strong></p>
+      <p><strong>Problem:</strong> Too many words.</p>
+    </div>
+
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul><li>Count every word in the gap before you finish.</li></ul>
+    </div>
+
+    <hr>
+
+    <h3>Rule 4: Make the Whole Second Sentence Grammatical</h3>
+    <div class="task-block">
+      <p>We cancelled the picnic because of the rain.</p>
+      <p><span class="key-tag">DUE</span></p>
+      <p>The picnic was cancelled <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the rain.</p>
+    </div>
+
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong Answer</div>
+      <p><strong>due it was</strong></p>
+      <p><strong>Problem:</strong> The sentence does not fit grammatically.</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Correct Answer</div>
+      <div class="answer-text">due to</div>
+      <div class="full-sentence">The picnic was cancelled <strong>due to</strong> the rain.</div>
+    </div>
+
+    <h3>Extra Rule: Write Only the Missing Words</h3>
+    <p>For the same question:</p>
+    <p style="padding-left:20px; font-style:italic;">The picnic was cancelled __________ the rain.</p>
+    <p>Do not write: <em>The picnic was cancelled due to the rain.</em></p>
+    <p>Write only: <code>due to</code></p>
+
+    <div class="footnotes">
+      <p><sup>1</sup> <a href="https://www.cambridgeenglish.org/latinamerica/Images/167791-b2-first-handbook.pdf" target="_blank">B2 First Handbook — Cambridge English</a></p>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch1')">← <div><span class="nav-ch">Chapter 1</span>What Part 4 Is</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch3')"><div><span class="nav-ch">Chapter 3</span>Small Grammar Toolbox</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 3
+──────────────────────────────────────────── -->
+<div id="panel-ch3" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 1 — Understand the Task</div>
+    <div class="ch-number">Chapter 3</div>
+    <h2>Small Grammar Toolbox</h2>
+  </div>
+  <div class="chapter-body">
+    <p>You do not need to become a grammar expert before you can improve at Part 4. But you do need a small toolbox.</p>
+
+    <table>
+      <thead><tr><th>Term</th><th>Simple explanation</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><strong>subject</strong></td><td>who or what the sentence is about</td><td><em><strong>Maria</strong> plays tennis.</em></td></tr>
+        <tr><td><strong>verb</strong></td><td>the action or state</td><td><em>Maria <strong>plays</strong> tennis.</em></td></tr>
+        <tr><td><strong>object</strong></td><td>the person or thing affected by the action</td><td><em>Maria plays <strong>tennis</strong>.</em></td></tr>
+        <tr><td><strong>clause</strong></td><td>a part of a sentence with a subject and verb</td><td><em><strong>because I was tired</strong></em></td></tr>
+        <tr><td><strong>noun phrase</strong></td><td>a group of words that works like a noun</td><td><em><strong>the old blue car</strong></em></td></tr>
+        <tr><td><strong>-ing form</strong></td><td>verb form like <em>going</em>, <em>playing</em></td><td><em>I enjoy <strong>swimming</strong>.</em></td></tr>
+        <tr><td><strong>infinitive</strong></td><td><em>to go</em>, <em>to play</em></td><td><em>I want <strong>to leave</strong>.</em></td></tr>
+        <tr><td><strong>past participle</strong></td><td>form used in passives and perfect tenses</td><td><em><strong>seen</strong>, <strong>made</strong>, <strong>taken</strong></em></td></tr>
+      </tbody>
+    </table>
+
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Can I find the subject?</li>
+        <li>Can I find the verb?</li>
+        <li>Can I see what comes before and after the gap?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch2')">← <div><span class="nav-ch">Chapter 2</span>The Four Rules</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch4')"><div><span class="nav-ch">Chapter 4</span>The Main Routine</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 4
+──────────────────────────────────────────── -->
+<div id="panel-ch4" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 2 — Learn the Solving Method</div>
+    <div class="ch-number">Chapter 4</div>
+    <h2>The Main Routine</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Use this routine every time:</p>
+    <div class="routine-display">
+      <span class="routine-tag">Meaning</span> →
+      <span class="routine-tag">Key Word</span> →
+      <span class="routine-tag">Gap Frame</span> →
+      <span class="routine-tag">Pattern</span> →
+      <span class="routine-tag">Answer</span> →
+      <span class="routine-tag">Check</span>
+    </div>
+
+    <h3>Running Example</h3>
+    <div class="task-block">
+      <p>Someone stole my bike yesterday.</p>
+      <p><span class="key-tag">WAS</span></p>
+      <p>My bike <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> yesterday.</p>
+    </div>
+
+    <div class="step-block">
+      <span class="step-label">Step 1 — Meaning</span>
+      <p>Ask:</p>
+      <ul>
+        <li>Who or what is the sentence about?</li>
+        <li>What happened?</li>
+        <li>When did it happen?</li>
+        <li>Is the focus on the person doing the action, or the thing receiving the action?</li>
+      </ul>
+      <p style="margin-top:12px;">Meaning: A person stole the bike. We do not know who, or the person is not important. The bike receives the action. The time is yesterday.</p>
+    </div>
+
+    <div class="step-block">
+      <span class="step-label">Step 2 — Key Word</span>
+      <p>Key word: <strong>WAS</strong></p>
+      <p>This suggests a past passive form.</p>
+    </div>
+
+    <div class="step-block">
+      <span class="step-label">Step 3 — Gap Frame</span>
+      <p>Look at the second sentence like this:</p>
+      <p style="margin-top:8px;"><strong>My bike</strong> + gap + <strong>yesterday</strong></p>
+      <p>The answer must fit after <strong>My bike</strong> and before <strong>yesterday</strong>.</p>
+    </div>
+
+    <div class="step-block">
+      <span class="step-label">Step 4 — Pattern</span>
+      <p>Passive pattern:</p>
+      <div class="pattern-box">object + be + past participle</div>
+      <p>Here: <em>My bike + was + stolen</em></p>
+    </div>
+
+    <div class="step-block">
+      <span class="step-label">Step 5 — Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;">
+        <div class="answer-label">Answer</div>
+        <div class="answer-text">was stolen</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <span class="step-label">Step 6 — Check</span>
+      <div class="full-sentence" style="margin-bottom:12px;">My bike <strong>was stolen</strong> yesterday.</div>
+      <div class="check-box" style="margin:0;">
+        <div class="check-title">Check Yourself</div>
+        <ul>
+          <li>Same meaning? <strong>Yes.</strong></li>
+          <li>Key word unchanged? <strong>Yes: <em>was</em>.</strong></li>
+          <li>Two to five words? <strong>Yes: two words.</strong></li>
+          <li>Grammar fits? <strong>Yes.</strong></li>
+          <li>Spelling correct? <strong>Yes: <em>stolen</em>.</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="thinking-box">
+      <div class="thinking-label">Student Thinking Box</div>
+      <p>I do not know who stole it.<br>
+      The bike receives the action.<br>
+      So I need the passive.<br>
+      The key word <strong>was</strong> fits the passive.<br>
+      The past participle of <em>steal</em> is <em>stolen</em>.</p>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch3')">← <div><span class="nav-ch">Chapter 3</span>Small Grammar Toolbox</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch5')"><div><span class="nav-ch">Chapter 5</span>Understanding the Marking</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 5
+──────────────────────────────────────────── -->
+<div id="panel-ch5" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 2 — Learn the Solving Method</div>
+    <div class="ch-number">Chapter 5</div>
+    <h2>Understanding the Marking</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Part 4 is not always just right or wrong. Each answer can receive up to two marks. Cambridge's handbook says the mark scheme splits the answer into two parts and candidates get one mark for each correct part.<sup class="footnote-ref">1</sup></p>
+    <p>Official answer keys often show these two parts with a vertical line. For example, an answer key may show a Part 4 answer divided like this: <code>have not / n't SEEN | Dan for</code>.</p>
+
+    <h3>Teaching Example</h3>
+    <div class="task-block">
+      <p>She has never visited Rome before.</p>
+      <p><span class="key-tag">BEEN</span></p>
+      <p>She <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Rome before.</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Correct Answer</div>
+      <div class="answer-text">has never been to</div>
+      <div class="full-sentence">She <strong>has never been to</strong> Rome before.</div>
+    </div>
+
+    <p>Possible marking view:</p>
+    <table>
+      <thead><tr><th>Part 1</th><th>Part 2</th></tr></thead>
+      <tbody>
+        <tr><td><code>has never</code></td><td><code>been to</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>What This Means for You</h3>
+    <p>If you know part of the answer, do not leave the gap empty. A careful partial answer may be better than no answer. But do not write random words. Use what you know.</p>
+
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Do I know the tense?</li>
+        <li>Do I know the fixed phrase?</li>
+        <li>Do I know the preposition?</li>
+        <li>Can I write at least the part I am sure about?</li>
+      </ul>
+    </div>
+
+    <div class="footnotes">
+      <p><sup>1</sup> <a href="https://www.cambridgeenglish.org/latinamerica/Images/167791-b2-first-handbook.pdf" target="_blank">B2 First Handbook — Cambridge English</a></p>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch4')">← <div><span class="nav-ch">Chapter 4</span>The Main Routine</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch6')"><div><span class="nav-ch">Chapter 6</span>Time and Tenses</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 6
+──────────────────────────────────────────── -->
+<div id="panel-ch6" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 6</div>
+    <h2>Time and Tenses</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Many Part 4 questions test time. You must decide: Is the action finished? Does it continue until now? Is the sentence about a point in time or a length of time?</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>for</code> &nbsp; <code>since</code> &nbsp; <code>ago</code> &nbsp; <code>last</code> &nbsp; <code>started</code> &nbsp; <code>began</code> &nbsp; <code>been</code></p>
+
+    <h3>Basic Patterns</h3>
+    <table>
+      <thead><tr><th>Meaning</th><th>Common Pattern</th></tr></thead>
+      <tbody>
+        <tr><td>started in the past and continues now</td><td>present perfect + <strong>for/since</strong></td></tr>
+        <tr><td>finished time</td><td>past simple</td></tr>
+        <tr><td>last time something happened</td><td>present perfect negative + <strong>for/since</strong></td></tr>
+        <tr><td>beginning point</td><td><strong>since</strong></td></tr>
+        <tr><td>length of time</td><td><strong>for</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>She started working here three years ago.</p>
+      <p><span class="key-tag">FOR</span></p>
+      <p>She <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> three years.</p>
+    </div>
+
+    <div class="step-block">
+      <span class="step-label">Meaning</span>
+      <p>She began working here three years ago. She still works here now.</p>
+    </div>
+    <div class="step-block">
+      <span class="step-label">Key Word</span>
+      <p><strong>FOR</strong> shows a length of time.</p>
+    </div>
+    <div class="step-block">
+      <span class="step-label">Gap Frame</span>
+      <p>She + gap + three years</p>
+    </div>
+    <div class="step-block">
+      <span class="step-label">Pattern</span>
+      <div class="pattern-box">has/have + past participle + for</div>
+    </div>
+    <div class="step-block">
+      <span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">has worked here for</div><div class="full-sentence">She <strong>has worked here for</strong> three years.</div></div>
+    </div>
+
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Same time meaning? <strong>Yes.</strong></li>
+        <li>Started in the past and continues now? <strong>Yes.</strong></li>
+        <li>Key word unchanged? <strong>Yes: <em>for</em>.</strong></li>
+        <li>Word count? <strong>Four words.</strong></li>
+      </ul>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>I haven't seen him since Monday.</p>
+      <p><span class="key-tag">LAST</span></p>
+      <p>I <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Monday.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">last saw him on</div>
+      <div class="full-sentence">I <strong>last saw him on</strong> Monday.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="task-block">
+      <p>When did you begin learning English?</p>
+      <p><span class="key-tag">BEEN</span></p>
+      <p>How long <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> English?</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Correct Answer</div>
+      <div class="answer-text">have you been learning</div>
+    </div>
+
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong Answer</div>
+      <p><strong>did you learn</strong></p>
+      <p>The first question asks about a period from the beginning until now. The answer needs present perfect continuous:</p>
+      <p><em>How long <strong>have you been learning</strong> English?</em></p>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Is the time finished or unfinished?</li>
+        <li>Do I need present perfect?</li>
+        <li>Do I need past simple?</li>
+        <li>Do I need <strong>for</strong> or <strong>since</strong>?</li>
+        <li>Does the answer keep the same time meaning?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch5')">← <div><span class="nav-ch">Chapter 5</span>Understanding the Marking</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch7')"><div><span class="nav-ch">Chapter 7</span>Passive Forms</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 7
+──────────────────────────────────────────── -->
+<div id="panel-ch7" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 7</div>
+    <h2>Passive Forms</h2>
+  </div>
+  <div class="chapter-body">
+    <p>A passive sentence starts with the person or thing that receives the action.</p>
+    <p>Active: <em>Someone stole my bike.</em><br>
+    Passive: <em>My bike was stolen.</em></p>
+
+    <h3>Common Key Words</h3>
+    <p><code>was</code> &nbsp; <code>were</code> &nbsp; <code>is</code> &nbsp; <code>are</code> &nbsp; <code>been</code> &nbsp; <code>be</code> &nbsp; <code>by</code></p>
+
+    <h3>Basic Pattern</h3>
+    <div class="pattern-box">object + be + past participle</div>
+    <p>Examples: <em>was stolen / are cleaned / has been repaired / must be checked</em></p>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>Someone stole my bike yesterday.</p>
+      <p><span class="key-tag">WAS</span></p>
+      <p>My bike <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> yesterday.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>The bike receives the action.</p></div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>WAS</strong> suggests past passive.</p></div>
+    <div class="step-block"><span class="step-label">Gap Frame</span><p>My bike + gap + yesterday</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">was + past participle</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">was stolen</div><div class="full-sentence">My bike <strong>was stolen</strong> yesterday.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>They clean the classrooms every day.</p>
+      <p><span class="key-tag">ARE</span></p>
+      <p>The classrooms <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> every day.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">are cleaned</div>
+      <div class="full-sentence">The classrooms <strong>are cleaned</strong> every day.</div>
+    </div>
+
+    <h3>Modal Passive</h3>
+    <div class="pattern-box">modal + be + past participle</div>
+    <p>Examples: <em>must be done / should be checked / can be seen</em></p>
+
+    <div class="task-block">
+      <p>You must finish this report today.</p>
+      <p><span class="key-tag">BE</span></p>
+      <p>This report <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> today.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">must be finished</div>
+      <div class="full-sentence">This report <strong>must be finished</strong> today.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>My bike <strong>was stole</strong> yesterday.</em></p>
+      <p><strong>Why wrong?</strong> After <em>was</em>, you need the past participle: <strong>stolen</strong></p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct</div>
+      <div class="answer-text">was stolen</div>
+      <div class="full-sentence">My bike <strong>was stolen</strong> yesterday.</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Who or what receives the action?</li>
+        <li>Do I need <strong>am/is/are/was/were/be/been</strong>?</li>
+        <li>What is the past participle?</li>
+        <li>Is the time still the same?</li>
+        <li>Do I need <strong>by + person</strong>, or is it unnecessary?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch6')">← <div><span class="nav-ch">Chapter 6</span>Time and Tenses</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch8')"><div><span class="nav-ch">Chapter 8</span>Modals and Obligation</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 8
+──────────────────────────────────────────── -->
+<div id="panel-ch8" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 8</div>
+    <h2>Modals and Obligation</h2>
+  </div>
+  <div class="chapter-body">
+    <p>These questions test necessity, prohibition, advice, or permission. The danger is that similar forms can have very different meanings.</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>must</code> &nbsp; <code>have</code> &nbsp; <code>need</code> &nbsp; <code>should</code> &nbsp; <code>allowed</code> &nbsp; <code>ought</code></p>
+
+    <h3>Important Meanings</h3>
+    <table>
+      <thead><tr><th>Form</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>mustn't / must not</strong></td><td>it is not allowed</td></tr>
+        <tr><td><strong>don't have to</strong></td><td>it is not necessary</td></tr>
+        <tr><td><strong>had to</strong></td><td>it was necessary</td></tr>
+        <tr><td><strong>didn't have to</strong></td><td>it was not necessary</td></tr>
+        <tr><td><strong>should</strong></td><td>it is a good idea</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>It isn't necessary for you to bring food.</p>
+      <p><span class="key-tag">HAVE</span></p>
+      <p>You <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> food.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>Bringing food is not necessary.</p></div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>HAVE</strong> suggests <em>have to</em>.</p></div>
+    <div class="step-block"><span class="step-label">Gap Frame</span><p>You + gap + food</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">do not have to + verb</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">do not have to bring</div><div class="full-sentence">You <strong>do not have to bring</strong> food. — (meaning: it is not necessary)</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>You are not allowed to use your phone here.</p>
+      <p><span class="key-tag">MUST</span></p>
+      <p>You <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> your phone here.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">must not use</div>
+      <div class="full-sentence">You <strong>must not use</strong> your phone here.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>You <strong>do not have to use</strong> your phone here.</em></p>
+      <p>This means: <em>It is not necessary to use your phone.</em></p>
+      <p>But the first sentence means: <em>It is prohibited.</em></p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct</div>
+      <div class="answer-text">must not use</div>
+      <div class="full-sentence">You <strong>must not use</strong> your phone here.</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Is something necessary?</li>
+        <li>Is something prohibited?</li>
+        <li>Is it advice?</li>
+        <li>Is it permission?</li>
+        <li>Is the sentence about past, present, or future?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch7')">← <div><span class="nav-ch">Chapter 7</span>Passive Forms</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch9')"><div><span class="nav-ch">Chapter 9</span>Comparisons</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 9
+──────────────────────────────────────────── -->
+<div id="panel-ch9" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 9</div>
+    <h2>Comparisons</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Comparison questions ask you to keep the same comparison, even when the sentence changes shape. The subject may change. When the subject changes, the comparison may need to reverse.</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>as</code> &nbsp; <code>than</code> &nbsp; <code>not</code> &nbsp; <code>same</code> &nbsp; <code>different</code> &nbsp; <code>too</code> &nbsp; <code>enough</code></p>
+
+    <h3>Basic Patterns</h3>
+    <table>
+      <thead><tr><th>Meaning</th><th>Pattern</th></tr></thead>
+      <tbody>
+        <tr><td>equal</td><td><strong>as ... as</strong></td></tr>
+        <tr><td>not equal</td><td><strong>not as/so ... as</strong></td></tr>
+        <tr><td>more</td><td><strong>comparative + than</strong></td></tr>
+        <tr><td>too much</td><td><strong>too + adjective + to</strong></td></tr>
+        <tr><td>enough</td><td><strong>adjective + enough + to</strong></td></tr>
+        <tr><td>identical</td><td><strong>the same as</strong></td></tr>
+        <tr><td>not identical</td><td><strong>different from/to</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>This book is easier than the last one.</p>
+      <p><span class="key-tag">NOT</span></p>
+      <p>The last book was <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> this one.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>This book is easier. The last book was more difficult.</p></div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>NOT</strong> suggests a negative comparison.</p></div>
+    <div class="step-block"><span class="step-label">Gap Frame</span><p>The last book was + gap + this one</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">not as + adjective + as</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">not as easy as</div><div class="full-sentence">The last book was <strong>not as easy as</strong> this one.</div></div>
+    </div>
+    <p>The adjective <strong>easy</strong> stays, but the subject changes. So the comparison reverses.</p>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>My bag is the same as yours.</p>
+      <p><span class="key-tag">DIFFERENT</span></p>
+      <p>My bag <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> yours.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">is not different from</div>
+      <div class="full-sentence">My bag <strong>is not different from</strong> yours.</div>
+    </div>
+
+    <h3>Too / Enough Example</h3>
+    <div class="task-block">
+      <p>The coffee was too hot to drink.</p>
+      <p><span class="key-tag">ENOUGH</span></p>
+      <p>The coffee <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> to drink.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">was not cool enough</div>
+      <div class="full-sentence">The coffee <strong>was not cool enough</strong> to drink.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>The last book was <strong>as easy as</strong> this one.</em></p>
+      <p>That means the two books were equally easy. The first sentence says this book was easier.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct</div>
+      <div class="answer-text">not as easy as</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Which thing is bigger, easier, better, older, etc.?</li>
+        <li>Has the subject changed?</li>
+        <li>Do I need a negative comparison?</li>
+        <li>Do I need <strong>as ... as</strong> or <strong>comparative + than</strong>?</li>
+        <li>Does the meaning still compare the same two things?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch8')">← <div><span class="nav-ch">Chapter 8</span>Modals and Obligation</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch10')"><div><span class="nav-ch">Chapter 10</span>Gerunds and Infinitives</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 10
+──────────────────────────────────────────── -->
+<div id="panel-ch10" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 10</div>
+    <h2>Gerunds and Infinitives</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Some verbs and expressions are followed by <strong>-ing</strong>. Some are followed by <strong>to + infinitive</strong>. Some use <strong>to</strong>, but the word after <strong>to</strong> must still be <strong>-ing</strong>.</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>forward</code> &nbsp; <code>object</code> &nbsp; <code>used</code> &nbsp; <code>decided</code> &nbsp; <code>managed</code> &nbsp; <code>avoid</code> &nbsp; <code>suggest</code></p>
+
+    <h3>Basic Patterns</h3>
+    <table>
+      <thead><tr><th>Pattern</th><th>Correct</th></tr></thead>
+      <tbody>
+        <tr><td>want + to infinitive</td><td><em>want to go</em></td></tr>
+        <tr><td>decide + to infinitive</td><td><em>decided to leave</em></td></tr>
+        <tr><td>enjoy + -ing</td><td><em>enjoy swimming</em></td></tr>
+        <tr><td>avoid + -ing</td><td><em>avoid speaking</em></td></tr>
+        <tr><td>look forward to + -ing</td><td><em>look forward to seeing</em></td></tr>
+        <tr><td>be used to + -ing</td><td><em>be used to getting up</em></td></tr>
+        <tr><td>object to + -ing</td><td><em>object to working late</em></td></tr>
+      </tbody>
+    </table>
+
+    <div class="rule-box">
+      <div class="rule-label">Rule</div>
+      <strong>To</strong> is not always followed by the infinitive.
+    </div>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>I am excited about seeing you next week.</p>
+      <p><span class="key-tag">FORWARD</span></p>
+      <p>I am <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> you next week.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>I feel happy because I will see you soon.</p></div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>FORWARD</strong> suggests the expression: <em>look forward to + -ing</em></p></div>
+    <div class="step-block"><span class="step-label">Gap Frame</span><p>I am + gap + you next week</p></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">looking forward to seeing</div><div class="full-sentence">I am <strong>looking forward to seeing</strong> you next week.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>I don't want to work late.</p>
+      <p><span class="key-tag">OBJECT</span></p>
+      <p>I <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> late.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">object to working</div>
+      <div class="full-sentence">I <strong>object to working</strong> late.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>I am <strong>looking forward to see</strong> you.</em></p>
+      <p>After <em>look forward to</em>, use <strong>-ing</strong>.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct</div>
+      <div class="answer-text">looking forward to seeing</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Does this verb take <strong>-ing</strong>?</li>
+        <li>Does this verb take <strong>to + infinitive</strong>?</li>
+        <li>Is <strong>to</strong> part of an infinitive or a preposition?</li>
+        <li>Does the answer fit after the words outside the gap?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch9')">← <div><span class="nav-ch">Chapter 9</span>Comparisons</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch11')"><div><span class="nav-ch">Chapter 11</span>Linkers: Contrast and Reason</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 11
+──────────────────────────────────────────── -->
+<div id="panel-ch11" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 11</div>
+    <h2>Linkers: Contrast and Reason</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Linkers connect ideas. Some linkers are followed by a clause (subject + verb). Some linkers are followed by a noun or <strong>-ing</strong> form.</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>although</code> &nbsp; <code>though</code> &nbsp; <code>despite</code> &nbsp; <code>because</code> &nbsp; <code>reason</code> &nbsp; <code>spite</code></p>
+
+    <h3>Basic Patterns</h3>
+    <table>
+      <thead><tr><th>Linker</th><th>Followed by</th></tr></thead>
+      <tbody>
+        <tr><td><strong>although / even though</strong></td><td>subject + verb</td></tr>
+        <tr><td><strong>despite / in spite of</strong></td><td>noun or -ing</td></tr>
+        <tr><td><strong>because</strong></td><td>subject + verb</td></tr>
+        <tr><td><strong>because of</strong></td><td>noun or -ing</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>Although it was raining, we went out.</p>
+      <p><span class="key-tag">DESPITE</span></p>
+      <p>We went out <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>There was rain, but we went out.</p></div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>DESPITE</strong> shows contrast.</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><p>After <strong>despite</strong>, use a noun or <strong>-ing</strong>, not a full clause.</p></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">despite the rain</div><div class="full-sentence">We went out <strong>despite the rain</strong>.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>She stayed home because of her illness.</p>
+      <p><span class="key-tag">BECAUSE</span></p>
+      <p>She stayed home <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">because she was ill</div>
+      <div class="full-sentence">She stayed home <strong>because she was ill</strong>.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>We went out <strong>despite it was raining</strong>.</em></p>
+      <p>After <strong>despite</strong>, do not use a full clause.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct</div>
+      <div class="answer-text">despite the rain</div>
+      <div class="full-sentence">We went out <strong>despite the rain</strong>. — Or: We went out <strong>although it was raining</strong>.</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Is the idea contrast or reason?</li>
+        <li>Does the linker need a clause?</li>
+        <li>Does the linker need a noun or <strong>-ing</strong>?</li>
+        <li>Has the meaning changed?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch10')">← <div><span class="nav-ch">Chapter 10</span>Gerunds and Infinitives</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch12')"><div><span class="nav-ch">Chapter 12</span>Result and Purpose</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 12
+──────────────────────────────────────────── -->
+<div id="panel-ch12" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 12</div>
+    <h2>Result and Purpose</h2>
+  </div>
+  <div class="chapter-body">
+    <p><strong>Result</strong> means: What happened because of something?<br>
+    <strong>Purpose</strong> means: Why did someone do something?<br>
+    Do not confuse them.</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>too</code> &nbsp; <code>enough</code> &nbsp; <code>so</code> &nbsp; <code>such</code> &nbsp; <code>order</code></p>
+
+    <h3>Basic Patterns</h3>
+    <table>
+      <thead><tr><th>Meaning</th><th>Pattern</th></tr></thead>
+      <tbody>
+        <tr><td>result</td><td><strong>so ... that</strong></td></tr>
+        <tr><td>result</td><td><strong>such ... that</strong></td></tr>
+        <tr><td>impossible because too much</td><td><strong>too ... to</strong></td></tr>
+        <tr><td>possible because enough</td><td><strong>enough to</strong></td></tr>
+        <tr><td>purpose</td><td><strong>so that</strong></td></tr>
+        <tr><td>purpose</td><td><strong>in order to</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>The box was very heavy, so I couldn't lift it.</p>
+      <p><span class="key-tag">TOO</span></p>
+      <p>The box <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>The box was very heavy. Because of this, I could not lift it.</p></div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>TOO</strong> suggests: <em>too + adjective + to</em></p></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">was too heavy to lift</div><div class="full-sentence">The box <strong>was too heavy to lift</strong>.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>She whispered because she did not want to wake the baby.</p>
+      <p><span class="key-tag">ORDER</span></p>
+      <p>She whispered <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the baby.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">in order not to wake</div>
+      <div class="full-sentence">She whispered <strong>in order not to wake</strong> the baby.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>The box <strong>was enough heavy to lift</strong>.</em></p>
+      <p>The correct order is: <strong>adjective + enough</strong></p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct forms</div>
+      <div class="answer-text">was not light enough to lift</div>
+      <div class="full-sentence">Or: The box <strong>was too heavy to lift</strong>.</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Is this result or purpose?</li>
+        <li>Is the sentence positive or negative?</li>
+        <li>Do I need <strong>too</strong> or <strong>enough</strong>?</li>
+        <li>Do I need <strong>so that</strong> or <strong>in order to</strong>?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch11')">← <div><span class="nav-ch">Chapter 11</span>Linkers: Contrast and Reason</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch13')"><div><span class="nav-ch">Chapter 13</span>Conditionals</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 13
+──────────────────────────────────────────── -->
+<div id="panel-ch13" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 13</div>
+    <h2>Conditionals</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Conditionals show: <em>This happens if something else happens.</em> The condition may be real, possible, or imaginary.</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>if</code> &nbsp; <code>unless</code> &nbsp; <code>provided</code> &nbsp; <code>long</code> &nbsp; <code>would</code></p>
+
+    <h3>Basic Patterns</h3>
+    <table>
+      <thead><tr><th>Meaning</th><th>Pattern</th></tr></thead>
+      <tbody>
+        <tr><td>real future condition</td><td>if + present, will + verb</td></tr>
+        <tr><td>imaginary present/future</td><td>if + past, would + verb</td></tr>
+        <tr><td>if not</td><td>unless</td></tr>
+        <tr><td>only if</td><td>provided that / as long as</td></tr>
+      </tbody>
+    </table>
+
+    <div class="rule-box">
+      <div class="rule-label">Pattern</div>
+      <strong>unless = if not</strong>
+      <p style="font-weight:400; margin-top:6px; font-size:16px;">But be careful. <strong>Unless</strong> does not fit naturally in every negative sentence. Always check the meaning.</p>
+    </div>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>If you don't hurry, you'll miss the train.</p>
+      <p><span class="key-tag">UNLESS</span></p>
+      <p>You'll miss the train <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>You need to hurry. If you do not hurry, you will miss the train.</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">unless + positive subject + verb</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">unless you hurry</div><div class="full-sentence">You'll miss the train <strong>unless you hurry</strong>. — (= if you do not hurry)</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>I will help you if I have time.</p>
+      <p><span class="key-tag">PROVIDED</span></p>
+      <p>I will help you <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> time.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">provided that I have</div>
+      <div class="full-sentence">I will help you <strong>provided that I have</strong> time.</div>
+    </div>
+
+    <h3>Second Conditional Example</h3>
+    <div class="task-block">
+      <p>I don't have a bike, so I walk to school.</p>
+      <p><span class="key-tag">IF</span></p>
+      <p>I would cycle to school <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> a bike.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">if I had</div>
+      <div class="full-sentence">I would cycle to school <strong>if I had</strong> a bike.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>You'll miss the train <strong>unless you don't hurry</strong>.</em></p>
+      <p>This creates the wrong logic. <strong>Unless</strong> already means <em>if not</em>.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct</div>
+      <div class="answer-text">unless you hurry</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Is the condition real or imaginary?</li>
+        <li>Is the sentence about present, future, or past?</li>
+        <li>Does <strong>unless</strong> really mean <strong>if not</strong> here?</li>
+        <li>Does the result stay the same?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch12')">← <div><span class="nav-ch">Chapter 12</span>Result and Purpose</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch14')"><div><span class="nav-ch">Chapter 14</span>Reported Speech</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 14
+──────────────────────────────────────────── -->
+<div id="panel-ch14" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 14</div>
+    <h2>Reported Speech</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Reported speech tells us what someone said, asked, ordered, advised, or warned. You often need to change the sentence shape.</p>
+
+    <h3>Common Key Words</h3>
+    <p><code>told</code> &nbsp; <code>asked</code> &nbsp; <code>said</code> &nbsp; <code>advised</code> &nbsp; <code>warned</code> &nbsp; <code>wanted</code></p>
+
+    <h3>Basic Patterns</h3>
+    <table>
+      <thead><tr><th>Direct idea</th><th>Reported pattern</th></tr></thead>
+      <tbody>
+        <tr><td>"Close the door."</td><td>told me to close the door</td></tr>
+        <tr><td>"Don't touch it."</td><td>warned me not to touch it</td></tr>
+        <tr><td>"You should rest."</td><td>advised me to rest</td></tr>
+        <tr><td>"Where do you live?"</td><td>asked me where I lived</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>"Close the door," Anna said to me.</p>
+      <p><span class="key-tag">TOLD</span></p>
+      <p>Anna <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the door.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>TOLD</strong> needs a person after it: <em>told me</em></p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">told + person + to + infinitive</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">told me to close</div><div class="full-sentence">Anna <strong>told me to close</strong> the door.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>"Where do you live?" he asked me.</p>
+      <p><span class="key-tag">WHERE</span></p>
+      <p>He asked me <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">where I lived</div>
+      <div class="full-sentence">He asked me <strong>where I lived</strong>.</div>
+    </div>
+
+    <h3>Advice Example</h3>
+    <div class="task-block">
+      <p>"You should rest," the doctor said.</p>
+      <p><span class="key-tag">ADVISED</span></p>
+      <p>The doctor <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> rest.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">advised me to</div>
+      <div class="full-sentence">The doctor <strong>advised me to</strong> rest.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>He asked me <strong>where did I live</strong>.</em></p>
+      <p>A reported question does not use normal question word order.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">✓ Correct</div>
+      <div class="answer-text">where I lived</div>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Is the sentence reporting information, a question, a command, or advice?</li>
+        <li>Do I need <strong>said</strong> or <strong>told</strong>?</li>
+        <li>Is there a person after <strong>told</strong>?</li>
+        <li>Do I need <strong>to + infinitive</strong>?</li>
+        <li>Do I need to change the word order in a reported question?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch13')">← <div><span class="nav-ch">Chapter 13</span>Conditionals</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch15')"><div><span class="nav-ch">Chapter 15</span>Phrasal Verbs &amp; Fixed Expressions</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 15
+──────────────────────────────────────────── -->
+<div id="panel-ch15" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 15</div>
+    <h2>Phrasal Verbs and Fixed Expressions</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Some words belong together. You cannot translate them word by word. You need to learn the whole pattern.</p>
+
+    <h3>Common Examples</h3>
+    <table>
+      <thead><tr><th>Type</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td>verb + particle</td><td><em>give up, turn up, put off</em></td></tr>
+        <tr><td>verb + preposition</td><td><em>depend on, apologise for</em></td></tr>
+        <tr><td>fixed expression</td><td><em>take part in, pay attention to, run out of</em></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>The meeting was delayed until Friday.</p>
+      <p><span class="key-tag">PUT</span></p>
+      <p>They <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> until Friday.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>The meeting did not happen at the original time. It was delayed.</p></div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>PUT</strong> suggests the phrasal verb: <em>put off</em></p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">put + object + off</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">put the meeting off</div><div class="full-sentence">They <strong>put the meeting off</strong> until Friday.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>I no longer eat chocolate.</p>
+      <p><span class="key-tag">GIVEN</span></p>
+      <p>I <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> chocolate.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">have given up eating</div>
+      <div class="full-sentence">I <strong>have given up eating</strong> chocolate.</div>
+    </div>
+
+    <h3>Fixed Expression Example</h3>
+    <div class="task-block">
+      <p>She participated in the race.</p>
+      <p><span class="key-tag">PART</span></p>
+      <p>She <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the race.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">took part in</div>
+      <div class="full-sentence">She <strong>took part in</strong> the race.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>She <strong>took part at</strong> the race.</em></p>
+      <p>The fixed expression is: <strong>take part in</strong></p>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Is this a fixed expression?</li>
+        <li>Which preposition belongs with the verb?</li>
+        <li>Does the expression need an object?</li>
+        <li>Does the expression need <strong>-ing</strong> after the preposition?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch14')">← <div><span class="nav-ch">Chapter 14</span>Reported Speech</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch16')"><div><span class="nav-ch">Chapter 16</span>Common B2 Verb Patterns</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 16
+──────────────────────────────────────────── -->
+<div id="panel-ch16" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 16</div>
+    <h2>Common B2 Verb Patterns</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Some B2 patterns are common in Part 4 because they test both grammar and vocabulary. Learn the pattern as one piece.</p>
+    <p>Not: <em>prevent someone to do</em> — but: <em>prevent someone from doing</em></p>
+
+    <h3>Pattern Bank</h3>
+    <table>
+      <thead><tr><th>Pattern</th><th>Meaning</th><th>Correct example</th><th>Common mistake</th></tr></thead>
+      <tbody>
+        <tr><td><strong>accuse someone of doing</strong></td><td>say someone did something wrong</td><td><em>She accused Paul of lying.</em></td><td><span class="mistake">accused Paul to lie</span></td></tr>
+        <tr><td><strong>prevent someone from doing</strong></td><td>stop someone doing something</td><td><em>The rain prevented us from playing.</em></td><td><span class="mistake">prevented us to play</span></td></tr>
+        <tr><td><strong>blame someone for doing</strong></td><td>say someone is responsible</td><td><em>He blamed me for breaking it.</em></td><td><span class="mistake">blamed me of breaking</span></td></tr>
+        <tr><td><strong>congratulate someone on doing</strong></td><td>praise someone for success</td><td><em>We congratulated her on passing.</em></td><td><span class="mistake">congratulated her for passing</span></td></tr>
+        <tr><td><strong>apologise for doing</strong></td><td>say sorry</td><td><em>He apologised for being late.</em></td><td><span class="mistake">apologised about being late</span></td></tr>
+        <tr><td><strong>succeed in doing</strong></td><td>manage to do something</td><td><em>She succeeded in finding it.</em></td><td><span class="mistake">succeeded to find it</span></td></tr>
+        <tr><td><strong>insist on doing</strong></td><td>say strongly that you will do it</td><td><em>He insisted on paying.</em></td><td><span class="mistake">insisted to pay</span></td></tr>
+        <tr><td><strong>object to doing</strong></td><td>dislike or disagree with something</td><td><em>I object to working late.</em></td><td><span class="mistake">object to work late</span></td></tr>
+        <tr><td><strong>warn someone not to do</strong></td><td>tell someone about danger</td><td><em>She warned me not to touch it.</em></td><td><span class="mistake">warned me to not touch it</span></td></tr>
+        <tr><td><strong>remind someone to do</strong></td><td>help someone remember</td><td><em>He reminded me to call.</em></td><td><span class="mistake">reminded me calling</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>The rain stopped us from playing tennis.</p>
+      <p><span class="key-tag">PREVENTED</span></p>
+      <p>The rain <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> tennis.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">prevented + object + from + -ing</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">prevented us from playing</div><div class="full-sentence">The rain <strong>prevented us from playing</strong> tennis.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>Paul said sorry for arriving late.</p>
+      <p><span class="key-tag">APOLOGISED</span></p>
+      <p>Paul <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> late.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">apologised for arriving</div>
+      <div class="full-sentence">Paul <strong>apologised for arriving</strong> late.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>The rain <strong>prevented us to play</strong> tennis.</em></p>
+      <p>After <em>prevent someone</em>, use: <strong>from + -ing</strong></p>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>What verb pattern does the key word suggest?</li>
+        <li>Does the pattern need a person?</li>
+        <li>Does it need a preposition?</li>
+        <li>Does it need <strong>-ing</strong> or <strong>to + infinitive</strong>?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch15')">← <div><span class="nav-ch">Chapter 15</span>Phrasal Verbs &amp; Fixed Expressions</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch17')"><div><span class="nav-ch">Chapter 17</span>Sentence-Shape Changes</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 17
+──────────────────────────────────────────── -->
+<div id="panel-ch17" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 3 — Learn the Main Transformation Patterns</div>
+    <div class="ch-number">Chapter 17</div>
+    <h2>Sentence-Shape Changes</h2>
+  </div>
+  <div class="chapter-body">
+    <p>In Part 4, you must not change the key word. But the sentence around the key word may change. This is different from Part 3. In Part 3, you change word forms. In Part 4, the key word must stay unchanged.</p>
+
+    <h3>Common Sentence-Shape Changes</h3>
+    <table>
+      <thead><tr><th>Idea</th><th>Possible sentence shape</th></tr></thead>
+      <tbody>
+        <tr><td>can do something</td><td>have the ability to do something</td></tr>
+        <tr><td>is responsible for</td><td>has responsibility for</td></tr>
+        <tr><td>succeeded in doing</td><td>had success in doing</td></tr>
+        <tr><td>found it difficult to</td><td>had difficulty in doing</td></tr>
+        <tr><td>decided to</td><td>made a decision to</td></tr>
+        <tr><td>is similar to</td><td>has similarity to</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Slow Demonstration</h3>
+    <div class="task-block">
+      <p>She found it difficult to understand the instructions.</p>
+      <p><span class="key-tag">DIFFICULTY</span></p>
+      <p>She <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the instructions.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>DIFFICULTY</strong> must stay as <strong>difficulty</strong>.</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">have difficulty in + -ing</div></div>
+    <div class="step-block"><span class="step-label">Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">had difficulty in understanding</div><div class="full-sentence">She <strong>had difficulty in understanding</strong> the instructions.</div></div>
+    </div>
+
+    <h3>Try One</h3>
+    <div class="task-block">
+      <p>He can speak three languages.</p>
+      <p><span class="key-tag">ABILITY</span></p>
+      <p>He <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> three languages.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">has the ability to speak</div>
+      <div class="full-sentence">He <strong>has the ability to speak</strong> three languages.</div>
+    </div>
+
+    <h3>Success Example</h3>
+    <div class="task-block">
+      <p>She succeeded in finding the answer.</p>
+      <p><span class="key-tag">SUCCESS</span></p>
+      <p>She <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the answer.</p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">had success in finding</div>
+      <div class="full-sentence">She <strong>had success in finding</strong> the answer.</div>
+    </div>
+
+    <h3>Spot the Danger</h3>
+    <div class="danger-box">
+      <div class="danger-title">✗ Wrong</div>
+      <p><em>She <strong>was successful in finding</strong> the answer.</em></p>
+      <p>The meaning is good, but the key word changed from <strong>success</strong> to <strong>successful</strong>.</p>
+    </div>
+
+    <h3>Mini Checklist</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Did I keep the key word exactly?</li>
+        <li>Did the sentence shape change correctly?</li>
+        <li>Does the new phrase fit the gap?</li>
+        <li>Does the meaning stay the same?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch16')">← <div><span class="nav-ch">Chapter 16</span>Common B2 Verb Patterns</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch18')"><div><span class="nav-ch">Chapter 18</span>Danger Zones</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 18
+──────────────────────────────────────────── -->
+<div id="panel-ch18" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 4 — Avoid Common Mistakes</div>
+    <div class="ch-number">Chapter 18</div>
+    <h2>Danger Zones</h2>
+  </div>
+  <div class="chapter-body">
+    <p>These are common ways to lose marks.</p>
+
+    <div class="danger-item">
+      <div class="danger-number">1</div>
+      <div class="danger-item-body">
+        <h4>Changing the Key Word</h4>
+        <p>Key word: <strong>SUCCESS</strong></p>
+        <p>Wrong: <em class="mistake">successful / succeeded / successfully</em></p>
+        <div class="rule-box" style="margin-top:10px;"><div class="rule-label">Rule</div>The sentence may change around the key word, but the key word itself must not change.</div>
+      </div>
+    </div>
+
+    <div class="danger-item">
+      <div class="danger-number">2</div>
+      <div class="danger-item-body">
+        <h4>Writing Too Many Words</h4>
+        <p>Part 4 answers must be two to five words. Cambridge also notes that contracted forms count as the full form for word-count purposes, with <em>can't = cannot</em> treated as one word.<sup class="footnote-ref">1</sup></p>
+        <p>Exam-safe practice habit: Write <strong>did not</strong>, not <strong>didn't</strong>, unless your teacher or answer key clearly accepts the contraction.</p>
+        <div class="task-block" style="margin-top:10px;">
+          <p>I last saw Ana in 2020. <span class="key-tag" style="font-size:11px;">SINCE</span></p>
+          <p>I <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 2020.</p>
+        </div>
+        <div class="answer-block"><div class="answer-label">✓ Correct (five words)</div><div class="answer-text">have not seen Ana since</div></div>
+        <div class="danger-box"><div class="danger-title">✗ Too long</div><p><strong>have not had a meeting with Ana since</strong></p></div>
+      </div>
+    </div>
+
+    <div class="danger-item">
+      <div class="danger-number">3</div>
+      <div class="danger-item-body">
+        <h4>Changing the Meaning</h4>
+        <p>Small changes can create a different idea.</p>
+        <table style="margin-top:10px;">
+          <thead><tr><th>Meaning A</th><th>Meaning B</th></tr></thead>
+          <tbody>
+            <tr><td>not necessary</td><td>prohibited</td></tr>
+            <tr><td>finished time</td><td>unfinished time</td></tr>
+            <tr><td>cause</td><td>result</td></tr>
+            <tr><td>active</td><td>passive</td></tr>
+            <tr><td>possible</td><td>certain</td></tr>
+            <tr><td>advice</td><td>obligation</td></tr>
+          </tbody>
+        </table>
+        <p>Example: <em>You <strong>don't have to</strong> go.</em> = It is not necessary. &nbsp;|&nbsp; <em>You <strong>must not</strong> go.</em> = It is not allowed.</p>
+      </div>
+    </div>
+
+    <div class="danger-item">
+      <div class="danger-number">4</div>
+      <div class="danger-item-body">
+        <h4>Ignoring Words Before and After the Gap</h4>
+        <p>Do not look only at the gap.</p>
+        <p>Example: <em>She is looking forward __________ her cousins.</em></p>
+        <p>The words before and after show the pattern: <em>looking forward <strong>to seeing</strong> her cousins</em></p>
+        <div class="danger-box" style="margin-top:10px;"><div class="danger-title">✗ Wrong</div><p><em>looking forward <strong>to see</strong></em></p></div>
+        <div class="answer-block"><div class="answer-label">✓ Correct</div><div class="answer-text">to seeing</div></div>
+      </div>
+    </div>
+
+    <div class="danger-item">
+      <div class="danger-number">5</div>
+      <div class="danger-item-body">
+        <h4>Repeating Words Already Outside the Gap</h4>
+        <div class="task-block" style="margin-top:10px;">
+          <p>The teacher gave us extra homework. <span class="key-tag" style="font-size:11px;">WERE</span></p>
+          <p>We <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> extra homework.</p>
+        </div>
+        <div class="answer-block"><div class="answer-label">✓ Correct</div><div class="answer-text">were given</div><div class="full-sentence">We <strong>were given</strong> extra homework.</div></div>
+        <div class="danger-box"><div class="danger-title">✗ Wrong</div><p><strong>were given extra homework</strong></p><p>Full sentence becomes: <em>We were given extra homework extra homework.</em> — You repeated words already outside the gap.</p></div>
+      </div>
+    </div>
+
+    <div class="danger-item">
+      <div class="danger-number">6</div>
+      <div class="danger-item-body">
+        <h4>Correct Grammar, Wrong Collocation</h4>
+        <p>Some words naturally go together.</p>
+        <table style="margin-top:10px;">
+          <thead><tr><th>Wrong</th><th>Correct</th></tr></thead>
+          <tbody>
+            <tr><td><span class="mistake">depend of</span></td><td><span class="correct-word">depend on</span></td></tr>
+            <tr><td><span class="mistake">apologise about being late</span></td><td><span class="correct-word">apologise for being late</span></td></tr>
+            <tr><td><span class="mistake">interested on</span></td><td><span class="correct-word">interested in</span></td></tr>
+            <tr><td><span class="mistake">good in English</span></td><td><span class="correct-word">good at English</span></td></tr>
+          </tbody>
+        </table>
+        <div class="rule-box" style="margin-top:12px;"><div class="rule-label">Pattern</div>Learn the preposition as part of the expression. Not <em>depend</em> — but <em>depend on</em>.</div>
+      </div>
+    </div>
+
+    <div class="danger-item">
+      <div class="danger-number">7</div>
+      <div class="danger-item-body">
+        <h4>Singular/Plural Mistakes</h4>
+        <p>Look at the whole second sentence. Sometimes a word after the gap shows whether the answer should be singular or plural.</p>
+        <p>Example: <em>The student __________ the project.</em> → <strong>has responsibility for</strong></p>
+        <p>Example: <em>The students __________ the project.</em> → <strong>have responsibility for</strong></p>
+        <p>Cambridge teaching advice specifically tells students to notice clues in verbs and nouns that show whether a singular or plural form is needed, while still keeping the key word unchanged.<sup class="footnote-ref">2</sup></p>
+      </div>
+    </div>
+
+    <div class="danger-item">
+      <div class="danger-number">8</div>
+      <div class="danger-item-body">
+        <h4>Spelling Mistakes</h4>
+        <p>Spelling matters in Reading and Use of English. Cambridge teaching tips for the digital test say there is no spellchecker.<sup class="footnote-ref">2</sup></p>
+        <p>Learn the spelling of common words and forms:</p>
+        <p style="font-family:'JetBrains Mono', monospace; font-size:14px; line-height:2; color:var(--blue-note);">
+          necessary &nbsp; successful &nbsp; opportunity &nbsp; responsible &nbsp; different<br>
+          enough &nbsp; although &nbsp; despite &nbsp; received &nbsp; beginning
+        </p>
+        <p>Also learn common past participles:</p>
+        <p style="font-family:'JetBrains Mono', monospace; font-size:14px; line-height:2; color:var(--blue-note);">
+          written &nbsp; taken &nbsp; stolen &nbsp; chosen &nbsp; forgotten &nbsp; broken &nbsp; made &nbsp; seen
+        </p>
+      </div>
+    </div>
+
+    <div class="danger-item" style="border-bottom:none;">
+      <div class="danger-number">9</div>
+      <div class="danger-item-body">
+        <h4>Unsafe Contractions</h4>
+        <p>Contractions can create word-count confusion.</p>
+        <table style="margin-top:10px;">
+          <thead><tr><th>Contraction</th><th>Full form</th></tr></thead>
+          <tbody>
+            <tr><td><em>didn't</em></td><td>did not</td></tr>
+            <tr><td><em>hasn't</em></td><td>has not</td></tr>
+            <tr><td><em>wouldn't</em></td><td>would not</td></tr>
+            <tr><td><em>can't</em></td><td>cannot</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px;">Practice habit: Use full forms when you are learning. Count the words carefully. Check your answer key or teacher's advice about contractions.</p>
+      </div>
+    </div>
+
+    <div class="footnotes">
+      <p><sup>1</sup> <a href="https://www.cambridgeenglish.org/latinamerica/Images/167791-b2-first-handbook.pdf" target="_blank">B2 First Handbook — Cambridge English</a></p>
+      <p><sup>2</sup> <a href="https://www.cambridgeenglish.org/images/168044-b2-first-and-b2-first-for-schools-teaching-tips.pdf" target="_blank">B2 First Teaching Tips — Cambridge English</a></p>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch17')">← <div><span class="nav-ch">Chapter 17</span>Sentence-Shape Changes</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch19')"><div><span class="nav-ch">Chapter 19</span>How to Learn the Patterns</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 19
+──────────────────────────────────────────── -->
+<div id="panel-ch19" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 5 — Build Control</div>
+    <div class="ch-number">Chapter 19</div>
+    <h2>How to Learn the Patterns</h2>
+  </div>
+  <div class="chapter-body">
+    <p>You improve at Part 4 by learning patterns and rebuilding answers. Do not only read correct answers. You need to practise producing them.</p>
+
+    <h3>1. Pattern Notebook</h3>
+    <p>Make entries like this:</p>
+    <table>
+      <thead><tr><th>Pattern</th><th>Meaning</th><th>Example</th><th>Danger</th></tr></thead>
+      <tbody>
+        <tr><td>look forward to + -ing</td><td>feel excited about a future event</td><td><em>I look forward to seeing you.</em></td><td>not "to see"</td></tr>
+        <tr><td>prevent someone from doing</td><td>stop someone doing something</td><td><em>The rain prevented us from playing.</em></td><td>not "to play"</td></tr>
+        <tr><td>not as ... as</td><td>negative comparison</td><td><em>Mark is not as tall as Jenny.</em></td><td>subject change</td></tr>
+      </tbody>
+    </table>
+    <p>Each entry should include:</p>
+    <ul>
+      <li>key word or structure</li>
+      <li>meaning</li>
+      <li>example transformation</li>
+      <li>common mistake</li>
+      <li>your own example</li>
+    </ul>
+
+    <h3>2. Error Log</h3>
+    <p>Record your mistakes by type.</p>
+    <table>
+      <thead><tr><th>My wrong answer</th><th>Correct answer</th><th>Mistake type</th><th>What I learned</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mistake">depend of</span></td><td><span class="correct-word">depend on</span></td><td>collocation</td><td>depend + on</td></tr>
+        <tr><td><span class="mistake">to see</span></td><td><span class="correct-word">to seeing</span></td><td>verb pattern</td><td>look forward to + -ing</td></tr>
+        <tr><td><span class="mistake">mustn't go</span></td><td><span class="correct-word">don't have to go</span></td><td>meaning</td><td>not necessary ≠ prohibited</td></tr>
+        <tr><td><span class="mistake">was stole</span></td><td><span class="correct-word">was stolen</span></td><td>grammar</td><td>passive needs past participle</td></tr>
+      </tbody>
+    </table>
+    <p>Mistake types: meaning mistake / grammar mistake / word-count mistake / key word changed / spelling mistake / collocation mistake / words outside the gap ignored</p>
+
+    <h3>3. Transformation Cards</h3>
+    <p>Front:</p>
+    <div class="task-block">
+      <p>I haven't seen Tom for two years.</p>
+      <p><span class="key-tag">SINCE</span></p>
+    </div>
+    <div class="answer-block">
+      <div class="answer-label">Back</div>
+      <div class="answer-text">It has been two years since I saw Tom.</div>
+    </div>
+    <p>Use cards to test production. Do not only look and think, <em>"I understand."</em> Cover the answer and rebuild it.</p>
+
+    <h3>4. Rebuild the Answer</h3>
+    <p>Take a correct answer. Cover it. Then rebuild it from:</p>
+    <ol>
+      <li>meaning</li>
+      <li>key word</li>
+      <li>words before and after the gap</li>
+      <li>pattern</li>
+    </ol>
+
+    <p>Example:</p>
+    <div class="task-block">
+      <p>The twins are eager to see their cousins again.</p>
+      <p><span class="key-tag">FORWARD</span></p>
+      <p>The twins are <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> their cousins again.</p>
+    </div>
+
+    <div class="thinking-box">
+      <div class="thinking-label">Think Through It</div>
+      <p>Meaning: excited about a future meeting.<br>
+      Key word: <strong>FORWARD</strong>.<br>
+      Pattern: look forward to + -ing.<br>
+      Gap frame: are + gap + their cousins.<br>
+      Answer: <strong>looking forward to seeing</strong>.</p>
+    </div>
+
+    <div class="answer-block">
+      <div class="answer-label">Answer</div>
+      <div class="answer-text">looking forward to seeing</div>
+      <div class="full-sentence">The twins are <strong>looking forward to seeing</strong> their cousins again.</div>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch18')">← <div><span class="nav-ch">Chapter 18</span>Danger Zones</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch20')"><div><span class="nav-ch">Chapter 20</span>Exam-Day Method</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 20
+──────────────────────────────────────────── -->
+<div id="panel-ch20" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 5 — Build Control</div>
+    <div class="ch-number">Chapter 20</div>
+    <h2>Exam-Day Method</h2>
+  </div>
+  <div class="chapter-body">
+    <p>In the exam, you need a calm procedure. Cambridge teaching tips advise students to manage time carefully, not spend too long on one part, and leave a few minutes at the end to check answers.<sup class="footnote-ref">2</sup></p>
+
+    <h3>Exam Method</h3>
+    <ol>
+      <li>Do the easier transformations first.</li>
+      <li>Do not spend too long on one question.</li>
+      <li>Write a partial answer if you know part of it.</li>
+      <li>Check the key word.</li>
+      <li>Count the words.</li>
+      <li>Read the full second sentence silently.</li>
+      <li>Check spelling.</li>
+      <li>Return to skipped questions if time remains.</li>
+    </ol>
+
+    <h3>Decision Tree</h3>
+    <div class="step-block">
+      <p><strong>Do I know the pattern?</strong><br>→ Write it and check.</p>
+      <br>
+      <p><strong>Do I partly know the pattern?</strong><br>→ Write the part I know carefully.</p>
+      <br>
+      <p><strong>Do I not know it?</strong><br>→ Skip it and return later.</p>
+    </div>
+
+    <h3>Final Check for Each Answer</h3>
+    <div class="check-box">
+      <div class="check-title">Check Yourself</div>
+      <ul>
+        <li>Same main meaning?</li>
+        <li>Key word unchanged?</li>
+        <li>Two to five words?</li>
+        <li>Grammar fits before and after the gap?</li>
+        <li>Spelling correct?</li>
+        <li>No extra repeated words?</li>
+      </ul>
+    </div>
+
+    <div class="footnotes">
+      <p><sup>2</sup> <a href="https://www.cambridgeenglish.org/images/168044-b2-first-and-b2-first-for-schools-teaching-tips.pdf" target="_blank">B2 First Teaching Tips — Cambridge English</a></p>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch19')">← <div><span class="nav-ch">Chapter 19</span>How to Learn the Patterns</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch21')"><div><span class="nav-ch">Chapter 21</span>Full Demonstration Walkthroughs</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 21
+──────────────────────────────────────────── -->
+<div id="panel-ch21" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 5 — Build Control</div>
+    <div class="ch-number">Chapter 21</div>
+    <h2>Full Demonstration Walkthroughs</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Use these examples to see the full thinking process.</p>
+
+    <!-- WT 1 -->
+    <div class="walkthrough-header"><div class="wt-num">1</div><div class="wt-title">Present Perfect / Since</div></div>
+    <div class="task-block">
+      <p>I last visited Spain in 2019.</p>
+      <p><span class="key-tag">SINCE</span></p>
+      <p>I <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 2019.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Step 1 — Meaning</span><p>The last visit was in 2019. From 2019 until now, I have not visited Spain.</p></div>
+    <div class="step-block"><span class="step-label">Step 2 — Key Word</span><p><strong>SINCE</strong> shows the starting point.</p></div>
+    <div class="step-block"><span class="step-label">Step 3 — Gap Frame</span><p>I + gap + 2019</p></div>
+    <div class="step-block"><span class="step-label">Step 4 — Pattern</span><div class="pattern-box">have not + past participle + since</div></div>
+    <div class="step-block"><span class="step-label">Step 5 — Answer</span>
+      <div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">have not visited Spain since</div><div class="full-sentence">I <strong>have not visited Spain since</strong> 2019.</div></div>
+    </div>
+    <div class="step-block"><span class="step-label">Step 6 — Check</span><div class="check-box" style="margin:10px 0 0;"><div class="check-title">Check Yourself</div><ul><li>Same meaning? <strong>Yes.</strong></li><li>Key word unchanged? <strong>Yes.</strong></li><li>Two to five words? <strong>Five.</strong></li><li>Grammar correct? <strong>Yes.</strong></li><li>Spelling correct? <strong>Yes.</strong></li></ul></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">did not visit Spain since</span> — Use present perfect with <em>since</em> when the period continues until now.</p>
+      <p><span class="mistake">have not visited since Spain</span> — The word order is wrong.</p>
+    </div>
+
+    <!-- WT 2 -->
+    <div class="walkthrough-header"><div class="wt-num">2</div><div class="wt-title">Passive</div></div>
+    <div class="task-block">
+      <p>They repaired my laptop yesterday.</p>
+      <p><span class="key-tag">WAS</span></p>
+      <p>My laptop <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> yesterday.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>Someone repaired the laptop. The laptop receives the action.</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">was + past participle</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">was repaired</div><div class="full-sentence">My laptop <strong>was repaired</strong> yesterday.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">was repair</span> — After <em>was</em>, use the past participle: <em>repaired</em>.</p>
+      <p><span class="mistake">were repaired</span> — <em>Laptop</em> is singular, so use <em>was</em>.</p>
+    </div>
+
+    <!-- WT 3 -->
+    <div class="walkthrough-header"><div class="wt-num">3</div><div class="wt-title">Modal Obligation</div></div>
+    <div class="task-block">
+      <p>It wasn't necessary for us to buy tickets.</p>
+      <p><span class="key-tag">HAVE</span></p>
+      <p>We <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> tickets.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>Buying tickets was not necessary.</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">did not have to + verb</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">did not have to buy</div><div class="full-sentence">We <strong>did not have to buy</strong> tickets.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">must not buy</span> — This means it was prohibited. The first sentence means it was not necessary.</p>
+      <p><span class="mistake">had not to buy</span> — This is not the correct structure.</p>
+    </div>
+
+    <!-- WT 4 -->
+    <div class="walkthrough-header"><div class="wt-num">4</div><div class="wt-title">Comparison</div></div>
+    <div class="task-block">
+      <p>Jenny is taller than Mark.</p>
+      <p><span class="key-tag">AS</span></p>
+      <p>Mark is <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Jenny.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>Jenny is taller. Mark is shorter.</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">not as + adjective + as</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">not as tall as</div><div class="full-sentence">Mark is <strong>not as tall as</strong> Jenny.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">as tall as</span> — This means they are the same height.</p>
+      <p><span class="mistake">not taller as</span> — The structure is wrong. Use <em>not as tall as</em>.</p>
+    </div>
+
+    <!-- WT 5 -->
+    <div class="walkthrough-header"><div class="wt-num">5</div><div class="wt-title">Gerund or Infinitive</div></div>
+    <div class="task-block">
+      <p>I am excited about meeting your family.</p>
+      <p><span class="key-tag">FORWARD</span></p>
+      <p>I am <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> your family.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">looking forward to meeting</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">looking forward to meeting</div><div class="full-sentence">I am <strong>looking forward to meeting</strong> your family.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">looking forward to meet</span> — After <em>look forward to</em>, use <em>-ing</em>.</p>
+      <p><span class="mistake">look forward meeting</span> — The sentence needs <em>am looking</em>, and the expression needs <em>to</em>.</p>
+    </div>
+
+    <!-- WT 6 -->
+    <div class="walkthrough-header"><div class="wt-num">6</div><div class="wt-title">Contrast Linker</div></div>
+    <div class="task-block">
+      <p>Despite the noise, I slept well.</p>
+      <p><span class="key-tag">ALTHOUGH</span></p>
+      <p>I slept well <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">although + subject + verb</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">although it was noisy</div><div class="full-sentence">I slept well <strong>although it was noisy</strong>.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">although the noise</span> — After <em>although</em>, use a subject and verb.</p>
+      <p><span class="mistake">despite it was noisy</span> — After <em>despite</em>, do not use a full clause.</p>
+    </div>
+
+    <!-- WT 7 -->
+    <div class="walkthrough-header"><div class="wt-num">7</div><div class="wt-title">Result</div></div>
+    <div class="task-block">
+      <p>The test was so hard that I couldn't finish it.</p>
+      <p><span class="key-tag">TOO</span></p>
+      <p>The test <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">too + adjective + to + verb</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">was too hard to finish</div><div class="full-sentence">The test <strong>was too hard to finish</strong>.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">was too hard that</span> — Use <em>so ... that</em>, but <em>too ... to</em>.</p>
+      <p><span class="mistake">was enough hard to finish</span> — The word order is wrong, and the meaning changes.</p>
+    </div>
+
+    <!-- WT 8 -->
+    <div class="walkthrough-header"><div class="wt-num">8</div><div class="wt-title">Conditional</div></div>
+    <div class="task-block">
+      <p>If you don't book now, there won't be any seats.</p>
+      <p><span class="key-tag">UNLESS</span></p>
+      <p>There won't be any seats <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">unless + positive subject + verb</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">unless you book now</div><div class="full-sentence">There won't be any seats <strong>unless you book now</strong>.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">unless you don't book now</span> — Double negative meaning.</p>
+      <p><span class="mistake">if you book now</span> — This gives the opposite condition.</p>
+    </div>
+
+    <!-- WT 9 -->
+    <div class="walkthrough-header"><div class="wt-num">9</div><div class="wt-title">Reported Speech</div></div>
+    <div class="task-block">
+      <p>"Don't be late," my teacher said to me.</p>
+      <p><span class="key-tag">WARNED</span></p>
+      <p>My teacher <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> late.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">warned + person + not to + verb</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">warned me not to be</div><div class="full-sentence">My teacher <strong>warned me not to be</strong> late.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">warned me to not be</span> — The safer exam pattern is <em>warned me not to be</em>.</p>
+      <p><span class="mistake">warned I not to be</span> — After <em>warned</em>, use object form: <em>me</em>.</p>
+    </div>
+
+    <!-- WT 10 -->
+    <div class="walkthrough-header"><div class="wt-num">10</div><div class="wt-title">Phrasal Verb</div></div>
+    <div class="task-block">
+      <p>Jack arrived late for the meeting.</p>
+      <p><span class="key-tag">TURNED</span></p>
+      <p>Jack <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> for the meeting.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Key Word</span><p><strong>TURNED</strong> suggests the phrasal verb: <em>turn up</em> = arrive</p></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">turned up late</div><div class="full-sentence">Jack <strong>turned up late</strong> for the meeting.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">turned late up</span> — The word order is unnatural here.</p>
+      <p><span class="mistake">turned down late</span> — <em>Turn down</em> has a different meaning.</p>
+    </div>
+
+    <!-- WT 11 -->
+    <div class="walkthrough-header"><div class="wt-num">11</div><div class="wt-title">B2 Verb Pattern</div></div>
+    <div class="task-block">
+      <p>Maria said Liam had broken the window.</p>
+      <p><span class="key-tag">ACCUSED</span></p>
+      <p>Maria <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the window.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">accused + person + of + -ing</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">accused Liam of breaking</div><div class="full-sentence">Maria <strong>accused Liam of breaking</strong> the window.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">accused Liam to break</span> — Use <em>of + -ing</em>, not <em>to + infinitive</em>.</p>
+      <p><span class="mistake">accused that Liam broke</span> — This is not the correct pattern for this sentence.</p>
+    </div>
+
+    <!-- WT 12 -->
+    <div class="walkthrough-header"><div class="wt-num">12</div><div class="wt-title">Mixed Pattern</div></div>
+    <div class="task-block">
+      <p>Because I was ill, I missed the class.</p>
+      <p><span class="key-tag">PREVENTED</span></p>
+      <p>My illness <span class="gap-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the class.</p>
+    </div>
+    <div class="step-block"><span class="step-label">Meaning</span><p>My illness stopped me from attending the class.</p></div>
+    <div class="step-block"><span class="step-label">Pattern</span><div class="pattern-box">prevented + person + from + -ing</div></div>
+    <div class="step-block"><span class="step-label">Answer</span><div class="answer-block" style="margin:10px 0 0;"><div class="answer-label">Answer</div><div class="answer-text">prevented me from attending</div><div class="full-sentence">My illness <strong>prevented me from attending</strong> the class.</div></div></div>
+    <div class="danger-box">
+      <div class="danger-title">Why Wrong Answers Are Wrong</div>
+      <p><span class="mistake">prevented me to attend</span> — After <em>prevent someone</em>, use <em>from + -ing</em>.</p>
+      <p><span class="mistake">prevented from attending</span> — The sentence needs the object <em>me</em>.</p>
+    </div>
+
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch20')">← <div><span class="nav-ch">Chapter 20</span>Exam-Day Method</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch22')"><div><span class="nav-ch">Chapter 22</span>Final Mastery Checklist</div> →</button>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────
+     CHAPTER 22
+──────────────────────────────────────────── -->
+<div id="panel-ch22" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Part 5 — Build Control</div>
+    <div class="ch-number">Chapter 22</div>
+    <h2>Final Mastery Checklist</h2>
+  </div>
+  <div class="chapter-body">
+    <p>Use this checklist every few weeks. Mark each skill:</p>
+    <p><strong>Not yet &nbsp; / &nbsp; Sometimes &nbsp; / &nbsp; Usually</strong></p>
+
+    <table class="mastery-table">
+      <thead>
+        <tr>
+          <th>Skill</th>
+          <th>Not yet</th>
+          <th>Sometimes</th>
+          <th>Usually</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>I can explain what Part 4 asks me to do.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can use the key word without changing it.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can count two to five words correctly.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can check the words before and after the gap.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can find the main meaning of the first sentence.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can recognise passive transformations.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can recognise comparison transformations.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can recognise conditional transformations.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can recognise fixed expressions.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can explain why a wrong answer is wrong.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+        <tr>
+          <td>I can correct some of my own mistakes.</td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+          <td><span class="checkbox-cell"></span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <h3>Final Message</h3>
+    <p>You do not need to guess.</p>
+
+    <div class="routine-display" style="margin:24px 0;">
+      <p style="font-family:'Playfair Display', serif; font-size:17px; font-style:italic; line-height:1.9; color: var(--text-light);">
+        Read the meaning.<br>
+        Notice the key word.<br>
+        Study the gap frame.<br>
+        Choose the pattern.<br>
+        Write the answer.<br>
+        Check the full sentence.
+      </p>
+    </div>
+
+    <p>Better control comes from repeating this process carefully.</p>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch21')">← <div><span class="nav-ch">Chapter 21</span>Full Demonstration Walkthroughs</div></button>
+    <button class="nav-btn disabled">End of Guide</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+  // Chapter order for prev/next
+  const chapterOrder = ['intro','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12','ch13','ch14','ch15','ch16','ch17','ch18','ch19','ch20','ch21','ch22'];
+
+  function showChapter(id, btn) {
+    // Hide all panels
+    document.querySelectorAll('.chapter-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.chapter-link').forEach(l => l.classList.remove('active'));
+    // Show target
+    document.getElementById('panel-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+    // Scroll main to top
+    window.scrollTo(0, 0);
+    // Auto-open the part group containing this chapter
+    if (btn) {
+      const list = btn.closest('.chapter-list');
+      if (list && !list.classList.contains('open')) {
+        list.classList.add('open');
+        const toggle = list.previousElementSibling;
+        if (toggle) toggle.classList.add('open');
+      }
+    }
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    if (window.innerWidth <= 800 && sidebar && sidebar.classList.contains('sidebar-open')) {
+      sidebar.classList.remove('sidebar-open');
+      document.body.classList.remove('sidebar-open');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function showChapterById(id) {
+    const btn = document.querySelector(`.chapter-link[onclick="showChapter('${id}', this)"]`);
+    showChapter(id, btn);
+  }
+
+  function togglePart(btn) {
+    btn.classList.toggle('open');
+    const list = btn.nextElementSibling;
+    list.classList.toggle('open');
+  }
+
+  (function () {
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    if (!sidebar || !toggleBtn) return;
+
+    function toggleSidebar() {
+      const isOpen = sidebar.classList.toggle('sidebar-open');
+      document.body.classList.toggle('sidebar-open', isOpen);
+      toggleBtn.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+  })();
+
+  // Checkbox interactivity
+  document.querySelectorAll('.checkbox-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      cell.style.background = cell.style.background ? '' : 'var(--green-note)';
+      cell.style.borderColor = cell.style.borderColor ? '' : 'var(--green-note)';
+    });
+  });
+</script>
+<script>
+
+/* Language Lab navigation. Original lesson DOM and engines stay in place. */
+(function(){
+  "use strict";
+  const root=document.documentElement,essay=!!document.querySelector('.tab-panel');
+  const chapters=Array.from(document.querySelectorAll('.chapter-panel'));
+  const tabs=Array.from(document.querySelectorAll('.tab-panel'));
+  const chapterLinks=Array.from(document.querySelectorAll('.chapter-link'));
+  const tabButtons=Array.from(document.querySelectorAll('.tab-btn'));
+  const records=essay?tabs.flatMap((tab,t)=>Array.from(tab.querySelectorAll(':scope > .lesson-block')).map((block,i)=>({id:tab.id,tab:t,block,group:tabButtons[t]?.textContent.trim()||'Writing workshop',title:block.querySelector('.block-head h2')?.textContent.trim()||'Activity '+(i+1)}))):chapters.map((el,i)=>({id:el.id.slice(6),el,title:el.querySelector('.chapter-header h2')?.textContent.trim()||chapterLinks[i]?.textContent.trim()||'Chapter '+(i+1)}));
+  const original=essay?window.openTab:window.showChapter;
+  const host=document.querySelector(essay?'.wrap':'#main');
+  if(!records.length||!host||typeof original!=='function')return;
+  const guidePaths=[['index.html','Home'],['key-word-transformations.html','Key Word Transformations'],['tense-building-blocks.html','Tense Building Blocks'],['english-articles.html','English Articles'],['active-passive-voice.html','Active and Passive Voice'],['essay.html','Essay Writing'],['B2Reported_Speech_and_Report.html','Reported Speech & Report Writing']];
+  let current=0,font=20,clearSelection=()=>{};
+  try{let n=Number(localStorage.getItem('language-lab-text-size'));if(n>=16&&n<=34)font=n}catch(e){}
+  function applyFont(n){font=Math.max(16,Math.min(34,n));root.style.fontSize=font+'px';try{localStorage.setItem('language-lab-text-size',String(font))}catch(e){}}
+  function make(tag,cls,text){let el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el}
+  function button(text,label,fn,cls){const b=make('button',cls,text);b.type='button';b.setAttribute('aria-label',label);b.title=label;b.addEventListener('click',fn);return b}
+  function select(label){const el=make('select','ll-select');el.setAttribute('aria-label',label);el.title=label;return el}
+  function option(s,val,label){const o=make('option','',label);o.value=val;s.append(o)}
+  const header=make('header','ll-header'),inner=make('div','ll-header-inner'),brand=make('strong','ll-brand','LANGUAGE LAB / B2'),nav=make('nav','ll-controls');nav.setAttribute('aria-label','Lesson navigation');
+  const guide=select('Choose guide'),jump=select('Choose section');
+  guidePaths.forEach(([path,label])=>option(guide,path,label));guide.value="key-word-transformations.html";guide.onchange=()=>{location.href=guide.value};
+  if(essay){let last=-1,group;records.forEach((r,i)=>{if(r.tab!==last){group=document.createElement('optgroup');group.label=r.group;jump.append(group);last=r.tab}option(group,String(i),r.title)})}else records.forEach((r,i)=>option(jump,String(i),(i===0?'Overview: ':i+'. ')+r.title));
+  const smaller=button('A−','Decrease text size',()=>applyFont(font-2)),larger=button('A+','Increase text size',()=>applyFont(font+2)),topPrev=button('←','Previous section',()=>go(current-1)),topNext=button('→','Next section',()=>go(current+1));
+  topPrev.setAttribute('aria-keyshortcuts','ArrowLeft');topNext.setAttribute('aria-keyshortcuts','ArrowRight');
+  nav.append(smaller,larger,guide,jump,topPrev,topNext);inner.append(brand,nav);header.append(inner);
+  const progress=make('div','ll-progress'),fill=make('div');progress.append(fill);progress.setAttribute('role','progressbar');progress.setAttribute('aria-label','Section position');progress.setAttribute('aria-valuemin','1');progress.setAttribute('aria-valuemax',String(records.length));document.body.prepend(header,progress);
+  const footer=make('div','ll-footer'),prev=button('← Previous','Previous section',()=>go(current-1)),next=button('Next →','Next section',()=>go(current+1),'ll-next'),position=make('span','ll-position');position.setAttribute('aria-live','polite');footer.append(prev,position,next);host.after(footer);footer.after(make('p','ll-shortcuts','Keyboard: ← previous section · → next section (when not typing)'));
+  const essayHead=essay?make('div','ll-essay-heading'):null,stage=essay?make('div','ll-stage'):null,heading=essay?make('h1','ll-screen-heading'):null;
+  if(essay){essayHead.append(stage,heading);host.insertBefore(essayHead,tabs[0])}
+  function sync(i){current=i;const r=records[i];jump.value=String(i);position.textContent=(i+1)+' / '+records.length;fill.style.width=((i+1)/records.length*100)+'%';progress.setAttribute('aria-valuenow',String(i+1));prev.disabled=topPrev.disabled=i===0;next.disabled=topNext.disabled=i===records.length-1;if(essay){records.forEach(item=>item.block.classList.toggle('ll-current',item===r));stage.textContent=r.group+' · Activity '+(i+1)+' / '+records.length;heading.textContent=r.title}}
+  let navigating=false;
+  function go(i){if(i<0||i>=records.length)return;clearSelection();const r=records[i];navigating=true;try{if(essay)original(r.id,tabButtons[r.tab]);else{let b=chapterLinks.find(x=>x.getAttribute('onclick')?.includes("'"+r.id+"'"));original(r.id,b)}sync(i);window.scrollTo(0,0)}finally{navigating=false}}
+  if(essay){window.openTab=function(id,b){const first=records.findIndex(r=>r.id===id);if(first>=0&&!navigating){go(first);return}return original(id,b)}}else{window.showChapter=function(id,b){const result=original(id,b);const i=records.findIndex(r=>r.id===id);if(i>=0&&!navigating)sync(i);return result}}
+  jump.addEventListener('change',()=>go(Number(jump.value)));
+  document.addEventListener('keydown',e=>{if(e.defaultPrevented||e.isComposing||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey||e.repeat||document.querySelector('dialog[open]'))return;const target=e.target;if(target instanceof Element&&target.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="textbox"],[role="combobox"],[role="slider"],.ll-table,.drag-card,.stack-item,.drop-zone'))return;if(e.key==='ArrowLeft'&&current>0){e.preventDefault();go(current-1)}else if(e.key==='ArrowRight'&&current<records.length-1){e.preventDefault();go(current+1)}});
+  host.querySelectorAll('table').forEach(t=>{if(t.closest('.ll-table'))return;const w=make('div','ll-table');w.tabIndex=0;w.setAttribute('role','region');w.setAttribute('aria-label','Table; scroll horizontally if needed');const cols=Math.max(...Array.from(t.rows).map(r=>Array.from(r.cells).reduce((n,c)=>n+(c.colSpan||1),0)),1);w.style.setProperty('--ll-table-width',cols>3?(cols*6)+'rem':cols>1?(cols*4.5)+'rem':'0px');t.before(w);w.append(t)});
+  if(!essay){host.querySelectorAll('.answer-block').forEach(block=>{const d=make('details','ll-answer'),sum=make('summary','','Show answer / explanation');d.addEventListener('toggle',()=>sum.textContent=d.open?'Hide answer / explanation':'Show answer / explanation');block.before(d);d.append(sum,block)})}
+  if(essay){
+    let selected=null;
+    const live=make('div','ll-sr');live.setAttribute('aria-live','polite');host.append(live);
+    function clearCard(){if(selected){selected.classList.remove('ll-selected');selected.setAttribute('aria-pressed','false')}selected=null;host.querySelectorAll('.ll-target').forEach(z=>z.classList.remove('ll-target'))}
+    clearSelection=clearCard;
+    function selectCard(card){if(selected===card){clearCard();return}clearCard();selected=card;card.classList.add('ll-selected');card.setAttribute('aria-pressed','true');card.closest('.lesson-block').querySelectorAll('.drop-zone').forEach(z=>z.classList.add('ll-target'));live.textContent='Card selected. Choose a destination.'}
+    function moveCard(zone){if(!selected||!selected.isConnected||selected.closest('.lesson-block')!==zone.closest('.lesson-block')){clearCard();return}const card=selected;card.classList.remove('correct','wrong');zone.appendChild(card);clearCard();live.textContent='Card moved to '+(zone.dataset.zone||'destination')+'.';card.focus()}
+    function prepareCards(){host.querySelectorAll('.drag-card:not([data-ll-card])').forEach(card=>{card.dataset.llCard='1';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-pressed','false')})}
+    host.querySelectorAll('.drop-zone').forEach(zone=>{zone.tabIndex=0;zone.setAttribute('aria-label','Destination: '+(zone.dataset.zone||'card tray'));zone.addEventListener('dragstart',clearCard);zone.addEventListener('drop',clearCard)});
+    host.querySelectorAll('.lesson-block').forEach(block=>{const tray=block.querySelector('.card-tray');if(tray)tray.before(make('p','ll-touch-tip','Drag a card, or tap a card and then tap its destination.'))});
+    prepareCards();new MutationObserver(()=>{if(selected&&!selected.isConnected)clearCard();prepareCards()}).observe(host,{childList:true,subtree:true});
+    host.addEventListener('click',e=>{const target=e.target;if(!(target instanceof Element))return;const card=target.closest('.drag-card');if(card){if(selected&&selected!==card&&card.parentElement.classList.contains('drop-zone')&&selected.closest('.lesson-block')===card.closest('.lesson-block'))moveCard(card.parentElement);else selectCard(card);return}const zone=target.closest('.drop-zone');if(zone&&selected)moveCard(zone)});
+    host.addEventListener('keydown',e=>{if(!['Enter',' '].includes(e.key)||!(e.target instanceof Element))return;const c=e.target.closest('.drag-card'),z=e.target.closest('.drop-zone');if(c&&e.target===c){e.preventDefault();selectCard(c)}else if(z&&e.target===z&&selected){e.preventDefault();moveCard(z)}});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')clearCard()});
+    const stack=document.getElementById('essayStack');if(stack){stack.before(make('p','ll-touch-tip','Drag paragraphs into order, or use the up and down buttons.'));Array.from(stack.children).forEach(item=>{const bar=make('span','ll-stack-controls');function move(dir){const neighbor=dir<0?item.previousElementSibling:item.nextElementSibling;if(!neighbor)return;if(dir<0)stack.insertBefore(item,neighbor);else stack.insertBefore(neighbor,item);Array.from(stack.children).forEach(x=>x.classList.remove('correct','wrong'));live.textContent='Paragraph moved.'}bar.append(button('↑','Move paragraph up',()=>move(-1)),button('↓','Move paragraph down',()=>move(1)));item.append(bar)})}
+  }
+  root.classList.add(essay?'ll-essay':'ll-guide','ll-ready');applyFont(font);go(0);
+})();
+</script>
+<script>
+
+/* Unified side panel. Retains the existing navigation and exercise state. */
+(function(){
+ "use strict";
+ const root=document.documentElement;
+ const isReport="key-word-transformations.html"==="B2Reported_Speech_and_Report.html";
+ const jump=isReport?document.getElementById('jump'):document.querySelector('.ll-header select[aria-label="Choose section"]');
+ const position=isReport?document.getElementById('position'):document.querySelector('.ll-position');
+ const bar=isReport?document.querySelector('body>header nav'):document.querySelector('.ll-controls');
+ if(!jump||!position||!bar||!jump.options.length)return;
+ const guides=[['index.html','Home'],['key-word-transformations.html','Key Word Transformations'],['tense-building-blocks.html','Tense Building Blocks'],['english-articles.html','English Articles'],['active-passive-voice.html','Active and Passive Voice'],['essay.html','Essay Writing'],["B2Reported_Speech_and_Report.html",'Reported Speech & Report Writing']];
+ const title=guides.find(([p])=>p==="key-word-transformations.html")?.[1]||document.title;
+ const make=(tag,cls,label)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(label!==undefined)e.textContent=label;return e};
+ const menu=make('aside');menu.id='ll-contents';menu.hidden=true;menu.setAttribute('aria-label','Guide and section contents');
+ const head=make('div','ll-menu-head'),name=make('div');name.append(make('div','ll-menu-brand','LANGUAGE LAB / B2'),make('div','ll-menu-title',title));
+ const close=make('button','ll-menu-close','×');close.type='button';close.setAttribute('aria-label','Close contents');close.title='Close contents';head.append(name,close);menu.append(head);
+ const scroll=make('div','ll-menu-scroll'),guideNav=make('nav','ll-menu-guides');guideNav.setAttribute('aria-label','Guides');guideNav.append(make('div','ll-menu-label','Guides'));
+ guides.forEach(([path,label])=>{const a=make('a','ll-menu-link',label);a.href=path;if(path==="key-word-transformations.html")a.setAttribute('aria-current','page');guideNav.append(a)});
+ const sections=make('nav');sections.setAttribute('aria-label','Sections in this guide');sections.append(make('div','ll-menu-label','Contents'));scroll.append(guideNav,sections);menu.append(scroll);
+ const count=make('div','ll-menu-count');menu.append(count);
+ const groups=new Map(),items=[];
+ const opts=Array.from(jump.options);
+ const oldChapterLinks=Array.from(document.querySelectorAll('#sidebar .chapter-link'));
+ function groupName(opt,i){
+   if(isReport)return i<10?'Reported speech':i<15?'Active/passive & Part 4':'Report writing';
+   if(opt.parentElement?.tagName==='OPTGROUP')return opt.parentElement.label;
+   const old=oldChapterLinks[i];const part=old?.closest('.part-group');
+   const label=part?.querySelector('.part-toggle')?.textContent.replace(/▶|▼|▾|▸/g,'').trim();
+   return label&&label!=='Chapter List'?label:'Chapters';
+ }
+ function tidy(opt,i){let t=opt.textContent.trim();return t.replace(/^\d+\.\s*/,'').replace(/^Overview:\s*/,'')}
+ opts.forEach((opt,i)=>{
+   const group=groupName(opt,i);let d=groups.get(group);
+   if(!d){d=make('details');d.append(make('summary','',group));sections.append(d);groups.set(group,d)}
+   const b=make('button','ll-menu-item');b.type='button';b.append(make('span','ll-menu-number',String(i+1).padStart(2,'0')),document.createTextNode(tidy(opt,i)));
+   b.addEventListener('click',()=>{jump.value=opt.value;jump.dispatchEvent(new Event('change',{bubbles:true}));if(!wide.matches)setOpen(false,true);else sync()});
+   d.append(b);items.push({b,d,value:opt.value});
+ });
+ const shade=make('div');shade.id='ll-shade';shade.hidden=true;shade.setAttribute('aria-hidden','true');document.body.append(shade,menu);
+ const toggle=make('button','','Contents');toggle.id='ll-menu-toggle';toggle.type='button';toggle.setAttribute('aria-controls',menu.id);toggle.setAttribute('aria-expanded','false');toggle.title='Show or hide contents';bar.prepend(toggle);
+ // Old list controls remain available to the lesson engines but not to the visual or keyboard UI.
+ jump.hidden=true;jump.tabIndex=-1;jump.setAttribute('aria-hidden','true');
+ const oldGuide=document.querySelector('.ll-header select[aria-label="Choose guide"]');if(oldGuide){oldGuide.hidden=true;oldGuide.tabIndex=-1;oldGuide.setAttribute('aria-hidden','true')}
+ const wide=matchMedia('(min-width:901px)');
+ let opened=false,lastValue=null;
+ function sync(){
+   const val=jump.value;const changed=lastValue!==val;lastValue=val;
+   items.forEach(({b,d,value})=>{if(value===val){b.setAttribute('aria-current','step');if(changed)d.open=true}else b.removeAttribute('aria-current')});
+   count.textContent='Section '+position.textContent.trim();
+   if(changed&&opened){const active=items.find(x=>x.value===val)?.b;if(active){const r=active.getBoundingClientRect(),v=scroll.getBoundingClientRect();if(r.bottom>v.bottom)scroll.scrollTop+=r.bottom-v.bottom+10;else if(r.top<v.top)scroll.scrollTop-=v.top-r.top+10}}
+ }
+ function setOpen(open,returnFocus=false){
+   opened=open;root.classList.toggle('ll-menu-open',open);menu.hidden=!open;shade.hidden=!open||wide.matches;toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Hide contents':'Contents';
+   if(open&&!wide.matches){menu.setAttribute('role','dialog');menu.setAttribute('aria-modal','true');close.focus({preventScroll:true})}else{menu.removeAttribute('role');menu.removeAttribute('aria-modal')}
+   if(!open&&returnFocus)toggle.focus({preventScroll:true});if(open)sync();
+ }
+ toggle.addEventListener('click',()=>setOpen(!opened));close.addEventListener('click',()=>setOpen(false,true));shade.addEventListener('click',()=>setOpen(false,true));
+ document.addEventListener('keydown',e=>{
+   if(!opened||document.querySelector('dialog[open]'))return;
+   if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();setOpen(false,true);return}
+   if(!wide.matches){
+     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.stopImmediatePropagation();return}
+     if(e.key==='Tab'){const focusables=Array.from(menu.querySelectorAll('button,a[href],summary')).filter(el=>el.getClientRects().length&&!el.disabled);if(!focusables.length)return;const first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&(document.activeElement===first||!menu.contains(document.activeElement))){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||!menu.contains(document.activeElement))){e.preventDefault();first.focus()}}
+   }
+ },true);
+ if(wide.addEventListener)wide.addEventListener('change',()=>setOpen(wide.matches));else wide.addListener(()=>setOpen(wide.matches));
+ new MutationObserver(sync).observe(position,{childList:true,characterData:true,subtree:true});
+ root.classList.add('ll-sidebar-ready');sync();setOpen(wide.matches);
+})();
+
+</script>
+</body>
+</html>

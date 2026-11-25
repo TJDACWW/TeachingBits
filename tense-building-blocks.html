@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Tense Building Blocks: Time, Aspect, Negatives, and Questions</title>
+<style>
+  :root {
+    --sidebar-bg: #1b2c3e;
+    --sidebar-text: #c9c4bc;
+    --sidebar-hover: #243649;
+    --sidebar-active: #e9a060;
+    --sidebar-part: #8fadc4;
+    --sidebar-width: 270px;
+    --main-bg: #f5f1ea;
+    --paper: #fdfaf5;
+    --text: #252320;
+    --text-light: #5a5550;
+    --accent: #8b3a2a;
+    --accent-light: #c4533f;
+    --amber: #d4862a;
+    --blue-note: #2a4f72;
+    --green-note: #2a5c3f;
+    --border: #ddd8cc;
+    --table-head: #e8e1d5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, Georgia, serif;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--main-bg);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  #sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: #3a5268 var(--sidebar-bg);
+  }
+  #sidebar::-webkit-scrollbar { width: 5px; }
+  #sidebar::-webkit-scrollbar-thumb { background: #3a5268; border-radius: 3px; }
+
+  .sidebar-title {
+    padding: 24px 20px 18px;
+    border-bottom: 1px solid #2d4156;
+  }
+  .sidebar-title h1 {
+    font-family: Georgia, serif;
+    font-size: 0.8333rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+  }
+  .sidebar-title p {
+    font-size: 0.6389rem;
+    color: var(--sidebar-part);
+    margin-top: 4px;
+    font-family: system-ui, serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-nav { flex: 1; padding: 10px 0 30px; }
+
+  .guide-group, .part-group { border-bottom: 1px solid #243649; }
+  .guide-group { padding-bottom: 8px; margin-bottom: 8px; }
+
+  .part-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: var(--sidebar-part);
+    font-family: system-ui, serif;
+    font-size: 0.6111rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.15s;
+  }
+  .part-toggle:hover { background: var(--sidebar-hover); }
+  .part-toggle .arrow {
+    font-size: 0.5rem;
+    transition: transform 0.2s;
+    color: #4a6b84;
+  }
+  .part-toggle.open .arrow { transform: rotate(90deg); }
+
+  .guide-links,
+  .chapter-list {
+    display: none;
+    flex-direction: column;
+  }
+  .guide-links.open,
+  .chapter-list.open { display: flex; }
+
+  .guide-link,
+  .chapter-link {
+    display: block;
+    padding: 9px 20px 9px 28px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    font-family: system-ui, serif;
+    font-size: 0.7778rem;
+    line-height: 1.35;
+    text-align: left;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .chapter-link {
+    padding: 7px 20px 7px 28px;
+  }
+  .guide-link:hover,
+  .chapter-link:hover {
+    background: var(--sidebar-hover);
+    color: #fff;
+    border-left-color: #3a5a74;
+  }
+  .guide-link.active,
+  .chapter-link.active {
+    color: var(--sidebar-active);
+    border-left-color: var(--sidebar-active);
+    background: rgba(233,160,96,0.08);
+    font-weight: 600;
+  }
+  .chapter-link .ch-num {
+    font-size: 0.5556rem;
+    color: #4a6b84;
+    display: block;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+
+  #main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  .chapter-panel { display: none; }
+  .chapter-panel.active {
+    display: block;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chapter-header {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 60px 36px;
+  }
+  .chapter-header .part-label {
+    font-size: 0.6111rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .chapter-header h2 {
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .chapter-header .ch-number {
+    font-family: Georgia, serif;
+    font-size: 0.7222rem;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .chapter-body {
+    padding: 48px 60px 80px;
+    max-width: 900px;
+  }
+
+  .chapter-body h3 {
+    font-family: Georgia, serif;
+    font-size: 1.2222rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 44px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .chapter-body h3:first-child { margin-top: 0; }
+
+  .chapter-body h4 {
+    font-family: system-ui, serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--blue-note);
+    margin: 28px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.6667rem;
+  }
+
+  .chapter-body p { margin-bottom: 14px; }
+  .chapter-body ul, .chapter-body ol { margin: 12px 0 18px 24px; }
+  .chapter-body li { margin-bottom: 6px; }
+
+  strong { color: var(--text); font-weight: 600; }
+
+  .intro-lead {
+    font-size: 1.2222rem;
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--text-light);
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+
+  .note-box {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--blue-note);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 18px;
+    margin: 18px 0;
+  }
+  .formula-box {
+    background: #f4efe6;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 18px 0;
+  }
+  .formula {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7778rem;
+    color: var(--accent);
+    background: #e8e2d8;
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7778rem;
+    background: #e8e2d8;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .grid-table, .tense-table, .polarity-table, .refs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0 24px;
+    font-size: 0.8333rem;
+  }
+  .grid-table th, .grid-table td,
+  .tense-table th, .tense-table td,
+  .polarity-table th, .polarity-table td,
+  .refs-table th, .refs-table td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    vertical-align: top;
+  }
+  .grid-table th, .tense-table th, .polarity-table th, .refs-table th {
+    background: var(--table-head);
+    text-align: left;
+    font-weight: 600;
+  }
+  .grid-table td, .tense-table td, .polarity-table td { background: var(--paper); }
+  .grid-table td:nth-child(1), .grid-table td:nth-child(2) { width: 18%; }
+  .tense-table td:nth-child(1), .tense-table td:nth-child(2) { width: 18%; }
+  .polarity-table td:nth-child(1), .polarity-table td:nth-child(2) { width: 12%; }
+
+  .pattern-title {
+    font-family: Georgia, serif;
+    font-size: 0.8889rem;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    color: var(--blue-note);
+  }
+
+  .example-sentence {
+    font-style: italic;
+    padding: 12px 20px;
+    border-left: 4px solid var(--border);
+    margin: 12px 0;
+    background: var(--paper);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .aspect-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 16px 0;
+  }
+
+  .chapter-body hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  .panel-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 60px 60px;
+    border-top: 1px solid var(--border);
+    max-width: 900px;
+  }
+  .nav-btn {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: system-ui, serif;
+    font-size: 0.8333rem;
+    color: var(--text-light);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-btn:hover {
+    background: var(--blue-note);
+    color: #fff;
+    border-color: var(--blue-note);
+  }
+  .nav-btn.disabled { opacity: 0.3; pointer-events: none; }
+  .nav-btn .nav-ch { font-size: 0.6667rem; display: block; color: var(--amber); }
+  .nav-btn:hover .nav-ch { color: #f0c080; }
+
+  .footnotes {
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    padding-top: 20px;
+    font-size: 0.7778rem;
+    color: var(--text-light);
+  }
+  .footnotes a { color: var(--blue-note); }
+
+  #main { scrollbar-width: thin; }
+
+  @media (max-width: 800px) {
+    :root { --sidebar-width: 220px; }
+    body { display: block; }
+    #main { margin-left: 0; }
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      z-index: 120;
+      padding: 6px 10px;
+      font-size: 0.7778rem;
+      font-family: system-ui, serif;
+      border-radius: 4px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      border: 1px solid #243649;
+    }
+    #sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.25s ease-out;
+      width: min(var(--sidebar-width), 85vw);
+      min-width: 0;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+    }
+    #sidebar.sidebar-open { transform: translateX(0); }
+    body.sidebar-open { overflow: hidden; }
+    body.sidebar-open main::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 90;
+    }
+    .chapter-header, .chapter-body { padding-left: 28px; padding-right: 28px; }
+    .chapter-header h2 { font-size: 1.4444rem; }
+    .panel-nav { padding: 24px 28px 48px; }
+  }
+</style>
+<style>
+
+/* Language Lab contents sidebar. Desktop dock; mobile drawer. */
+:root{--ll-side-width:264px;--ll-side-bg:#172d38;--ll-side-text:#f5f1e8;--ll-side-muted:#b7c8ce;--ll-side-line:#405762;--ll-side-active:#174b60}
+html.ll-sidebar-ready body{box-sizing:border-box;min-width:0;padding-left:0;transition:none}
+html.ll-sidebar-ready #ll-contents[hidden],html.ll-sidebar-ready #ll-shade[hidden]{display:none!important}
+html.ll-sidebar-ready .ll-header select.ll-select,html.ll-sidebar-ready #jump{display:none!important}
+html.ll-sidebar-ready #ll-contents{position:fixed;inset:0 auto 0 0;width:var(--ll-side-width);max-width:calc(100vw - 44px);height:100vh;height:100dvh;z-index:300;background:var(--ll-side-bg);color:var(--ll-side-text);display:flex;flex-direction:column;overflow:hidden;font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-sizing:border-box;text-align:left;box-shadow:none}
+#ll-contents *{box-sizing:border-box;min-width:0;overflow-wrap:anywhere}
+#ll-contents .ll-menu-head{padding:13px 12px;border-bottom:1px solid var(--ll-side-line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none}
+#ll-contents .ll-menu-brand{font:750 11px/1.35 system-ui,sans-serif;letter-spacing:.1em;color:#fff}
+#ll-contents .ll-menu-title{font:600 16px/1.25 Georgia,serif;color:#f5f1e8;margin:3px 0 0}
+#ll-contents .ll-menu-close{background:transparent;color:white;border:1px solid #8299a2;border-radius:3px;padding:5px 8px;min-height:36px;min-width:38px;font:14px/1.3 system-ui,sans-serif;flex:none;cursor:pointer}
+#ll-contents .ll-menu-scroll{overflow:auto;overscroll-behavior:contain;flex:1;min-height:0;padding:9px 0 18px;scrollbar-width:thin;scrollbar-color:#657e88 var(--ll-side-bg)}
+#ll-contents .ll-menu-label{color:var(--ll-side-muted);font:700 10px/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;margin:11px 12px 5px}
+#ll-contents .ll-menu-guides{padding-bottom:10px;margin-bottom:8px;border-bottom:1px solid var(--ll-side-line)}
+#ll-contents .ll-menu-link,#ll-contents .ll-menu-item{display:block;width:100%;color:var(--ll-side-text);background:transparent;border:0;border-left:3px solid transparent;border-radius:0;box-shadow:none;text-decoration:none;text-align:left;font:14px/1.4 system-ui,sans-serif;padding:9px 11px 9px 14px;min-height:40px;margin:0;cursor:pointer;transform:none}
+#ll-contents .ll-menu-link[aria-current=page],#ll-contents .ll-menu-item[aria-current=step]{background:var(--ll-side-active);border-left-color:#edb28b;color:#fff;font-weight:650}
+#ll-contents .ll-menu-link:hover,#ll-contents .ll-menu-item:hover,#ll-contents summary:hover{background:#284754;color:#fff;box-shadow:none;transform:none}
+#ll-contents details{border:0;margin:0;padding:0}
+#ll-contents details>summary{cursor:pointer;color:#e2ecef;padding:9px 12px;min-height:40px;font:650 12px/1.45 system-ui,sans-serif;letter-spacing:.035em;border-top:1px solid #314953;list-style-position:inside}
+#ll-contents details>summary::marker{color:#edb28b}
+#ll-contents .ll-menu-number{color:#b9cbd1;font:12px/1.35 system-ui,sans-serif;display:inline-block;min-width:25px;margin-right:4px;font-variant-numeric:tabular-nums}
+#ll-contents .ll-menu-item[aria-current=step] .ll-menu-number{color:#f4c3a7}
+#ll-contents :focus-visible,#ll-contents summary:focus-visible,#ll-menu-toggle:focus-visible{outline:2px solid #f0b077;outline-offset:-3px}
+#ll-contents .ll-menu-count{padding:10px 12px;border-top:1px solid var(--ll-side-line);font:12px/1.35 system-ui,sans-serif;color:var(--ll-side-muted);flex:none;font-variant-numeric:tabular-nums}
+#ll-shade{position:fixed;inset:0;z-index:299;background:#172d387d;border:0;padding:0;margin:0;cursor:pointer}
+#ll-menu-toggle{background:#172d38;color:#fff;border:1px solid #a9b8bf;border-radius:3px;font:650 14px/1.3 system-ui,sans-serif;padding:5px 9px;min-height:36px;max-width:100%;cursor:pointer}
+#ll-menu-toggle:hover{background:#284754;border-color:#f4c3a7}
+html.ll-sidebar-ready .ll-header-inner,html.ll-sidebar-ready body>header:not(.ll-header){min-width:0}
+@media(min-width:901px){html.ll-sidebar-ready.ll-menu-open body{padding-left:var(--ll-side-width)}html.ll-sidebar-ready #ll-shade{display:none!important}}
+@media(min-width:901px) and (max-width:1100px){html.ll-menu-open .layout,html.ll-menu-open .pair-grid{grid-template-columns:1fr}html.ll-menu-open #screen,html.ll-menu-open #main,html.ll-menu-open .wrap{padding:24px 18px}html.ll-menu-open .chapter-header h2,html.ll-menu-open .ll-screen-heading{font-size:1.8rem}}
+@media(max-width:900px){html.ll-sidebar-ready body{padding-left:0}html.ll-sidebar-ready #ll-contents{box-shadow:5px 0 18px #172d3850}html.ll-sidebar-ready.ll-menu-open body{overflow:hidden}}
+@media print{html.ll-sidebar-ready body{padding-left:0!important;overflow:visible!important}#ll-contents,#ll-shade,#ll-menu-toggle{display:none!important}}
+
+</style>
+<style>
+/* Language Lab: embedded, standalone visual system. */
+:root{--ll-paper:#f5f1e8;--ll-ink:#202a30;--ll-blue:#174b60;--ll-deep:#172d38;--ll-accent:#a33f27;--ll-line:#c9c5ba;--ll-card:#fffdf7;--ll-muted:#59636a;--main-bg:var(--ll-paper);--sidebar-bg:var(--ll-deep);--text:var(--ll-ink);--text-light:var(--ll-muted);--ink:var(--ll-ink);--accent:var(--ll-accent);--border:var(--ll-line);--line:var(--ll-line);--blue-note:var(--ll-blue);--green-note:#2d6043;--sage:#2d6043;--amber:#8b541b;--ochre:#8b541b;--table-head:#e9e3d8;--muted:var(--ll-muted);--card:var(--ll-card)}
+html{font-size:20px}html.ll-guide{--paper:var(--ll-card)}html.ll-essay{--paper:var(--ll-paper)}
+.ll-ready body{display:block;margin:0;min-width:0;background:var(--ll-paper);color:var(--ll-ink);font:1rem/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-wrap:anywhere}
+.ll-ready #sidebar,.ll-ready #sidebarToggle,.ll-ready .panel-nav,.ll-ready .masthead{display:none!important}
+.ll-ready body.sidebar-open{overflow:auto}.ll-ready body.sidebar-open main::before{display:none}
+.ll-ready #main,.ll-ready .wrap{margin:0 auto;width:100%;max-width:1200px;min-width:0;min-height:60vh;padding:clamp(16px,4vw,52px);overflow:visible}
+.ll-ready .chapter-header{background:transparent;padding:0 0 16px;border:0}
+.ll-ready .chapter-header h2,.ll-ready .ll-screen-heading{font:600 2.25rem/1.14 Georgia,"Times New Roman",serif;letter-spacing:-.035em;color:var(--ll-ink);margin:0 0 .5em;overflow-wrap:anywhere}
+.ll-ready .chapter-header .part-label,.ll-ready .chapter-header .ch-number,.ll-stage{font:650 .7rem/1.4 system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ll-accent);margin:0 0 12px}
+.ll-ready .chapter-body{padding:0;max-width:none;min-width:0}.ll-ready .chapter-body h3,.ll-ready .block-head h2{font:650 1.12rem/1.3 system-ui,sans-serif;letter-spacing:0;color:var(--ll-ink);border-bottom:1px solid var(--ll-line);padding-bottom:8px;margin:1.6em 0 .65em}.ll-ready .chapter-body h3:first-child{margin-top:0}
+.ll-ready .chapter-body h4{font:700 .82rem/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:1.2em 0 .5em;color:var(--ll-blue)}
+.ll-ready p{margin:0 0 .75em}.ll-ready .chapter-body ul,.ll-ready .chapter-body ol{padding-left:1.2em;margin:.5em 0 .85em}.ll-ready .chapter-body li{margin:.3em 0}.ll-ready .intro-lead{font:1.35rem/1.4 Georgia,serif;color:var(--ll-blue)}.ll-ready a{color:var(--ll-blue);text-underline-offset:.15em}.ll-ready strong{color:inherit}
+.ll-ready .example-sentence,.ll-ready .task-block,.ll-ready .prompt-sheet{background:var(--ll-card);color:var(--ll-ink);border:0;border-left:3px solid var(--ll-blue);border-radius:0;box-shadow:none;padding:.7em .85em;margin:.8em 0;font:1.12rem/1.45 Georgia,serif}
+.ll-ready .task-block,.ll-ready .prompt-sheet{background:var(--ll-blue);color:white;border-left:3px solid var(--ll-accent)}.ll-ready .task-block strong,.ll-ready .prompt-sheet strong,.ll-ready .task-block a,.ll-ready .prompt-sheet a{color:white}
+.ll-ready .task-block .key-tag,.ll-ready .example-sentence .key-word{background:#f5e2bc;color:var(--ll-deep);border:0;font:750 .78rem/1.45 system-ui,sans-serif;padding:.12em .5em}.ll-ready .task-block .gap-line,.ll-ready .example-sentence .gap-marker{min-width:min(5em,100%);max-width:100%;border-color:#d4ae7e}
+.ll-ready .answer-block,.ll-ready .rule-box,.ll-ready .thinking-box,.ll-ready .check-box,.ll-ready .danger-box,.ll-ready .note-box,.ll-ready .formula-box,.ll-ready .step-block,.ll-ready .aspect-card,.ll-ready .routine-display,.ll-ready .pair-card{border:0;border-left:3px solid var(--ll-blue);border-radius:0;box-shadow:none;padding:.7em .85em;margin:.75em 0;background:var(--ll-card);color:var(--ll-ink)}
+.ll-ready .answer-block{background:#e1ebdf;border-color:#46784c}.ll-ready .danger-box{background:#f2e0da;border-color:var(--ll-accent)}.ll-ready .rule-box{background:#eee7d9;border-color:var(--ll-accent);font-size:1rem}.ll-ready .thinking-box{background:#e9e3d8;border-color:#8b541b}.ll-ready .check-box,.ll-ready .note-box{background:#e6eceb;border-color:var(--ll-blue)}
+.ll-ready .pattern-box,.ll-ready .formula-box{background:var(--ll-blue);color:white;border-color:var(--ll-accent);white-space:normal;overflow-wrap:anywhere}.ll-ready .pattern-box{border-radius:0;padding:.7em .85em;font:.95rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.ll-ready .formula-box code,.ll-ready .pattern-box code{background:#e6eceb;color:var(--ll-deep)}.ll-ready .formula-box strong,.ll-ready .formula-box a,.ll-ready .pattern-box strong,.ll-ready .pattern-box a{color:white}
+.ll-ready .part-intro{background:var(--ll-blue);color:white;padding:.8em 1em;font:1.05rem/1.5 Georgia,serif}.ll-ready .answer-text,.ll-ready .full-sentence,.ll-ready .check-box li,.ll-ready .routine-display{font-size:1rem}.ll-ready .routine-tag,.ll-ready .step-label{border-radius:3px}
+.ll-ready .pair-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.ll-ready .pair-grid>*{min-width:0}.ll-ready table{border-collapse:collapse;box-shadow:none;border-radius:0;font-size:.9rem;max-width:none;width:100%;margin:0;overflow:visible}.ll-ready th,.ll-ready td{font-family:inherit;font-size:inherit;white-space:normal;overflow-wrap:normal;vertical-align:top;padding:.45em .5em;border-bottom:1px solid var(--ll-line)}.ll-ready th{background:#e9e3d8;color:var(--ll-ink);text-transform:none;letter-spacing:0;font-weight:700}
+.ll-table{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;margin:.8em 0}.ll-table table{min-width:var(--ll-table-width,0px)}.ll-ready code{font:.85em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.ll-ready .footnotes{font-size:.8rem;margin-top:1.5em;padding-top:1em}.ll-answer{margin:.65em 0;border-bottom:1px solid var(--ll-line);padding-bottom:.4em}.ll-answer summary{cursor:pointer;color:var(--ll-blue);font:650 14px/1.4 system-ui,sans-serif;padding:8px 0;min-height:38px}
+.ll-ready .lesson-block{box-shadow:none;border:0;border-radius:0;background:transparent;padding:0;margin:0;min-width:0}.ll-ready .lesson-block .block-head{display:none}.ll-ready .tab-panel.active>.lesson-block:not(.ll-current){display:none}.ll-ready .word-btn{cursor:pointer;border-bottom:1px dotted #b3b2aa}.ll-ready .prompt-sheet .word-btn:hover,.ll-ready .prompt-sheet .word-btn.highlighted{color:var(--ll-ink);background:#f5e2bc}
+.ll-ready .card-tray,.ll-ready .drop-col{background:#eee9df;border:1px solid var(--ll-line);border-radius:0;min-width:0;padding:10px}.ll-ready .drop-col{border-top:3px solid var(--ll-blue);min-height:74px}.ll-ready .columns-3,.ll-ready .columns-4,.ll-ready .vocab-deck{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px}
+.ll-ready .drag-card,.ll-ready .stack-item,.ll-ready .vocab-card,.ll-ready .radio-opt{background:var(--ll-card);color:var(--ll-ink);border:1px solid #9da5a0;box-shadow:none;border-radius:3px;max-width:100%;min-width:0;padding:.45em .55em;overflow-wrap:anywhere;font-size:1rem}.ll-ready .drag-card.correct,.ll-ready .stack-item.correct,.ll-ready .vocab-card.picked{background:#dce9d8;color:#163b21;border-color:#46784c}.ll-ready .drag-card.wrong,.ll-ready .stack-item.wrong{background:#f2dbd4;color:#652319;border-color:#a33f27}.ll-ready .drag-card.ll-selected{outline:3px solid #a33f27;outline-offset:-3px}.ll-ready .drop-zone.ll-target{outline:2px dashed #174b60;outline-offset:-2px;cursor:pointer}
+.ll-ready .stack-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto}.ll-ready .ll-stack-controls{display:flex;gap:4px;flex-wrap:wrap;justify-content:end}.ll-ready .ll-stack-controls button{font:650 16px/1 system-ui,sans-serif;padding:5px 8px;min-height:36px}.ll-ready .col-title,.ll-ready .tray-label{font:700 .72rem/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em}.ll-ready .vocab-term{font-size:1rem}.ll-ready .vocab-ex{font-size:.86rem}
+.ll-ready .status-msg.show{background:#e6eceb;color:var(--ll-ink);border:0;border-left:3px solid var(--ll-blue);font:.9rem/1.5 system-ui,sans-serif;padding:.65em .8em}.ll-ready button,.ll-ready input,.ll-ready select,.ll-ready textarea{font-family:inherit}.ll-ready button{border-radius:3px;cursor:pointer;max-width:100%;overflow-wrap:anywhere}.ll-ready button.action,.ll-ready .choice-box{background:var(--ll-blue);color:white;border:1px solid var(--ll-blue);min-height:40px;font:600 .85rem/1.4 system-ui,sans-serif;letter-spacing:0;text-transform:none;padding:7px 11px;box-shadow:none;transform:none}.ll-ready button.action.ghost,.ll-ready .choice-box{background:var(--ll-card);color:var(--ll-ink);border-color:#8b918f}.ll-ready .choice-box.selected{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-ready .choice-box.correct{background:#2d6043;color:white}.ll-ready .choice-box.wrong{background:var(--ll-accent);color:white}.ll-ready button:hover{border-color:var(--ll-accent);transform:none;box-shadow:none}.ll-ready button:disabled{cursor:default;opacity:1;background:#e6e3db;color:#59636a;border-color:#b3b2aa}
+.ll-ready button:focus-visible,.ll-ready input:focus-visible,.ll-ready select:focus-visible,.ll-ready textarea:focus-visible,.ll-ready [tabindex]:focus-visible{outline:3px solid #cb8433;outline-offset:2px}.ll-ready input[type=text],.ll-ready select:not(.ll-select),.ll-ready textarea{max-width:100%;min-width:0;font:inherit;color:var(--ll-ink);background:var(--ll-card);border:1px solid #8b918f;border-radius:3px}.ll-ready .note-row,.ll-ready .err-fix-row{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}.ll-ready .inline-select{width:auto;max-width:100%;font-size:.9em}.ll-ready .word-counter{font:600 .8rem/1.4 system-ui,sans-serif}.ll-ready .radio-opt input{flex:none;margin-top:.35em}.ll-ready .radio-opt{align-items:flex-start}.ll-ready .checkbox-cell{width:24px;height:24px;vertical-align:middle}.ll-ready .chapter-panel.active{animation:none}
+.ll-header{background:var(--ll-deep);color:white}.ll-header-inner{max-width:1200px;margin:auto;padding:8px 12px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;font:14px/1.4 system-ui,sans-serif}.ll-brand{font-size:12px;letter-spacing:.095em;font-weight:750}.ll-controls{display:flex;gap:5px;align-items:center;flex-wrap:wrap;min-width:0;max-width:100%}.ll-header button,.ll-header select.ll-select{font:14px/1.3 system-ui,sans-serif;min-height:36px;color:white;background:var(--ll-deep);border:1px solid #a9b8bf;border-radius:3px;padding:5px 8px;max-width:100%;min-width:0;width:auto}.ll-header select.ll-select{max-width:260px}.ll-header option{background:var(--ll-deep);color:white}.ll-header button:disabled{color:#c7d1d5;background:#334853;border-color:#75858a}.ll-progress{height:4px;background:#d8d5ca}.ll-progress>div{height:100%;background:var(--ll-accent);width:0}
+.ll-footer{max-width:1200px;margin:auto;padding:12px clamp(12px,4vw,52px);border-top:1px solid var(--ll-line);display:flex;justify-content:space-between;align-items:center;gap:8px;font:14px/1.4 system-ui,sans-serif}.ll-footer button{font:600 14px/1.4 system-ui,sans-serif;min-height:40px;border:1px solid #8b918f;background:var(--ll-card);color:var(--ll-ink);padding:6px 12px;border-radius:3px}.ll-footer .ll-next{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-footer button:disabled{color:#59636a;background:#e6e3db;border-color:#b3b2aa}.ll-position{font-variant-numeric:tabular-nums;text-align:center;white-space:nowrap;color:var(--ll-muted)}.ll-shortcuts{font:12px/1.5 system-ui,sans-serif;text-align:center;color:var(--ll-muted);margin:0 0 16px}.ll-touch-tip{font:.8rem/1.45 system-ui,sans-serif;color:var(--ll-muted)}.ll-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:650px){.ll-ready #main,.ll-ready .wrap{padding:20px 14px;min-height:0}.ll-ready .chapter-header h2,.ll-ready .ll-screen-heading{font-size:1.65rem}.ll-ready .chapter-header{padding:0 0 10px}.ll-ready .pair-grid{grid-template-columns:1fr}.ll-ready .note-row,.ll-ready .err-fix-row{grid-template-columns:minmax(0,1fr)}.ll-header select.ll-select{max-width:min(100%,200px)}.ll-ready .stack-item{grid-template-columns:minmax(0,1fr) auto}.ll-ready .stack-handle{display:none}.ll-ready .task-block,.ll-ready .prompt-sheet{padding:.6em}.ll-footer{padding:10px 12px}}
+@media(max-width:380px){.ll-header-inner{gap:6px}.ll-controls{gap:4px}.ll-header select.ll-select{max-width:165px}.ll-header button,.ll-header select.ll-select{padding:4px 6px}}
+@media(prefers-reduced-motion:reduce){.ll-ready *{animation:none!important;transition:none!important}}
+@media print{.ll-header,.ll-footer,.ll-shortcuts,.ll-progress{display:none!important}.ll-ready #main,.ll-ready .wrap{padding:0;max-width:none}}
+</style>
+</head>
+<body>
+
+<button id="sidebarToggle" class="menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false">
+  Contents
+</button>
+
+<nav id="sidebar">
+  <div class="sidebar-title">
+    <h1>English Tense Building Blocks</h1>
+    <p>Time, Aspect, Negatives, and Questions</p>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="guide-group">
+      <button class="part-toggle open" onclick="togglePart(this)">
+        Guides <span class="arrow">▶</span>
+      </button>
+      <div class="guide-links open">
+        <a class="guide-link" href="index.html">Home</a>
+        <a class="guide-link" href="key-word-transformations.html">Key Word Transformations</a>
+        <a class="guide-link active" href="tense-building-blocks.html" aria-current="page">English Tense Building Blocks</a>
+        <a class="guide-link" href="english-articles.html">English Articles</a>
+        <a class="guide-link" href="active-passive-voice.html">Active and Passive Voice</a>
+      </div>
+    </div>
+
+    <div class="part-group">
+      <button class="part-toggle open" onclick="togglePart(this)">
+        Chapter List <span class="arrow">▶</span>
+      </button>
+      <div class="chapter-list open">
+        <button class="chapter-link active" onclick="showChapter('overview', this)">
+          <span class="ch-num">Overview</span>
+          Purpose and structure
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch1', this)">
+          <span class="ch-num">Chapter 1</span>
+          Core building blocks
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch2', this)">
+          <span class="ch-num">Chapter 2</span>
+          Time and aspect as building blocks
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch3', this)">
+          <span class="ch-num">Chapter 3</span>
+          Aspect patterns and the full tense grid
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch4', this)">
+          <span class="ch-num">Chapter 4</span>
+          Why each aspect is used
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch5', this)">
+          <span class="ch-num">Chapter 5</span>
+          Negatives
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch6', this)">
+          <span class="ch-num">Chapter 6</span>
+          Yes/no questions and wh-questions
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch7', this)">
+          <span class="ch-num">Chapter 7</span>
+          Integrated tense-aspect-polarity chart
+        </button>
+        <button class="chapter-link" onclick="showChapter('ch8', this)">
+          <span class="ch-num">Chapter 8</span>
+          How the blocks move
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<div id="panel-overview" class="chapter-panel active">
+  <div class="chapter-header">
+    <div class="part-label">Overview</div>
+    <h2>Time, Aspect, Negatives, and Questions</h2>
+  </div>
+  <div class="chapter-body">
+    <p class="intro-lead">English tense forms are built from a small number of reusable blocks.</p>
+    <p>This guide explains how <strong>time</strong> (present, past, future), <strong>aspect</strong> (simple, continuous, perfect, perfect continuous), and polarity or question form combine to make the 12 main tense patterns.</p>
+    <div class="note-box">
+      <p>The main idea is simple: keep the pattern, move the first auxiliary, and the whole tense changes in a predictable way.</p>
+    </div>
+    <p>That makes the system easier to revise than a long list of isolated verb forms. Each chapter below focuses on one piece of the system and then shows how the same piece appears again and again.</p>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn disabled">← Previous</button>
+    <button class="nav-btn" onclick="showChapterById('ch1')"><div><span class="nav-ch">Chapter 1</span>Core building blocks</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch1" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 1</div>
+    <h2>Core Building Blocks</h2>
+  </div>
+  <div class="chapter-body">
+    <h3>The three basic pieces</h3>
+    <p>Every finite verb phrase can be analysed as subject + auxiliary verb(s) + main verb.</p>
+    <ul>
+      <li><strong>Subject</strong>: the doer or bearer of the state, such as I, she, the students, or my car.</li>
+      <li><strong>Auxiliary verb(s)</strong>: helping verbs such as be, have, will, do/does/did, and modals like can, may, should.</li>
+      <li><strong>Main verb</strong>: the lexical verb in the right form.</li>
+    </ul>
+
+    <h3>Verb forms you need</h3>
+    <table class="grid-table">
+      <thead>
+        <tr>
+          <th>Label</th>
+          <th>Form</th>
+          <th>Examples</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>V1</td><td>Base form</td><td>work, go, eat</td></tr>
+        <tr><td>V2</td><td>Past simple</td><td>worked, went, ate</td></tr>
+        <tr><td>V3</td><td>Past participle</td><td>worked, gone, eaten</td></tr>
+        <tr><td>V-ing</td><td>Present participle</td><td>working, going, eating</td></tr>
+      </tbody>
+    </table>
+
+    <div class="formula-box">
+      <p><span class="formula">Time</span> is usually carried by the first auxiliary, or by the main verb in simple present and simple past.</p>
+      <p><span class="formula">Aspect</span> is carried by combinations such as be + V-ing or have + V3.</p>
+    </div>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('overview')">← <div><span class="nav-ch">Overview</span>Purpose and structure</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch2')"><div><span class="nav-ch">Chapter 2</span>Time and aspect</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch2" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 2</div>
+    <h2>Time and Aspect as Building Blocks</h2>
+  </div>
+  <div class="chapter-body">
+    <p>English tense forms combine one of three times with one of four aspects.</p>
+    <div class="aspect-card">
+      <h4>Time</h4>
+      <p>Present, past, and future tell us <em>when</em> the event or state is placed.</p>
+      <h4>Aspect</h4>
+      <p>Simple, continuous, perfect, and perfect continuous tell us how the event is viewed.</p>
+    </div>
+
+    <table class="tense-table">
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>General idea</th>
+          <th>Typical meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Simple</td><td>No extra aspect marker</td><td>Facts, habits, completed events, neutral future</td></tr>
+        <tr><td>Continuous</td><td>be + V-ing</td><td>Action in progress, temporary or unfinished</td></tr>
+        <tr><td>Perfect</td><td>have + V3</td><td>Completed before another time; result matters</td></tr>
+        <tr><td>Perfect continuous</td><td>have been + V-ing</td><td>Duration or ongoing activity up to a reference time</td></tr>
+      </tbody>
+    </table>
+
+    <p>The same four aspect patterns are reused for present, past, and future time, so the system is much smaller than it first looks.</p>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch1')">← <div><span class="nav-ch">Chapter 1</span>Core building blocks</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch3')"><div><span class="nav-ch">Chapter 3</span>Aspect patterns</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch3" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 3</div>
+    <h2>Aspect Patterns and the Full Tense Grid</h2>
+  </div>
+  <div class="chapter-body">
+    <h3>The lego rules</h3>
+    <div class="aspect-card">
+      <p><strong>Simple:</strong> present simple uses <code>S + V1(+s)</code>, past simple uses <code>S + V2</code>, and future simple uses <code>S + will + V1</code>.</p>
+      <p><strong>Continuous:</strong> <code>S + be + V-ing</code>, with the form of be showing the time.</p>
+      <p><strong>Perfect:</strong> <code>S + have + V3</code>, with have showing the time.</p>
+      <p><strong>Perfect continuous:</strong> <code>S + have been + V-ing</code>.</p>
+    </div>
+
+    <h3>Full tense grid</h3>
+    <table class="tense-table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Aspect</th>
+          <th>Name</th>
+          <th>Pattern</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Present</td><td>Simple</td><td>Present simple</td><td><code>S + V1(+s)</code></td><td>She works.</td></tr>
+        <tr><td>Present</td><td>Continuous</td><td>Present continuous</td><td><code>S + am/is/are + V-ing</code></td><td>She is working.</td></tr>
+        <tr><td>Present</td><td>Perfect</td><td>Present perfect</td><td><code>S + has/have + V3</code></td><td>She has worked.</td></tr>
+        <tr><td>Present</td><td>Perfect continuous</td><td>Present perfect continuous</td><td><code>S + has/have been + V-ing</code></td><td>She has been working.</td></tr>
+        <tr><td>Past</td><td>Simple</td><td>Past simple</td><td><code>S + V2</code></td><td>She worked.</td></tr>
+        <tr><td>Past</td><td>Continuous</td><td>Past continuous</td><td><code>S + was/were + V-ing</code></td><td>She was working.</td></tr>
+        <tr><td>Past</td><td>Perfect</td><td>Past perfect</td><td><code>S + had + V3</code></td><td>She had worked.</td></tr>
+        <tr><td>Past</td><td>Perfect continuous</td><td>Past perfect continuous</td><td><code>S + had been + V-ing</code></td><td>She had been working.</td></tr>
+        <tr><td>Future</td><td>Simple</td><td>Future simple</td><td><code>S + will + V1</code></td><td>She will work.</td></tr>
+        <tr><td>Future</td><td>Continuous</td><td>Future continuous</td><td><code>S + will be + V-ing</code></td><td>She will be working.</td></tr>
+        <tr><td>Future</td><td>Perfect</td><td>Future perfect</td><td><code>S + will have + V3</code></td><td>She will have worked.</td></tr>
+        <tr><td>Future</td><td>Perfect continuous</td><td>Future perfect continuous</td><td><code>S + will have been + V-ing</code></td><td>She will have been working.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch2')">← <div><span class="nav-ch">Chapter 2</span>Time and aspect</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch4')"><div><span class="nav-ch">Chapter 4</span>Why each aspect is used</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch4" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 4</div>
+    <h2>Why Each Aspect Is Used</h2>
+  </div>
+  <div class="chapter-body">
+    <h3>Simple aspect</h3>
+    <p>Use it for habits, general truths, states, timetables, finished events, spontaneous decisions, promises, offers, and neutral future facts.</p>
+    <p class="example-sentence">The train leaves at 6. / She worked yesterday. / I will help you.</p>
+
+    <h3>Continuous aspect</h3>
+    <p>Use it for actions in progress, temporary situations, background actions, parallel past actions, and polite questions about arrangements.</p>
+    <p class="example-sentence">I am studying now. / She was cooking when I arrived. / Will you be staying long?</p>
+
+    <h3>Perfect aspect</h3>
+    <p>Use it to link one time to an earlier time, focusing on completion, result, experience, or a past event before another past point.</p>
+    <p class="example-sentence">I have lost my keys. / She had left before I arrived. / By Friday, I will have finished the report.</p>
+
+    <h3>Perfect continuous aspect</h3>
+    <p>Use it when the main idea is duration or ongoing activity up to a reference time.</p>
+    <p class="example-sentence">I have been studying all day. / He had been waiting for an hour when she arrived. / Next year I will have been teaching for ten years.</p>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch3')">← <div><span class="nav-ch">Chapter 3</span>Aspect patterns</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch5')"><div><span class="nav-ch">Chapter 5</span>Negatives</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch5" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 5</div>
+    <h2>Negatives</h2>
+  </div>
+  <div class="chapter-body">
+    <h3>Rule 1: tenses with an auxiliary</h3>
+    <p>If the tense already has an auxiliary, add <strong>not</strong> after the first auxiliary.</p>
+    <div class="formula-box">
+      <p><code>S + AUX + not + main verb</code></p>
+    </div>
+    <ul>
+      <li>She is working → She is not working.</li>
+      <li>They have finished → They have not finished.</li>
+      <li>I will go → I will not go.</li>
+      <li>She had not been waiting.</li>
+    </ul>
+
+    <h3>Rule 2: simple present and simple past</h3>
+    <p>When there is no auxiliary in the affirmative, use do-support.</p>
+    <div class="formula-box">
+      <p><code>S + do/does/did + not + V1</code></p>
+    </div>
+    <ul>
+      <li>He works → He does not work.</li>
+      <li>They go → They do not go.</li>
+      <li>She went → She did not go.</li>
+    </ul>
+
+    <table class="polarity-table">
+      <thead>
+        <tr>
+          <th>Pattern type</th>
+          <th>Negative rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>With be / have / will / modal</td><td>Add not after the first auxiliary</td></tr>
+        <tr><td>No auxiliary in simple present/past</td><td>Use do/does/did + not + V1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch4')">← <div><span class="nav-ch">Chapter 4</span>Why each aspect is used</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch6')"><div><span class="nav-ch">Chapter 6</span>Questions</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch6" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 6</div>
+    <h2>Yes/No Questions and Wh-Questions</h2>
+  </div>
+  <div class="chapter-body">
+    <h3>Yes/no questions</h3>
+    <p>Make yes/no questions by moving the first auxiliary before the subject.</p>
+    <div class="formula-box">
+      <p><code>S + AUX + main verb</code> becomes <code>AUX + S + main verb?</code></p>
+    </div>
+    <ul>
+      <li>She is working → Is she working?</li>
+      <li>They have finished → Have they finished?</li>
+      <li>She has been studying → Has she been studying?</li>
+      <li>He had gone → Had he gone?</li>
+      <li>She will have been working → Will she have been working?</li>
+    </ul>
+
+    <h3>Simple present and simple past</h3>
+    <p>If there is no auxiliary, use do-support again.</p>
+    <ul>
+      <li>She works → Does she work?</li>
+      <li>He went → Did he go?</li>
+    </ul>
+
+    <h3>Wh-questions</h3>
+    <p>Put the wh-word in front of the yes/no question pattern.</p>
+    <ul>
+      <li>Does he work here? → Where does he work?</li>
+      <li>Did she arrive? → When did she arrive?</li>
+      <li>Has she been studying? → How long has she been studying?</li>
+    </ul>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch5')">← <div><span class="nav-ch">Chapter 5</span>Negatives</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch7')"><div><span class="nav-ch">Chapter 7</span>Integrated chart</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch7" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 7</div>
+    <h2>Integrated Tense-Aspect-Polarity Chart</h2>
+  </div>
+  <div class="chapter-body">
+    <p>This chart shows the same tense patterns in affirmative, negative, and yes/no question form.</p>
+
+    <h3>Present time</h3>
+    <table class="polarity-table">
+      <thead><tr><th>Aspect</th><th>Affirmative</th><th>Negative</th><th>Question</th></tr></thead>
+      <tbody>
+        <tr><td>Simple</td><td>She works.</td><td>She does not work.</td><td>Does she work?</td></tr>
+        <tr><td>Continuous</td><td>She is working.</td><td>She is not working.</td><td>Is she working?</td></tr>
+        <tr><td>Perfect</td><td>She has worked.</td><td>She has not worked.</td><td>Has she worked?</td></tr>
+        <tr><td>Perfect continuous</td><td>She has been working.</td><td>She has not been working.</td><td>Has she been working?</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Past time</h3>
+    <table class="polarity-table">
+      <thead><tr><th>Aspect</th><th>Affirmative</th><th>Negative</th><th>Question</th></tr></thead>
+      <tbody>
+        <tr><td>Simple</td><td>She worked.</td><td>She did not work.</td><td>Did she work?</td></tr>
+        <tr><td>Continuous</td><td>She was working.</td><td>She was not working.</td><td>Was she working?</td></tr>
+        <tr><td>Perfect</td><td>She had worked.</td><td>She had not worked.</td><td>Had she worked?</td></tr>
+        <tr><td>Perfect continuous</td><td>She had been working.</td><td>She had not been working.</td><td>Had she been working?</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Future time</h3>
+    <table class="polarity-table">
+      <thead><tr><th>Aspect</th><th>Affirmative</th><th>Negative</th><th>Question</th></tr></thead>
+      <tbody>
+        <tr><td>Simple</td><td>She will work.</td><td>She will not work.</td><td>Will she work?</td></tr>
+        <tr><td>Continuous</td><td>She will be working.</td><td>She will not be working.</td><td>Will she be working?</td></tr>
+        <tr><td>Perfect</td><td>She will have worked.</td><td>She will not have worked.</td><td>Will she have worked?</td></tr>
+        <tr><td>Perfect continuous</td><td>She will have been working.</td><td>She will not have been working.</td><td>Will she have been working?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch6')">← <div><span class="nav-ch">Chapter 6</span>Questions</div></button>
+    <button class="nav-btn" onclick="showChapterById('ch8')"><div><span class="nav-ch">Chapter 8</span>How the blocks move</div> →</button>
+  </div>
+</div>
+
+<div id="panel-ch8" class="chapter-panel">
+  <div class="chapter-header">
+    <div class="part-label">Chapter 8</div>
+    <h2>How the Blocks Move When Time or Aspect Changes</h2>
+  </div>
+  <div class="chapter-body">
+    <h3>Change time, keep aspect</h3>
+    <p>To change the time but keep the same aspect, usually change the first auxiliary, or swap V1 and V2 in simple forms.</p>
+    <ul>
+      <li>Continuous: She is working → She was working → She will be working.</li>
+      <li>Perfect: She has worked → She had worked → She will have worked.</li>
+      <li>Simple: She works → She worked → She will work.</li>
+    </ul>
+
+    <h3>Change aspect, keep time</h3>
+    <p>To change the aspect but keep the same time, adjust the auxiliary pattern and the main verb form.</p>
+    <ul>
+      <li>Present: She works → She is working → She has worked → She has been working.</li>
+      <li>Past: She worked → She was working → She had worked → She had been working.</li>
+    </ul>
+
+    <div class="note-box">
+      <p>The overall system stays compact because the same four aspect formulas and the same negative/question rules are reused across all twelve tense combinations.</p>
+    </div>
+
+    <h3>References from the source document</h3>
+    <table class="refs-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><a href="https://www.grammarly.com/blog/parts-of-speech/verb-tenses/" target="_blank" rel="noreferrer">Verb Tenses Explained, with Examples - Grammarly</a></td></tr>
+        <tr><td>2</td><td><a href="https://english.lingolia.com/en/grammar/tenses/overview" target="_blank" rel="noreferrer">Table of Verb Tenses in English Grammar</a></td></tr>
+        <tr><td>3</td><td><a href="https://www.geeksforgeeks.org/english/tense-chart/" target="_blank" rel="noreferrer">Tense Chart in English - GeeksforGeeks</a></td></tr>
+        <tr><td>4</td><td><a href="https://www.esllessonhandouts.com/handout/english-verb-tense-and-aspect-chart-1/" target="_blank" rel="noreferrer">English Verb Tense and Aspect Chart 1 - ESL Lesson Handouts</a></td></tr>
+        <tr><td>5</td><td><a href="https://www.ego4u.com/en/cram-up/grammar/tenses" target="_blank" rel="noreferrer">Table of English Tenses - English Grammar Online</a></td></tr>
+        <tr><td>6</td><td><a href="https://www.perfect-english-grammar.com/support-files/all_tenses_form_cheatsheet.pdf" target="_blank" rel="noreferrer">The basic forms of the English verb tenses</a></td></tr>
+        <tr><td>7</td><td><a href="https://www.csn.edu/sites/default/files/documents/cas-services/verb_tense_chart.pdf" target="_blank" rel="noreferrer">Verb Tense Chart</a></td></tr>
+        <tr><td>8</td><td><a href="https://english-resource.com/grammar/progressive-tense/" target="_blank" rel="noreferrer">Progressive Tense: Correct and Incorrect Usage | English Resource</a></td></tr>
+        <tr><td>9</td><td><a href="https://www.insightstoenglish.com/grammar-topic/tenses/progressive-continuous" target="_blank" rel="noreferrer">Progressive/Continuous - Insights to English</a></td></tr>
+        <tr><td>10</td><td><a href="https://en.wikipedia.org/wiki/Continuous_and_progressive_aspects" target="_blank" rel="noreferrer">Continuous and progressive aspects - Wikipedia</a></td></tr>
+        <tr><td>11</td><td><a href="https://www.grammarly.com/blog/grammar/present-perfect-tense/" target="_blank" rel="noreferrer">What Is the Present Perfect Tense? - Grammarly</a></td></tr>
+        <tr><td>12</td><td><a href="https://www.perfect-english-grammar.com/present-perfect-use.html" target="_blank" rel="noreferrer">Using The Present Perfect Tense in English</a></td></tr>
+        <tr><td>13</td><td><a href="https://www.englishpage.com/verbpage/presentperfect.html" target="_blank" rel="noreferrer">Present Perfect Tense | English Page</a></td></tr>
+        <tr><td>14</td><td><a href="https://www.youtube.com/watch?v=of0cS8ALFbo" target="_blank" rel="noreferrer">Progressive - Continuous Tenses (Past, Present, Future)</a></td></tr>
+        <tr><td>15</td><td><a href="https://www.scribbr.com/verbs/present-perfect/" target="_blank" rel="noreferrer">Present Perfect Tense | Scribbr</a></td></tr>
+        <tr><td>16</td><td><a href="https://www.ef.com/wwen/english-resources/english-grammar/present-perfect/" target="_blank" rel="noreferrer">Present perfect | EF Global Site</a></td></tr>
+        <tr><td>17</td><td><a href="https://lingbase.com/en/english/grammar/past-simple-negative-and-questions" target="_blank" rel="noreferrer">Past simple, negative and question forms - Lingbase</a></td></tr>
+        <tr><td>18</td><td><a href="https://en.wikipedia.org/wiki/Subject%E2%80%93auxiliary_inversion" target="_blank" rel="noreferrer">Subject-auxiliary inversion - Wikipedia</a></td></tr>
+        <tr><td>19</td><td><a href="https://www.perfect-english-grammar.com/inversion.html" target="_blank" rel="noreferrer">Inversion - Perfect English Grammar</a></td></tr>
+        <tr><td>20</td><td><a href="https://blog.aaaenos.com/chart-of-tenses-rules-examples-tenses-type-table/" target="_blank" rel="noreferrer">Chart of Tenses With Rules and Examples</a></td></tr>
+        <tr><td>21</td><td><a href="https://englishspeaking360.com/all-12-english-verb-tenses-explained-present-past-future-affirmative-form-negative-form-affirmative-question-form-negative-question-form/" target="_blank" rel="noreferrer">All 12 English Verb Tenses Explained</a></td></tr>
+        <tr><td>22</td><td><a href="https://continuingstudies.uvic.ca/elc/studyzone/330/grammar/pastnq" target="_blank" rel="noreferrer">Simple Past: Negatives and Questions - UVic</a></td></tr>
+        <tr><td>23</td><td><a href="https://speakspeak.com/english-grammar-exercises/elementary/present-simple-questions-negatives-do-dont-doesnt-practice-2" target="_blank" rel="noreferrer">Present simple questions, negatives - speakspeak</a></td></tr>
+        <tr><td>24</td><td><a href="https://www.scribd.com/document/414721584/Tense-Rule-Chart" target="_blank" rel="noreferrer">Tense Rule Chart: Affirmative, Negative, Interrogative</a></td></tr>
+        <tr><td>25</td><td><a href="https://farzanasrnmc.files.wordpress.com/2017/08/tense-chart.pdf" target="_blank" rel="noreferrer">Tense Use Formula Examples</a></td></tr>
+        <tr><td>26</td><td><a href="https://www.grammaring.com/subject-auxiliary-inversion-in-questions" target="_blank" rel="noreferrer">Subject-auxiliary inversion in questions - Grammaring</a></td></tr>
+        <tr><td>27</td><td><a href="https://www.bitgab.com/english-grammar/inversion-subject-auxiliary" target="_blank" rel="noreferrer">Inversion (subject-auxiliary) - BitGab</a></td></tr>
+        <tr><td>28</td><td><a href="https://englishlessonsbrighton.co.uk/all-english-tenses-timeline-infographic/" target="_blank" rel="noreferrer">All the English tenses: timeline infographic</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel-nav">
+    <button class="nav-btn" onclick="showChapterById('ch7')">← <div><span class="nav-ch">Chapter 7</span>Integrated chart</div></button>
+    <button class="nav-btn disabled">End of Guide</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+  const chapterOrder = ['overview','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8'];
+
+  function showChapter(id, btn) {
+    document.querySelectorAll('.chapter-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.chapter-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.scrollTo(0, 0);
+    if (btn) {
+      const list = btn.closest('.chapter-list');
+      if (list && !list.classList.contains('open')) {
+        list.classList.add('open');
+        const toggle = list.previousElementSibling;
+        if (toggle) toggle.classList.add('open');
+      }
+    }
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    if (window.innerWidth <= 800 && sidebar && sidebar.classList.contains('sidebar-open')) {
+      sidebar.classList.remove('sidebar-open');
+      document.body.classList.remove('sidebar-open');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function showChapterById(id) {
+    const btn = document.querySelector(`.chapter-link[onclick="showChapter('${id}', this)"]`);
+    showChapter(id, btn);
+  }
+
+  function togglePart(btn) {
+    btn.classList.toggle('open');
+    const list = btn.nextElementSibling;
+    list.classList.toggle('open');
+  }
+
+  (function () {
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    if (!sidebar || !toggleBtn) return;
+
+    function toggleSidebar() {
+      const isOpen = sidebar.classList.toggle('sidebar-open');
+      document.body.classList.toggle('sidebar-open', isOpen);
+      toggleBtn.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+  })();
+</script>
+<script>
+
+/* Language Lab navigation. Original lesson DOM and engines stay in place. */
+(function(){
+  "use strict";
+  const root=document.documentElement,essay=!!document.querySelector('.tab-panel');
+  const chapters=Array.from(document.querySelectorAll('.chapter-panel'));
+  const tabs=Array.from(document.querySelectorAll('.tab-panel'));
+  const chapterLinks=Array.from(document.querySelectorAll('.chapter-link'));
+  const tabButtons=Array.from(document.querySelectorAll('.tab-btn'));
+  const records=essay?tabs.flatMap((tab,t)=>Array.from(tab.querySelectorAll(':scope > .lesson-block')).map((block,i)=>({id:tab.id,tab:t,block,group:tabButtons[t]?.textContent.trim()||'Writing workshop',title:block.querySelector('.block-head h2')?.textContent.trim()||'Activity '+(i+1)}))):chapters.map((el,i)=>({id:el.id.slice(6),el,title:el.querySelector('.chapter-header h2')?.textContent.trim()||chapterLinks[i]?.textContent.trim()||'Chapter '+(i+1)}));
+  const original=essay?window.openTab:window.showChapter;
+  const host=document.querySelector(essay?'.wrap':'#main');
+  if(!records.length||!host||typeof original!=='function')return;
+  const guidePaths=[['index.html','Home'],['key-word-transformations.html','Key Word Transformations'],['tense-building-blocks.html','Tense Building Blocks'],['english-articles.html','English Articles'],['active-passive-voice.html','Active and Passive Voice'],['essay.html','Essay Writing'],['B2Reported_Speech_and_Report.html','Reported Speech & Report Writing']];
+  let current=0,font=20,clearSelection=()=>{};
+  try{let n=Number(localStorage.getItem('language-lab-text-size'));if(n>=16&&n<=34)font=n}catch(e){}
+  function applyFont(n){font=Math.max(16,Math.min(34,n));root.style.fontSize=font+'px';try{localStorage.setItem('language-lab-text-size',String(font))}catch(e){}}
+  function make(tag,cls,text){let el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el}
+  function button(text,label,fn,cls){const b=make('button',cls,text);b.type='button';b.setAttribute('aria-label',label);b.title=label;b.addEventListener('click',fn);return b}
+  function select(label){const el=make('select','ll-select');el.setAttribute('aria-label',label);el.title=label;return el}
+  function option(s,val,label){const o=make('option','',label);o.value=val;s.append(o)}
+  const header=make('header','ll-header'),inner=make('div','ll-header-inner'),brand=make('strong','ll-brand','LANGUAGE LAB / B2'),nav=make('nav','ll-controls');nav.setAttribute('aria-label','Lesson navigation');
+  const guide=select('Choose guide'),jump=select('Choose section');
+  guidePaths.forEach(([path,label])=>option(guide,path,label));guide.value="tense-building-blocks.html";guide.onchange=()=>{location.href=guide.value};
+  if(essay){let last=-1,group;records.forEach((r,i)=>{if(r.tab!==last){group=document.createElement('optgroup');group.label=r.group;jump.append(group);last=r.tab}option(group,String(i),r.title)})}else records.forEach((r,i)=>option(jump,String(i),(i===0?'Overview: ':i+'. ')+r.title));
+  const smaller=button('A−','Decrease text size',()=>applyFont(font-2)),larger=button('A+','Increase text size',()=>applyFont(font+2)),topPrev=button('←','Previous section',()=>go(current-1)),topNext=button('→','Next section',()=>go(current+1));
+  topPrev.setAttribute('aria-keyshortcuts','ArrowLeft');topNext.setAttribute('aria-keyshortcuts','ArrowRight');
+  nav.append(smaller,larger,guide,jump,topPrev,topNext);inner.append(brand,nav);header.append(inner);
+  const progress=make('div','ll-progress'),fill=make('div');progress.append(fill);progress.setAttribute('role','progressbar');progress.setAttribute('aria-label','Section position');progress.setAttribute('aria-valuemin','1');progress.setAttribute('aria-valuemax',String(records.length));document.body.prepend(header,progress);
+  const footer=make('div','ll-footer'),prev=button('← Previous','Previous section',()=>go(current-1)),next=button('Next →','Next section',()=>go(current+1),'ll-next'),position=make('span','ll-position');position.setAttribute('aria-live','polite');footer.append(prev,position,next);host.after(footer);footer.after(make('p','ll-shortcuts','Keyboard: ← previous section · → next section (when not typing)'));
+  const essayHead=essay?make('div','ll-essay-heading'):null,stage=essay?make('div','ll-stage'):null,heading=essay?make('h1','ll-screen-heading'):null;
+  if(essay){essayHead.append(stage,heading);host.insertBefore(essayHead,tabs[0])}
+  function sync(i){current=i;const r=records[i];jump.value=String(i);position.textContent=(i+1)+' / '+records.length;fill.style.width=((i+1)/records.length*100)+'%';progress.setAttribute('aria-valuenow',String(i+1));prev.disabled=topPrev.disabled=i===0;next.disabled=topNext.disabled=i===records.length-1;if(essay){records.forEach(item=>item.block.classList.toggle('ll-current',item===r));stage.textContent=r.group+' · Activity '+(i+1)+' / '+records.length;heading.textContent=r.title}}
+  let navigating=false;
+  function go(i){if(i<0||i>=records.length)return;clearSelection();const r=records[i];navigating=true;try{if(essay)original(r.id,tabButtons[r.tab]);else{let b=chapterLinks.find(x=>x.getAttribute('onclick')?.includes("'"+r.id+"'"));original(r.id,b)}sync(i);window.scrollTo(0,0)}finally{navigating=false}}
+  if(essay){window.openTab=function(id,b){const first=records.findIndex(r=>r.id===id);if(first>=0&&!navigating){go(first);return}return original(id,b)}}else{window.showChapter=function(id,b){const result=original(id,b);const i=records.findIndex(r=>r.id===id);if(i>=0&&!navigating)sync(i);return result}}
+  jump.addEventListener('change',()=>go(Number(jump.value)));
+  document.addEventListener('keydown',e=>{if(e.defaultPrevented||e.isComposing||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey||e.repeat||document.querySelector('dialog[open]'))return;const target=e.target;if(target instanceof Element&&target.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="textbox"],[role="combobox"],[role="slider"],.ll-table,.drag-card,.stack-item,.drop-zone'))return;if(e.key==='ArrowLeft'&&current>0){e.preventDefault();go(current-1)}else if(e.key==='ArrowRight'&&current<records.length-1){e.preventDefault();go(current+1)}});
+  host.querySelectorAll('table').forEach(t=>{if(t.closest('.ll-table'))return;const w=make('div','ll-table');w.tabIndex=0;w.setAttribute('role','region');w.setAttribute('aria-label','Table; scroll horizontally if needed');const cols=Math.max(...Array.from(t.rows).map(r=>Array.from(r.cells).reduce((n,c)=>n+(c.colSpan||1),0)),1);w.style.setProperty('--ll-table-width',cols>3?(cols*6)+'rem':cols>1?(cols*4.5)+'rem':'0px');t.before(w);w.append(t)});
+  if(!essay){host.querySelectorAll('.answer-block').forEach(block=>{const d=make('details','ll-answer'),sum=make('summary','','Show answer / explanation');d.addEventListener('toggle',()=>sum.textContent=d.open?'Hide answer / explanation':'Show answer / explanation');block.before(d);d.append(sum,block)})}
+  if(essay){
+    let selected=null;
+    const live=make('div','ll-sr');live.setAttribute('aria-live','polite');host.append(live);
+    function clearCard(){if(selected){selected.classList.remove('ll-selected');selected.setAttribute('aria-pressed','false')}selected=null;host.querySelectorAll('.ll-target').forEach(z=>z.classList.remove('ll-target'))}
+    clearSelection=clearCard;
+    function selectCard(card){if(selected===card){clearCard();return}clearCard();selected=card;card.classList.add('ll-selected');card.setAttribute('aria-pressed','true');card.closest('.lesson-block').querySelectorAll('.drop-zone').forEach(z=>z.classList.add('ll-target'));live.textContent='Card selected. Choose a destination.'}
+    function moveCard(zone){if(!selected||!selected.isConnected||selected.closest('.lesson-block')!==zone.closest('.lesson-block')){clearCard();return}const card=selected;card.classList.remove('correct','wrong');zone.appendChild(card);clearCard();live.textContent='Card moved to '+(zone.dataset.zone||'destination')+'.';card.focus()}
+    function prepareCards(){host.querySelectorAll('.drag-card:not([data-ll-card])').forEach(card=>{card.dataset.llCard='1';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-pressed','false')})}
+    host.querySelectorAll('.drop-zone').forEach(zone=>{zone.tabIndex=0;zone.setAttribute('aria-label','Destination: '+(zone.dataset.zone||'card tray'));zone.addEventListener('dragstart',clearCard);zone.addEventListener('drop',clearCard)});
+    host.querySelectorAll('.lesson-block').forEach(block=>{const tray=block.querySelector('.card-tray');if(tray)tray.before(make('p','ll-touch-tip','Drag a card, or tap a card and then tap its destination.'))});
+    prepareCards();new MutationObserver(()=>{if(selected&&!selected.isConnected)clearCard();prepareCards()}).observe(host,{childList:true,subtree:true});
+    host.addEventListener('click',e=>{const target=e.target;if(!(target instanceof Element))return;const card=target.closest('.drag-card');if(card){if(selected&&selected!==card&&card.parentElement.classList.contains('drop-zone')&&selected.closest('.lesson-block')===card.closest('.lesson-block'))moveCard(card.parentElement);else selectCard(card);return}const zone=target.closest('.drop-zone');if(zone&&selected)moveCard(zone)});
+    host.addEventListener('keydown',e=>{if(!['Enter',' '].includes(e.key)||!(e.target instanceof Element))return;const c=e.target.closest('.drag-card'),z=e.target.closest('.drop-zone');if(c&&e.target===c){e.preventDefault();selectCard(c)}else if(z&&e.target===z&&selected){e.preventDefault();moveCard(z)}});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')clearCard()});
+    const stack=document.getElementById('essayStack');if(stack){stack.before(make('p','ll-touch-tip','Drag paragraphs into order, or use the up and down buttons.'));Array.from(stack.children).forEach(item=>{const bar=make('span','ll-stack-controls');function move(dir){const neighbor=dir<0?item.previousElementSibling:item.nextElementSibling;if(!neighbor)return;if(dir<0)stack.insertBefore(item,neighbor);else stack.insertBefore(neighbor,item);Array.from(stack.children).forEach(x=>x.classList.remove('correct','wrong'));live.textContent='Paragraph moved.'}bar.append(button('↑','Move paragraph up',()=>move(-1)),button('↓','Move paragraph down',()=>move(1)));item.append(bar)})}
+  }
+  root.classList.add(essay?'ll-essay':'ll-guide','ll-ready');applyFont(font);go(0);
+})();
+</script>
+<script>
+
+/* Unified side panel. Retains the existing navigation and exercise state. */
+(function(){
+ "use strict";
+ const root=document.documentElement;
+ const isReport="tense-building-blocks.html"==="B2Reported_Speech_and_Report.html";
+ const jump=isReport?document.getElementById('jump'):document.querySelector('.ll-header select[aria-label="Choose section"]');
+ const position=isReport?document.getElementById('position'):document.querySelector('.ll-position');
+ const bar=isReport?document.querySelector('body>header nav'):document.querySelector('.ll-controls');
+ if(!jump||!position||!bar||!jump.options.length)return;
+ const guides=[['index.html','Home'],['key-word-transformations.html','Key Word Transformations'],['tense-building-blocks.html','Tense Building Blocks'],['english-articles.html','English Articles'],['active-passive-voice.html','Active and Passive Voice'],['essay.html','Essay Writing'],["B2Reported_Speech_and_Report.html",'Reported Speech & Report Writing']];
+ const title=guides.find(([p])=>p==="tense-building-blocks.html")?.[1]||document.title;
+ const make=(tag,cls,label)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(label!==undefined)e.textContent=label;return e};
+ const menu=make('aside');menu.id='ll-contents';menu.hidden=true;menu.setAttribute('aria-label','Guide and section contents');
+ const head=make('div','ll-menu-head'),name=make('div');name.append(make('div','ll-menu-brand','LANGUAGE LAB / B2'),make('div','ll-menu-title',title));
+ const close=make('button','ll-menu-close','×');close.type='button';close.setAttribute('aria-label','Close contents');close.title='Close contents';head.append(name,close);menu.append(head);
+ const scroll=make('div','ll-menu-scroll'),guideNav=make('nav','ll-menu-guides');guideNav.setAttribute('aria-label','Guides');guideNav.append(make('div','ll-menu-label','Guides'));
+ guides.forEach(([path,label])=>{const a=make('a','ll-menu-link',label);a.href=path;if(path==="tense-building-blocks.html")a.setAttribute('aria-current','page');guideNav.append(a)});
+ const sections=make('nav');sections.setAttribute('aria-label','Sections in this guide');sections.append(make('div','ll-menu-label','Contents'));scroll.append(guideNav,sections);menu.append(scroll);
+ const count=make('div','ll-menu-count');menu.append(count);
+ const groups=new Map(),items=[];
+ const opts=Array.from(jump.options);
+ const oldChapterLinks=Array.from(document.querySelectorAll('#sidebar .chapter-link'));
+ function groupName(opt,i){
+   if(isReport)return i<10?'Reported speech':i<15?'Active/passive & Part 4':'Report writing';
+   if(opt.parentElement?.tagName==='OPTGROUP')return opt.parentElement.label;
+   const old=oldChapterLinks[i];const part=old?.closest('.part-group');
+   const label=part?.querySelector('.part-toggle')?.textContent.replace(/▶|▼|▾|▸/g,'').trim();
+   return label&&label!=='Chapter List'?label:'Chapters';
+ }
+ function tidy(opt,i){let t=opt.textContent.trim();return t.replace(/^\d+\.\s*/,'').replace(/^Overview:\s*/,'')}
+ opts.forEach((opt,i)=>{
+   const group=groupName(opt,i);let d=groups.get(group);
+   if(!d){d=make('details');d.append(make('summary','',group));sections.append(d);groups.set(group,d)}
+   const b=make('button','ll-menu-item');b.type='button';b.append(make('span','ll-menu-number',String(i+1).padStart(2,'0')),document.createTextNode(tidy(opt,i)));
+   b.addEventListener('click',()=>{jump.value=opt.value;jump.dispatchEvent(new Event('change',{bubbles:true}));if(!wide.matches)setOpen(false,true);else sync()});
+   d.append(b);items.push({b,d,value:opt.value});
+ });
+ const shade=make('div');shade.id='ll-shade';shade.hidden=true;shade.setAttribute('aria-hidden','true');document.body.append(shade,menu);
+ const toggle=make('button','','Contents');toggle.id='ll-menu-toggle';toggle.type='button';toggle.setAttribute('aria-controls',menu.id);toggle.setAttribute('aria-expanded','false');toggle.title='Show or hide contents';bar.prepend(toggle);
+ // Old list controls remain available to the lesson engines but not to the visual or keyboard UI.
+ jump.hidden=true;jump.tabIndex=-1;jump.setAttribute('aria-hidden','true');
+ const oldGuide=document.querySelector('.ll-header select[aria-label="Choose guide"]');if(oldGuide){oldGuide.hidden=true;oldGuide.tabIndex=-1;oldGuide.setAttribute('aria-hidden','true')}
+ const wide=matchMedia('(min-width:901px)');
+ let opened=false,lastValue=null;
+ function sync(){
+   const val=jump.value;const changed=lastValue!==val;lastValue=val;
+   items.forEach(({b,d,value})=>{if(value===val){b.setAttribute('aria-current','step');if(changed)d.open=true}else b.removeAttribute('aria-current')});
+   count.textContent='Section '+position.textContent.trim();
+   if(changed&&opened){const active=items.find(x=>x.value===val)?.b;if(active){const r=active.getBoundingClientRect(),v=scroll.getBoundingClientRect();if(r.bottom>v.bottom)scroll.scrollTop+=r.bottom-v.bottom+10;else if(r.top<v.top)scroll.scrollTop-=v.top-r.top+10}}
+ }
+ function setOpen(open,returnFocus=false){
+   opened=open;root.classList.toggle('ll-menu-open',open);menu.hidden=!open;shade.hidden=!open||wide.matches;toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Hide contents':'Contents';
+   if(open&&!wide.matches){menu.setAttribute('role','dialog');menu.setAttribute('aria-modal','true');close.focus({preventScroll:true})}else{menu.removeAttribute('role');menu.removeAttribute('aria-modal')}
+   if(!open&&returnFocus)toggle.focus({preventScroll:true});if(open)sync();
+ }
+ toggle.addEventListener('click',()=>setOpen(!opened));close.addEventListener('click',()=>setOpen(false,true));shade.addEventListener('click',()=>setOpen(false,true));
+ document.addEventListener('keydown',e=>{
+   if(!opened||document.querySelector('dialog[open]'))return;
+   if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();setOpen(false,true);return}
+   if(!wide.matches){
+     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.stopImmediatePropagation();return}
+     if(e.key==='Tab'){const focusables=Array.from(menu.querySelectorAll('button,a[href],summary')).filter(el=>el.getClientRects().length&&!el.disabled);if(!focusables.length)return;const first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&(document.activeElement===first||!menu.contains(document.activeElement))){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||!menu.contains(document.activeElement))){e.preventDefault();first.focus()}}
+   }
+ },true);
+ if(wide.addEventListener)wide.addEventListener('change',()=>setOpen(wide.matches));else wide.addListener(()=>setOpen(wide.matches));
+ new MutationObserver(sync).observe(position,{childList:true,characterData:true,subtree:true});
+ root.classList.add('ll-sidebar-ready');sync();setOpen(wide.matches);
+})();
+
+</script>
+</body>
+</html>
